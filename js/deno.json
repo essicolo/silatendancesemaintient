@@ -1,0 +1,8 @@
+{
+  "nodeModulesDir": "manual",
+  "tasks": {
+    "watch": "deno run --allow-read --allow-write --allow-net=fr.wikipedia.org --allow-ffi --allow-env ingest/watch.ts",
+    "export": "deno run --allow-read --allow-write --allow-ffi --allow-env ingest/export_json.ts",
+    "compute": "deno run --allow-read --allow-write --allow-env tools/compute.mjs"
+  }
+}

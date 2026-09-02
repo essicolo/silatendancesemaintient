@@ -1,11 +1,27 @@
-# Deno
-# https://deno.com/
+# Python
+__pycache__/
+*.py[oc]
+.venv
 
-# Cache directory (when using project-local DENO_DIR)
-# https://docs.deno.com/runtime/fundamentals/setup/#deno_dir
-.deno/
+# Node / Deno
+node_modules/
 
-# Coverage reports
-# https://docs.deno.com/runtime/reference/cli/coverage/
-coverage/
-*.lcov
+# Dashboard bundle (rebuild: npm run build:dashboard)
+js/dist/
+
+# Raw/scraped data and the DuckDB base: rebuildable via ingest scripts
+# (watch for polls, run.py for the rest, one-off loaders for PDF polls).
+# The materialised riding-name maps are kept: they need geopandas to rebuild.
+/data/*
+!/data/riding_names_2017.json
+!/data/riding_names_2026.json
+
+# NOTE: js/data/ is tracked on purpose. It mixes regenerable exports with
+# ESTIMATED parameters (qc_systemic, qc_leader_effect, qc_regional_calibration,
+# qc_riding_regions, the geojson) that no watch run can rebuild — some of their
+# source data is no longer reachable. 2 MB total; keep it all.
+
+# Outillage local (Claude, agents)
+.claude/
+.agents/
+skills-lock.json

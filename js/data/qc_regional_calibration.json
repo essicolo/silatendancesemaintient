@@ -1,0 +1,6 @@
+{
+  "lambda": 0.9309810562602013,
+  "r2": 0.7440659226997703,
+  "n": 12,
+  "note": "realise ~ lambda * predit, devs ILR regionaux 2022, fenetre finale 35 j"
+}

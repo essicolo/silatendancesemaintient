@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Prédictions électorales Québec 2026</title>
+  <link rel="stylesheet" href="dist/leaflet/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #000;
+      --paper: #fff;
+      --line: #ddd;
+      --muted: #666;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Source Serif 4", "Source Serif Pro", Georgia, serif;
+      margin: 0;
+      padding: 2.5rem 3rem 4rem;
+      background: var(--paper);
+      color: var(--ink);
+      max-width: 1900px;
+    }
+    h1 { font-size: 1.7rem; font-weight: 600; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
+    h2 { font-size: 1.05rem; font-weight: 600; margin: 0 0 1rem; border-bottom: 1px solid var(--line); padding-bottom: 0.45rem; }
+    #status { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+    .row { display: grid; gap: 2rem; margin-bottom: 2rem; }
+    .row.trend { grid-template-columns: 1fr; }
+    .row.explore { grid-template-columns: 1.15fr 1fr; align-items: stretch; }
+    .row.explore .side { display: flex; flex-direction: column; gap: 2rem; min-width: 0; }
+    .row.explore > section { display: flex; flex-direction: column; }
+    .row.bottom { grid-template-columns: repeat(auto-fit, minmax(560px, 1fr)); }
+    @media (max-width: 1100px) { .row.explore { grid-template-columns: 1fr; } }
+
+    section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 1.5rem 1.75rem;
+      transition: background 0.3s ease;
+    }
+    section.flash { animation: flash-bg 0.9s ease; }
+    @keyframes flash-bg { 0% { background: #f0f0f0; } 100% { background: var(--paper); } }
+
+    #riding-map { flex: 1; min-height: 620px; background: var(--paper); }
+    .leaflet-container { background: var(--paper); }
+    .range-controls { margin-bottom: 0.75rem; }
+    .range-controls button {
+      font-family: inherit;
+      margin-right: 0.5rem;
+      padding: 0.3rem 0.9rem;
+      border: 1px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .range-controls button:hover { background: var(--ink); color: var(--paper); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--line); }
+    th { font-weight: 600; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .clickable-row { cursor: pointer; }
+    .clickable-row:hover { background: #f5f5f5; }
+    .selected-row { background: #eee; font-weight: 600; }
+    #watchlist { max-height: 340px; overflow-y: auto; }
+
+    .note { font-size: 0.82rem; color: var(--muted); max-width: 620px; line-height: 1.5; }
+    .note code { background: #f2f2f2; padding: 0.1rem 0.3rem; }
+    .muted-cell { color: var(--muted); font-style: italic; }
+    #riding-detail h3 { margin: 0 0 0.6rem; font-size: 1.15rem; }
+    #leader-ridings { min-height: 2rem; }
+
+    details.methodology {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--ink);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    details.methodology summary { font-weight: 600; cursor: pointer; }
+    details.methodology h4 { margin: 1rem 0 0.3rem; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    details.methodology p, details.methodology ul { margin: 0.2rem 0 0.6rem; }
+    details.methodology ul { padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+  <h1>Prédictions électorales Québec 2026</h1>
+  <div id="status">chargement...</div>
+
+  <div class="row trend">
+    <section><h2>Tendance des intentions de vote</h2><div id="trend-chart"></div></section>
+  </div>
+
+  <div class="row explore">
+    <section><h2>Projection par circonscription (carte 2026)</h2><div id="riding-map"></div></section>
+    <div class="side">
+      <section><h2>Circonscription sélectionnée</h2><div id="riding-detail"></div></section>
+      <section><h2>Circonscriptions les plus serrées</h2><div id="watchlist"></div>
+        <p class="note">Cliquez une ligne, ou une circonscription sur la carte : les deux mettent à jour la fiche ci-dessus.</p>
+      </section>
+      <section><h2>Circonscriptions des chefs</h2><div id="leader-ridings"></div></section>
+    </div>
+  </div>
+
+  <div class="row bottom">
+    <section><h2>Distribution des sièges</h2><div id="seat-bar"></div></section>
+    <section><h2>Scénarios de gouvernement</h2><div id="government-outcomes"></div></section>
+  </div>
+
+  <details class="methodology">
+    <summary>Méthodologie</summary>
+    <h4>Données</h4>
+    <p>Sondages d'intentions de vote compilés à partir des tableaux de Wikipédia (CC BY-SA), chaque
+    sondage renvoyant à la publication d'origine de la maison de sondage: Léger, Pallas Data,
+    Mainstreet, Synopsis, Angus Reid, Abacus et autres. Recensement 2021 par circonscription
+    (Statistique Canada, agrégé par aire de diffusion). Résultats de 2014, 2018 et 2022
+    (Élections Québec), exprimés sur la carte électorale 2026 (127 circonscriptions) par réagrégation
+    géographique des sections de vote. Députés sortants, retraits et chefs depuis les pages de
+    l'Assemblée nationale sur Wikipédia.</p>
+    <h4>Agrégation des sondages</h4>
+    <p>Les intentions de vote sont traitées comme une composition (les parts somment à 1) et manipulées
+    en coordonnées log-ratio isométriques (ILR), où les opérations linéaires sont valides (une
+    différence de points de pourcentage n'a pas le même sens à 4% qu'à 40%). La tendance est un
+    processus gaussien par coordonnée ILR, avec un bruit d'observation par sondage proportionnel à
+    l'inverse de la taille d'échantillon; l'échelle du bruit et la portée temporelle sont choisies par
+    vraisemblance marginale, et le noyau admet des points de rupture aux changements
+    de chefs (14 janvier et 12 avril 2026) : la corrélation entre régimes est elle-même ajustée par
+    vraisemblance, la valeur 1 redonnant le modèle stationnaire, et l'évidence a retenu une rupture
+    partielle (ρ=0,4) sur la coordonnée lente, celle qui tirait la remontée caquiste vers le creux
+    pré-Fréchette. La calibration des intervalles est vérifiée par validation croisée :
+    91% des sondages tombent dans l'intervalle à 90%. Les sondages régionaux
+    (ventilations Montréal / Québec / reste) entrent dans le même modèle comme observations d'un
+    processus gaussien conjoint : trois trajectoires régionales latentes dont un sondage national
+    observe la somme pondérée par les poids électoraux, et un sondage régional une seule. Validé sur
+    2022 : erreur régionale moyenne 3,1 points contre 3,6 pour le swing uniforme, le gain concentré
+    dans la région de Québec où la concentration conservatrice décide des sièges.</p>
+    <h4>Projection par circonscription</h4>
+    <p>Le mouvement provincial est appliqué au résultat de 2022 de chaque circonscription. Un siège
+    dont le député ne se représente pas, ou siège désormais pour un autre parti (57 des 125 sièges,
+    relevés automatiquement) perd la prime personnelle au sortant, appliquée comme perturbation
+    compositionnelle (facteur 1,125 sur la part du parti tenant, estimé des données par candidat
+    2018 à 2022). Un chef de parti sur le bulletin local vaut davantage. L'effet est estimé sur
+    35 cas historiques (1970-2022), chaque candidature de chef classée arrivée / continuation / départ
+    et mesurée contre le contrefactuel de swing uniforme; comme l'effet n'est pas stable dans le
+    temps (quasi nul avant 1998, fort à l'ère moderne), un processus gaussien sur l'année en donne
+    l'extrapolation 2026 : arrivée ×1,82, continuation ×1,31, départ ×0,90. Ces ajustements modifient
+    le point de départ de la projection, jamais le résultat 2022 affiché. S'ajoute une déviation
+    locale prédite par un processus gaussien multivarié (noyau Matérn, un GP par
+    coordonnée ILR, hyperparamètres par vraisemblance marginale ré-évaluée dans chaque pli de
+    validation).</p>
+    <h4>Variables du modèle de déviation locale</h4>
+    <ul>
+      <li>Langue: part de foyers de langue française, le reste en complément.</li>
+      <li>Scolarité: diplôme universitaire, aucun diplôme, le reste en complément.</li>
+      <li>Immigration: part immigrante, le reste en complément.</li>
+      <li>Secteurs d'emploi: agriculture, fabrication, commerce de détail, services
+      professionnels, santé et services sociaux, le reste en complément.</li>
+      <li>Âge, revenu, densité: âge médian, revenu médian des ménages, densité de
+      population (les trois seules grandeurs non compositionnelles).</li>
+      <li>Déviation de la circonscription à l'élection précédente, en coordonnées ILR.</li>
+    </ul>
+    <p>Les groupes compositionnels sont fermés avec une part résiduelle explicite puis transformés en
+    ILR avant d'entrer au modèle. Aucune sélection de variables : tout entre, et le GP atténue de
+    lui-même ce qui ne porte pas de signal. R² multivarié hors échantillon (50% ×15) : 0,44,
+    contre 0,38 pour la régression ridge qu'il remplace.</p>
+    <h4>Incertitude</h4>
+    <p>La simulation Monte Carlo (5 000 tirages) propage quatre sources d'incertitude : (1) la
+    distribution a posteriori de la tendance nationale; (2) un choc systémique commun à
+    toutes les circonscriptions, soit le biais collectif des sondeurs plus la dérive d'ici au scrutin du
+    5 octobre, calibré sur l'écart historique entre les derniers sondages et le résultat réel (2018 et
+    2022); (3) un facteur régional (Montréal / Québec / reste), car les déviations locales sont
+    corrélées dans l'espace; (4) la déviation propre de chaque circonscription, rééchantillonnée des
+    erreurs de prédiction hors échantillon du modèle (élargie pour les circonscriptions où le modèle
+    ne prédit rien). Les intentions affichées sont l'état de l'opinion aujourd'hui; la simulation de
+    sièges porte sur le jour du scrutin.</p>
+    <h4>Limites</h4>
+    <p>Deux validations, chacune sur une seule élection. Sur 2022 (swing seul) : 89% des
+    circonscriptions correctement classées, 78% des courses serrées. Sur 2018 (pipeline complet, test
+    temporel inversé faute d'une troisième élection) : 89% des circonscriptions, 97% des serrées,
+    contre 52% pour une projection sans changement. Le choc systémique est calibré sur deux élections
+    seulement. La réputation d'un candidat en particulier n'est pas modélisée, ni la participation
+    différentielle. Les covariances entre partis dans la tendance ne sont pas modélisées.</p>
+  </details>
+
+  <script type="module" src="dist/dashboard.js"></script>
+</body>
+</html>

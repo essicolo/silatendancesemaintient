@@ -1,0 +1,24 @@
+{
+  "name": "polls-model",
+  "version": "0.1.0",
+  "description": "Quebec/federal poll aggregation model, ported to @tangent.to/ds",
+  "type": "module",
+  "scripts": {
+    "compute": "node tools/compute.mjs",
+    "build:dashboard": "esbuild src/dashboard.js --bundle --platform=browser --format=esm --outfile=dist/dashboard.js --sourcemap",
+    "dev": "esbuild src/dashboard.js --bundle --platform=browser --format=esm --outfile=dist/dashboard.js --sourcemap --watch=forever --servedir=."
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@duckdb/node-api": "^1.5.5-r.4",
+    "@observablehq/plot": "^0.6.17",
+    "@tangent.to/ds": "^0.10.0",
+    "arquero": "^8.0.3",
+    "esbuild": "^0.28.2",
+    "leaflet": "^1.9.4",
+    "linkedom": "^0.18.13"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}

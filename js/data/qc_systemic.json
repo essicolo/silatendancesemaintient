@@ -1,0 +1,24 @@
+{
+  "sigma_industry": 0.14374005632016748,
+  "sigma_daily2": 3.260396354296767e-05,
+  "estimated_from": {
+    "industry": [
+      {
+        "election": "2018-10-01",
+        "n_final_polls": 7,
+        "rms_ilr": 0.1487840269819482
+      },
+      {
+        "election": "2022-10-03",
+        "n_final_polls": 19,
+        "rms_ilr": 0.13851252974689604
+      }
+    ],
+    "drift": {
+      "n_pairs": 2035,
+      "noise_floor_ilr2": 0.0551154690636744,
+      "bins_used": 7
+    },
+    "note": "isotropic ILR; industry RMS over 2 elections -- a thin base, stated as such"
+  }
+}
