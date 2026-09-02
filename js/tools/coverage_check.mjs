@@ -14,10 +14,9 @@
  */
 
 import { readFileSync } from "node:fs";
-import { mva } from "@tangent.to/ds";
-import { HeteroscedasticGP } from "../src/heteroscedasticGP.js";
+import { ml, mva } from "@tangent.to/ds";
 import { pivotPolls, toClosedComposition, sampleSizeWeight } from "../src/compositional.js";
-import { fitTrend } from "../src/gpTrend.js";
+import { ChangepointKernel, fitTrend, toX } from "../src/gpTrend.js";
 
 const { ilr } = mva.composition;
 const Z90 = 1.6449;
@@ -28,7 +27,7 @@ const { polls, partyCodes } = pivotPolls(rows);
 const comp = toClosedComposition(polls, partyCodes);
 const ilrMat = ilr(comp);
 const t0 = polls.reduce((min, p) => (p.pollDate < min ? p.pollDate : min), polls[0].pollDate);
-const x = polls.map((p) => [(new Date(p.pollDate) - new Date(t0)) / 86_400_000]);
+const x = toX(t0, polls.map((p) => p.pollDate));
 
 const w = sampleSizeWeight(polls);
 const wMax = Math.max(...w);
@@ -39,9 +38,10 @@ const noiseShape = relNoise.map((v) => v / relMin);
 console.log(`${polls.length} sondages, ${ilrMat[0].length} coordonnees ILR\n`);
 console.log("hyperparametres retenus par le fit de production :");
 const production = fitTrend(polls, partyCodes);
-production.gps.forEach((gp, c) =>
-  console.log(`  coord ${c}: lengthScale=${gp.chosenHyperparams.lengthScale}, noiseScale=${gp.chosenHyperparams.noiseScale}`)
-);
+production.gps.forEach((gp, c) => {
+  const h = gp.chosenHyperparams;
+  console.log(`  coord ${c}: lengthScale=${h.lengthScale}, noiseScale=${h.noiseScale}, rho=${h.rho}`);
+});
 
 // 5-fold with a fixed shuffle; hyperparams fixed to the production choice
 // (re-selecting per fold would be stricter but 72x more fits).
@@ -59,14 +59,17 @@ console.log("\ncouverture des intervalles a 90% (par coordonnee ILR) :");
 const coordCoverage = [];
 for (let c = 0; c < ilrMat[0].length; c++) {
   const y = ilrMat.map((row) => row[c]);
-  const { lengthScale, noiseScale } = production.gps[c].chosenHyperparams;
+  const { lengthScale, noiseScale, rho } = production.gps[c].chosenHyperparams;
   let inside = 0, total = 0;
 
   for (const test of folds) {
     const testSet = new Set(test);
     const tr = idx.filter((i) => !testSet.has(i));
-    const gp = new HeteroscedasticGP({ kernel: "matern", lengthScale, nu: 1.5, normalizeY: true });
-    gp.fit(tr.map((i) => x[i]), tr.map((i) => y[i]), tr.map((i) => noiseShape[i] * noiseScale));
+    const gp = new ml.GaussianProcessRegressor({
+      kernel: new ChangepointKernel({ lengthScale, rho }),
+      normalizeY: true,
+    });
+    gp.fit(tr.map((i) => x[i]), tr.map((i) => y[i]), { alpha: tr.map((i) => noiseShape[i] * noiseScale) });
     const { mean, std } = gp.predict(test.map((i) => x[i]), { returnStd: true });
 
     // The predictive interval for an OBSERVED poll includes that poll's own

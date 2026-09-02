@@ -8,6 +8,15 @@
  * a GP stay Gaussian, so both enter one closed-form posterior -- regional
  * data is INGESTED by the model, not bolted on as a correction afterward.
  *
+ * Since @tangent.to/ds 0.13 the GP itself is the library's: the aggregation
+ * structure is entirely expressible as a KERNEL over augmented inputs
+ * [day, kind] (kind = national or one region), because the covariance
+ * between any two observations -- national x national, national x regional,
+ * regional x regional -- is a fixed formula in k_g and k_h. So the custom
+ * code here is a Kernel subclass; fitting, factorization, marginal
+ * likelihood and prediction are GaussianProcessRegressor with a
+ * per-observation noise vector (alpha).
+ *
  * Validated on 2022 (Python prototype, model/regional_gp.py): predicting
  * each region's shares at the election from data available then, MAE 3.06pp
  * vs 3.61pp for uniform swing -- with the gain concentrated in the Quebec
@@ -23,76 +32,50 @@
  * them (effective shrinkage 0.07 where the 2022 calibration measured 0.93).
  */
 
-import { mva, core } from "@tangent.to/ds";
+import { ml, mva } from "@tangent.to/ds";
 import { toClosedComposition } from "./compositional.js";
 
 const { ilr } = mva.composition;
-const { cholesky, choleskySolve } = core.linalg;
 
 export const REGIONS = ["MTL", "QC", "REG"];
 const VAR_H_GRID = [0.02, 0.08, 0.2, 0.5];
 const LS_H_GRID = [400, 1000];
 
-function matern32(ta, tb, ls) {
-  const K = [];
-  for (const a of ta) {
-    const row = [];
-    for (const b of tb) {
-      const s = (Math.sqrt(3) * Math.abs(a - b)) / ls;
-      row.push((1 + s) * Math.exp(-s));
-    }
-    K.push(row);
-  }
-  return K;
-}
+// Input-row encoding for the augmented space: [day, kind].
+const KIND_NAT = -1;
+const kindOf = (region) => (region === "nat" ? KIND_NAT : REGIONS.indexOf(region));
 
-class JointGP {
-  constructor(weights, lsG, varG, lsH, varH) {
-    this.w = weights;
+const matern32 = (d, ls) => {
+  const s = (Math.sqrt(3) * Math.abs(d)) / ls;
+  return (1 + s) * Math.exp(-s);
+};
+
+/** Covariance of the aggregated-observation model, as a kernel over
+ * [day, kind] rows. With Kg = varG k_g and Kh = varH k_h:
+ *   nat x nat   : Kg + (sum_r w_r^2) Kh
+ *   nat x reg r : Kg + w_r Kh
+ *   reg r x reg s: Kg + [r == s] Kh
+ */
+class AggregatedRegionalKernel extends ml.Kernel {
+  constructor({ weights, lsG, varG, lsH, varH }) {
+    super();
+    this.weights = weights; // per REGIONS order
     this.lsG = lsG; this.varG = varG; this.lsH = lsH; this.varH = varH;
+    this.wsq = weights.reduce((s, w) => s + w * w, 0);
   }
 
-  _cross(kindsA, tA, kindsB, tB) {
-    const Kg = matern32(tA, tB, this.lsG);
-    const Kh = matern32(tA, tB, this.lsH);
-    const wsq = REGIONS.reduce((s, r) => s + this.w[r] * this.w[r], 0);
-    const C = [];
-    for (let i = 0; i < tA.length; i++) {
-      const row = [];
-      for (let j = 0; j < tB.length; j++) {
-        const g = this.varG * Kg[i][j], h = this.varH * Kh[i][j];
-        const ka = kindsA[i], kb = kindsB[j];
-        if (ka === "nat" && kb === "nat") row.push(g + wsq * h);
-        else if (ka === "nat") row.push(g + this.w[kb] * h);
-        else if (kb === "nat") row.push(g + this.w[ka] * h);
-        else row.push(g + (ka === kb ? h : 0));
-      }
-      C.push(row);
-    }
-    return C;
+  compute(a, b) {
+    const g = this.varG * matern32(a[0] - b[0], this.lsG);
+    const h = this.varH * matern32(a[0] - b[0], this.lsH);
+    const ka = a[1], kb = b[1];
+    if (ka === KIND_NAT && kb === KIND_NAT) return g + this.wsq * h;
+    if (ka === KIND_NAT) return g + this.weights[kb] * h;
+    if (kb === KIND_NAT) return g + this.weights[ka] * h;
+    return g + (ka === kb ? h : 0);
   }
 
-  fit(t, kinds, y, noise) {
-    this.t = t; this.kinds = kinds;
-    this.mean = y.reduce((a, b) => a + b, 0) / y.length;
-    const K = this._cross(kinds, t, kinds, t);
-    for (let i = 0; i < K.length; i++) K[i][i] += noise[i] + 1e-9;
-    this.L = cholesky(core.linalg.toMatrix(K));
-    const centered = y.map((v) => v - this.mean);
-    this.alpha = choleskySolve(this.L, centered);
-    let quad = 0;
-    for (let i = 0; i < y.length; i++) quad += centered[i] * (Array.isArray(this.alpha) ? this.alpha[i] : this.alpha.get(i, 0));
-    let logDet = 0;
-    for (let i = 0; i < y.length; i++) logDet += Math.log(this.L.get(i, i));
-    this.lml = -0.5 * quad - logDet - 0.5 * y.length * Math.log(2 * Math.PI);
-    return this;
-  }
-
-  predictRegion(region, tStar) {
-    const ks = this._cross([region], [tStar], this.kinds, this.t)[0];
-    let m = this.mean;
-    for (let i = 0; i < ks.length; i++) m += ks[i] * (Array.isArray(this.alpha) ? this.alpha[i] : this.alpha.get(i, 0));
-    return m;
+  getParams() {
+    return { weights: this.weights, lsG: this.lsG, varG: this.varG, lsH: this.lsH, varH: this.varH };
   }
 }
 
@@ -126,8 +109,11 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
   const regComp = regionals.length ? toClosedComposition(regionals, partyCodes) : [];
   const regIlr = regionals.length ? ilr(regComp) : [];
 
-  const t = [...nationalPolls.map((p) => day(p.pollDate)), ...regionals.map((p) => day(p.pollDate))];
-  const kinds = [...nationalPolls.map(() => "nat"), ...regionals.map((p) => p.region)];
+  const x = [
+    ...nationalPolls.map((p) => [day(p.pollDate), KIND_NAT]),
+    ...regionals.map((p) => [day(p.pollDate), kindOf(p.region)]),
+  ];
+  const wVec = REGIONS.map((r) => weights[r]);
 
   const k = natIlr[0].length;
   const gps = [];
@@ -145,13 +131,22 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
     let best = null;
     for (const lsH of LS_H_GRID) {
       for (const varH of VAR_H_GRID) {
-        const gp = new JointGP(weights, lengthScale, varG, lsH, varH);
+        // normalizeY would rescale y by its std and leave alpha (raw ILR
+        // variance units) on the wrong scale; the kernel amplitude varG is
+        // already anchored on the data, so only centering is needed, and the
+        // GP handles that itself with normalizeY: false plus a centered y.
+        const gp = new ml.GaussianProcessRegressor({
+          kernel: new AggregatedRegionalKernel({ weights: wVec, lsG: lengthScale, varG, lsH, varH }),
+          normalizeY: false,
+        });
         try {
-          gp.fit(t, kinds, y, noise);
+          gp.fit(x, y.map((v) => v - meanY), { alpha: noise });
         } catch {
           continue;
         }
-        if (!best || gp.lml > best.lml) best = gp;
+        if (!best || gp.logMarginalLikelihood_ > best.lml) {
+          best = { gp, mean: meanY, lml: gp.logMarginalLikelihood_ };
+        }
       }
     }
     gps.push(best);
@@ -162,14 +157,15 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
     predictDeviation(asOf) {
       const tStar = day(asOf);
       const out = {};
+      const predictKind = (gp, kind) => gp.gp.predict([[tStar, kind]])[0] + gp.mean;
       for (const region of REGIONS) {
         const dev = [];
         for (let c = 0; c < k; c++) {
           const gp = gps[c];
           if (!gp) { dev.push(0); continue; }
-          const fr = gp.predictRegion(region, tStar);
+          const fr = predictKind(gp, kindOf(region));
           // National trajectory implied by the same model: vote-weighted mix.
-          const fn = REGIONS.reduce((s, r) => s + weights[r] * gp.predictRegion(r, tStar), 0);
+          const fn = REGIONS.reduce((s, r) => s + weights[r] * predictKind(gp, kindOf(r)), 0);
           dev.push(fr - fn);
         }
         out[region] = dev;

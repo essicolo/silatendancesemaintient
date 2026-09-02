@@ -70,10 +70,11 @@
 - [ ] Le simulateur interactif (façon qc125) n'existe pas.
 
 ### `@tangent.to/ds` — manques rencontrés
-- [ ] Régression multivariée native : `stats.GLM` est à réponse unique, j'ajuste une GLM par coordonnée ILR et j'agrège à la main.
+- [x] **Bruit hétéroscédastique : natif depuis 0.13** (2026-09-02) — `GaussianProcessRegressor` accepte `alpha` en vecteur par observation. Vérifié identique à la sous-classe maison au 1e-6 près (lml, moyenne, écart-type), puis `heteroscedasticGP.js` supprimé. Les noyaux exotiques du projet sont devenus des sous-classes de `ml.Kernel` (`compute(a, b)` suffit) : `ChangepointKernel` (Matérn × ρ^|régime|, `gpTrend.js`) et `AggregatedRegionalKernel` (les trois blocs de covariance du GP conjoint national/régional, `regionalTrend.js`) — toute la tuyauterie GP (Cholesky, vraisemblance, prédiction) vit désormais dans la librairie. Sorties strictement identiques ; couverture CV 91,3 %.
+- [ ] **GP multisortie : toujours absent en 0.13.1** — `fit` réduit `y` en scalaires (un `Y` à 2 colonnes produit silencieusement des prédictions nulles, testé) ; le `MultiOutput` du bundle est celui de `stats.GLM`. On garde un GP par coordonnée ILR. Si un GP multisortie arrive (ICM/LMC), il porterait la covariance inter-partis, la limite en tête de `gpTrend.js`.
 - [ ] Sélection de pénalité par validation croisée (équivalent `RidgeCV`) — écrite à la main dans `ridingModel.js`.
 - [ ] `crossValidate` avec perte multivariée.
-- [ ] `GaussianProcessRegressor` n'accepte qu'un bruit scalaire `alpha` ; le bruit hétéroscédastique nécessite la sous-classe `heteroscedasticGP.js`. Son optimiseur de hyperparamètres suppose aussi ce scalaire, d'où une recherche en grille manuelle dans `gpTrend.js`.
+- [ ] La grille (portée × ρ × échelle de bruit) reste manuelle : l'optimiseur intégré (`optimize: true`) ne couvre ni l'échelle du vecteur `alpha` ni un paramètre discret comme ρ.
 
 ## Leçons méthodologiques (pour ne pas les refaire)
 
