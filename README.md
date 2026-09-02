@@ -23,7 +23,7 @@ Les groupes compositionnels sont fermés avec une part résiduelle explicite pui
 
 ### Incertitude
 La simulation Monte Carlo (5 000 tirages) propage quatre sources d'incertitude : (1) la distribution a posteriori de la tendance nationale; (2) un choc systémique commun à toutes les circonscriptions, soit le biais collectif des sondeurs plus la dérive d'ici au scrutin du 5 octobre, calibré sur l'écart historique entre les derniers sondages et le résultat réel (2018 et 2022); (3) un facteur régional (Montréal / Québec / reste), car les déviations locales sont corrélées dans l'espace; (4) la déviation propre de chaque circonscription, rééchantillonnée des erreurs de prédiction hors échantillon du modèle (élargie pour les circonscriptions où le modèle ne prédit rien). Les intentions affichées sont l'état de l'opinion aujourd'hui; la simulation de sièges porte sur le jour du scrutin.
-Limites
+### Limites
 
 Deux validations, chacune sur une seule élection. Sur 2022 (swing seul) : 89% des circonscriptions correctement classées, 78% des courses serrées. Sur 2018 (pipeline complet, test temporel inversé faute d'une troisième élection) : 89% des circonscriptions, 97% des serrées, contre 52% pour une projection sans changement. Le choc systémique est calibré sur deux élections seulement. La réputation d'un candidat en particulier n'est pas modélisée, ni la participation différentielle. Les covariances entre partis dans la tendance ne sont pas modélisées.
 
