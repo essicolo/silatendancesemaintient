@@ -484,9 +484,14 @@ async function main() {
   const effectsNote = meta.effectsR2 != null
     ? ` · effets locaux R²=${meta.effectsR2.toFixed(2)} sur ${meta.effectsCount} circonscriptions`
     : " · effets locaux indisponibles";
+  // generatedAt is ISO UTC; the audience is Quebec, so show Eastern time
+  // (America/Toronto follows the same DST rules as Montreal).
+  const computedAt = new Intl.DateTimeFormat("fr-CA", {
+    timeZone: "America/Toronto", dateStyle: "short", timeStyle: "short",
+  }).format(new Date(meta.generatedAt));
   status.textContent =
     `${meta.nPolls} sondages · intentions au ${meta.asOf} · simulation pour le scrutin du ${meta.electionDate} · ` +
-    `${meta.nRidings} circonscriptions${effectsNote} · calculé le ${meta.generatedAt.slice(0, 16).replace("T", " ")}`;
+    `${meta.nRidings} circonscriptions${effectsNote} · calculé le ${computedAt} (HE)`;
 
   section("trend-chart", () => {
     // Dots come from the raw poll rows (a cheap pivot, no fitting); the
