@@ -1,6 +1,6 @@
 /**
  * Poll ingestion from Wikipedia's maintained polling tables — Deno/TypeScript
- * port of src/polls/ingest/wiki_polls.py, byte-for-byte on poll_id.
+ * port of the retired Python parser (tag `python-archive`), byte-for-byte on poll_id.
  *
  * The Python original carries the full rationale (provenance, coverage,
  * the one-day date-convention offset that makes this a replacement rather

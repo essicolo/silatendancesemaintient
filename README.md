@@ -22,11 +22,11 @@ chaque paramètre est estimé des données, avec son incertitude, jamais posé
 - `js/ingest/` — la boucle vivante, en TypeScript exécuté par Deno :
   parseur des tableaux de sondages de Wikipédia (CC BY-SA, chaque ligne
   pointant vers la publication d'origine), base DuckDB, exports JSON, veille.
-- `src/polls/` — Python archivé : prototypes de validation et scripts
-  d'estimation ponctuels dont les sorties (paramètres statiques entre
-  élections) vivent dans `js/data/`. La reconstruction complète de la base
-  (recensement, résultats historiques, redécoupage) passe encore par
-  `uv run python -m polls.ingest.run`.
+- Le Python d'origine (prototypes de validation, scripts d'estimation,
+  reconstruction complète de la base : recensement, résultats historiques,
+  redécoupage) est purgé du tronc mais intact sous le tag git
+  `python-archive` — ses sorties, statiques entre élections, vivent dans
+  `js/data/` et `data/riding_names_*.json`.
 - `TODO.md` — journal de bord : décisions, validations, limites assumées.
 
 ## Commandes

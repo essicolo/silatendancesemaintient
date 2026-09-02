@@ -1,6 +1,6 @@
 /**
  * Export the pieces the modelling side needs, as plain JSON — port of
- * src/polls/export_json.py. Kept deliberately dumb (no modelling logic) so
+ * the retired Python exporter (tag `python-archive`). Kept deliberately dumb (no modelling logic) so
  * the projection code does the compositional/GP work itself rather than
  * displaying someone else's transform.
  *

@@ -1,6 +1,6 @@
 /**
  * Poll watch: detect new polls, ingest them, refresh the dashboard — Deno
- * port of src/polls/watch.py, now the production watcher.
+ * port of the retired Python watcher (tag `python-archive`).
  *
  * Designed so that the common case — nothing has changed — costs almost
  * nothing. MediaWiki exposes a page's revision id, so one small API call per

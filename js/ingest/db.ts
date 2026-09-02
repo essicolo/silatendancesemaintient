@@ -1,8 +1,8 @@
 /**
- * DuckDB access for the Deno pipeline — port of src/polls/db/load.py.
- * The schema stays in src/polls/db/schema.sql (language-neutral SQL, one
- * source of truth); this module applies it on connect so a fresh clone
- * bootstraps the same way the Python side did.
+ * DuckDB access for the Deno pipeline (ported from the retired Python
+ * loader, tag `python-archive`). The schema lives beside this module in
+ * schema.sql and is applied on connect, so a fresh clone bootstraps an
+ * empty base by itself.
  */
 
 import { readFileSync } from "node:fs";
@@ -11,7 +11,7 @@ import { DuckDBConnection, DuckDBInstance } from "@duckdb/node-api";
 import type { PollRow, ShareRow } from "./wiki_polls.ts";
 
 export const DB_PATH = new URL("../../data/polls.duckdb", import.meta.url);
-const SCHEMA_PATH = new URL("../../src/polls/db/schema.sql", import.meta.url);
+const SCHEMA_PATH = new URL("./schema.sql", import.meta.url);
 
 export async function connect(): Promise<DuckDBConnection> {
   const inst = await DuckDBInstance.create(fileURLToPath(DB_PATH));
