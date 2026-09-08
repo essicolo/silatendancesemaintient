@@ -23,8 +23,9 @@
  * City region (3.8 vs 5.6), where the PCQ concentration decides seats and
  * where the uniform swing is most wrong.
  *
- * The g-kernel hyperparameters are inherited per coordinate from the
- * national trend fit (gpTrend chosenHyperparams) rather than re-searched;
+ * The g-kernel hyperparameters -- length scale AND campaign clock dilation
+ * -- are inherited per coordinate from the national trend fit (gpTrend
+ * chosenHyperparams) rather than re-searched;
  * only the regional kernel (var_h, ls_h) is selected here, by log marginal
  * likelihood. Regional observation noise is sampling-theory (~3/n), NOT the
  * national fitted scale: the national scale absorbs house scatter across
@@ -34,6 +35,7 @@
 
 import { ml, mva } from "@tangent.to/ds";
 import { toClosedComposition } from "./compositional.js";
+import { toX } from "./gpTrend.js";
 
 const { ilr } = mva.composition;
 
@@ -102,16 +104,26 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
   const regionals = [...byPoll.values()].filter((p) => REGIONS.includes(p.region));
 
   const t0 = nationalPolls.reduce((min, p) => (p.pollDate < min ? p.pollDate : min), nationalPolls[0].pollDate);
-  const day = (d) => (new Date(d) - new Date(t0)) / 86_400_000;
 
   const natComp = toClosedComposition(nationalPolls, partyCodes);
   const natIlr = ilr(natComp);
   const regComp = regionals.length ? toClosedComposition(regionals, partyCodes) : [];
   const regIlr = regionals.length ? ilr(regComp) : [];
 
-  const x = [
-    ...nationalPolls.map((p) => [day(p.pollDate), KIND_NAT]),
-    ...regionals.map((p) => [day(p.pollDate), kindOf(p.region)]),
+  // The joint GP runs on the SAME campaign-dilated clock as the national
+  // trend it inherits its g-kernel from (gpTrend's toX carries [day, regime,
+  // campaignDays]). The dilation factor is per ILR coordinate, so the warped
+  // time axis is built inside the coordinate loop; both g and h_r see the
+  // warped axis -- regional dynamics accelerate in a campaign too, and a
+  // mixed clock would make the inherited length scale mean two different
+  // things in the same covariance.
+  const baseRows = toX(t0, [
+    ...nationalPolls.map((p) => p.pollDate),
+    ...regionals.map((p) => p.pollDate),
+  ]);
+  const kinds = [
+    ...nationalPolls.map(() => KIND_NAT),
+    ...regionals.map((p) => kindOf(p.region)),
   ];
   const wVec = REGIONS.map((r) => weights[r]);
 
@@ -122,7 +134,8 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
     // Empirical variance of the national series anchors the g amplitude.
     const meanY = y.reduce((a, b) => a + b, 0) / y.length;
     const varG = Math.max(natIlr.map((r) => r[c]).reduce((s, v) => s + (v - meanY) ** 2, 0) / natIlr.length, 1e-4);
-    const { lengthScale, noiseScale } = natHyper[c];
+    const { lengthScale, noiseScale, dilation = 1 } = natHyper[c];
+    const x = baseRows.map(([d, , camp], i) => [d + (dilation - 1) * camp, kinds[i]]);
     const noise = [
       ...nationalPolls.map((p) => noiseScale / Math.max(p.sampleSize > 0 ? p.sampleSize / 1000 : 1, 0.05)),
       ...regionals.map((p) => 3.0 / Math.max(p.sampleSize ?? 800, 100)),
@@ -145,7 +158,7 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
           continue;
         }
         if (!best || gp.logMarginalLikelihood_ > best.lml) {
-          best = { gp, mean: meanY, lml: gp.logMarginalLikelihood_ };
+          best = { gp, mean: meanY, lml: gp.logMarginalLikelihood_, dilation };
         }
       }
     }
@@ -155,9 +168,10 @@ export function fitRegionalTrend(nationalPolls, regionalRows, partyCodes, natHyp
   return {
     nRegionalPolls: regionals.length,
     predictDeviation(asOf) {
-      const tStar = day(asOf);
+      const [dStar, , campStar] = toX(t0, [asOf])[0];
       const out = {};
-      const predictKind = (gp, kind) => gp.gp.predict([[tStar, kind]])[0] + gp.mean;
+      const predictKind = (gp, kind) =>
+        gp.gp.predict([[dStar + (gp.dilation - 1) * campStar, kind]])[0] + gp.mean;
       for (const region of REGIONS) {
         const dev = [];
         for (let c = 0; c < k; c++) {
