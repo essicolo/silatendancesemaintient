@@ -194,7 +194,7 @@ function renderTrendChart(fullSeries, polls, partyCodes) {
     btn.onclick = () => draw(range);
     controls.appendChild(btn);
   }
-  draw(RANGES.find((r) => r.days === 365)); // default: last year
+  draw(RANGES.find((r) => r.since === "2022-10-03")); // default: since the 2022 election
 }
 
 // ---- Riding map (Leaflet: pan/zoom, click-to-select) ------------------------
