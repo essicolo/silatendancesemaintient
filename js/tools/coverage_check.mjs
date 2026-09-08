@@ -40,7 +40,7 @@ console.log("hyperparametres retenus par le fit de production :");
 const production = fitTrend(polls, partyCodes);
 production.gps.forEach((gp, c) => {
   const h = gp.chosenHyperparams;
-  console.log(`  coord ${c}: lengthScale=${h.lengthScale}, noiseScale=${h.noiseScale}, rho=${h.rho}`);
+  console.log(`  coord ${c}: lengthScale=${h.lengthScale}, noiseScale=${h.noiseScale}, rho=${h.rho}, dilation=${h.dilation}`);
 });
 
 // 5-fold with a fixed shuffle; hyperparams fixed to the production choice
@@ -59,14 +59,14 @@ console.log("\ncouverture des intervalles a 90% (par coordonnee ILR) :");
 const coordCoverage = [];
 for (let c = 0; c < ilrMat[0].length; c++) {
   const y = ilrMat.map((row) => row[c]);
-  const { lengthScale, noiseScale, rho } = production.gps[c].chosenHyperparams;
+  const { lengthScale, noiseScale, rho, dilation } = production.gps[c].chosenHyperparams;
   let inside = 0, total = 0;
 
   for (const test of folds) {
     const testSet = new Set(test);
     const tr = idx.filter((i) => !testSet.has(i));
     const gp = new ml.GaussianProcessRegressor({
-      kernel: new ChangepointKernel({ lengthScale, rho }),
+      kernel: new ChangepointKernel({ lengthScale, rho, dilation }),
       normalizeY: true,
     });
     gp.fit(tr.map((i) => x[i]), tr.map((i) => y[i]), { alpha: tr.map((i) => noiseShape[i] * noiseScale) });

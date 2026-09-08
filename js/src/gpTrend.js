@@ -47,39 +47,81 @@ function daysSince(t0, date) {
 const CHANGEPOINTS = ["2026-01-14", "2026-04-12"];
 const RHO_GRID = [0.15, 0.4, 0.7, 1.0];
 
+// Opinion moves faster during a campaign than the twelve-year average the
+// length scale is fitted on -- with 1500-day scales, six consecutive CAQ
+// residuals came out one-signed (~+1.7pp) in the first two 2026 campaign
+// weeks. The fix is a change of CLOCK, not of regime: inside a campaign
+// window one calendar day counts as `dilation` days of kernel time, which
+// shortens the effective length scale by that factor there and only there.
+// Unlike a changepoint this does not decorrelate the campaign from the
+// pre-campaign -- it accelerates it, which is the right shape. The dilation
+// factor is shared across ALL campaign windows, so it is identified mostly
+// by the three PAST campaigns in the training data, not by the current one;
+// dilation = 1 is on the grid and recovers the undilated model, so the
+// evidence decides. Windows are writ drop -> election day; 2026's writ date
+// is approximate (Wikipedia does not carry it yet), which is immaterial:
+// between two dates inside the campaign only elapsed campaign time matters.
+const CAMPAIGNS = [
+  ["2014-03-05", "2014-04-07"],
+  ["2018-08-23", "2018-10-01"],
+  ["2022-08-28", "2022-10-03"],
+  ["2026-08-26", "2026-10-05"],
+];
+// The grid ends at 16 even though some coordinates choose it: inside a
+// campaign only the EFFECTIVE scale lengthScale/dilation is identified, so
+// past 8 the likelihood slides along a (lengthScale x dilation) ridge --
+// extending the grid moves the pair (680x8 -> 1000x16) without moving the
+// posterior (nowcast stable to 0.1pp). The boundary-maximum rule is about a
+// clipped optimum; a ridge endpoint is not one.
+const DILATION_GRID = [1, 2, 4, 8, 16];
+
 function regimeOf(day, cpDays) {
   let r = 0;
   for (const c of cpDays) if (day >= c) r++;
   return r;
 }
 
-/** Matérn-3/2 over time multiplied by rho^|regime difference|. Input rows are
- * [day, regime] -- the regime index is data, precomputed per observation, so
- * the kernel itself stays a pure function of two rows, which is all the
- * library's Kernel contract asks for. rho = 1 is exactly stationary. */
+/** Cumulative campaign days elapsed before `day`. */
+function campaignDaysOf(day, windows) {
+  let c = 0;
+  for (const [a, b] of windows) c += Math.max(0, Math.min(day, b) - a);
+  return c;
+}
+
+/** Matérn-3/2 over campaign-dilated time, multiplied by rho^|regime
+ * difference|. Input rows are [day, regime, campaignDays] -- regime index and
+ * cumulative campaign days are data, precomputed per observation, so the
+ * kernel stays a pure function of two rows, which is all the library's
+ * Kernel contract asks for. The dilated coordinate is w(t) = t +
+ * (dilation-1)*c(t), a monotone 1-D warp, so the kernel remains a valid
+ * Matérn on a transformed axis (PSD by construction). rho = 1 and
+ * dilation = 1 recover the plain stationary Matérn exactly. */
 export class ChangepointKernel extends ml.Kernel {
-  constructor({ lengthScale = 100, rho = 1 } = {}) {
+  constructor({ lengthScale = 100, rho = 1, dilation = 1 } = {}) {
     super();
     this.lengthScale = lengthScale;
     this.rho = rho;
+    this.dilation = dilation;
   }
 
   compute(a, b) {
-    const s = (Math.sqrt(3) * Math.abs(a[0] - b[0])) / this.lengthScale;
+    const dt = (a[0] - b[0]) + (this.dilation - 1) * (a[2] - b[2]);
+    const s = (Math.sqrt(3) * Math.abs(dt)) / this.lengthScale;
     return (1 + s) * Math.exp(-s) * Math.pow(this.rho, Math.abs(a[1] - b[1]));
   }
 
   getParams() {
-    return { lengthScale: this.lengthScale, rho: this.rho };
+    return { lengthScale: this.lengthScale, rho: this.rho, dilation: this.dilation };
   }
 }
 
-/** [day, regime] rows for the GPs, from ISO dates. */
+/** [day, regime, campaignDays] rows for the GPs, from ISO dates. */
 export function toX(t0, dates) {
   const cpDays = CHANGEPOINTS.map((d) => daysSince(t0, d));
+  const windows = CAMPAIGNS.map(([a, b]) => [daysSince(t0, a), daysSince(t0, b)]);
   return dates.map((d) => {
     const day = daysSince(t0, d);
-    return [day, regimeOf(day, cpDays)];
+    return [day, regimeOf(day, cpDays), campaignDaysOf(day, windows)];
   });
 }
 
@@ -113,9 +155,9 @@ export function fitTrend(polls, partyCodes) {
   const LENGTH_SCALE_CANDIDATES = [10, 20, 30, 50, 75, 110, 160, 230, 330, 470, 680, 1000, 1500, 2200];
   const NOISE_SCALE_CANDIDATES = [0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8];
 
-  const fitOne = (y, lengthScale, rho, noiseScale) => {
+  const fitOne = (y, lengthScale, rho, dilation, noiseScale) => {
     const gp = new ml.GaussianProcessRegressor({
-      kernel: new ChangepointKernel({ lengthScale, rho }),
+      kernel: new ChangepointKernel({ lengthScale, rho, dilation }),
       normalizeY: true,
     });
     gp.fit(x, y, { alpha: relNoise.map((v) => v * noiseScale) });
@@ -126,11 +168,12 @@ export function fitTrend(polls, partyCodes) {
   for (let coord = 0; coord < ilrMat[0].length; coord++) {
     const y = ilrMat.map((row) => row[coord]);
 
-    // Stage 1: stationary grid (rho = 1) over (lengthScale, noiseScale).
+    // Stage 1: stationary grid (rho = 1, dilation = 1) over
+    // (lengthScale, noiseScale).
     let stat = null;
     for (const lengthScale of LENGTH_SCALE_CANDIDATES) {
       for (const noiseScale of NOISE_SCALE_CANDIDATES) {
-        const gp = fitOne(y, lengthScale, 1, noiseScale);
+        const gp = fitOne(y, lengthScale, 1, 1, noiseScale);
         if (!stat || gp.logMarginalLikelihood_ > stat.lml) {
           stat = { lml: gp.logMarginalLikelihood_, lengthScale, noiseScale };
         }
@@ -145,18 +188,23 @@ export function fitTrend(polls, partyCodes) {
     // implementation so marginal likelihoods are comparable; rho = 1 IS the
     // stationary model, so keeping it is always on the table. Affordable
     // because this runs at build time (compute.mjs), not per visitor.
+    // Dilation joins the same joint grid: it interacts with the length scale
+    // the same way the changepoints do (a dilated campaign makes a long
+    // smooth base scale admissible again).
     let best = null;
     for (const lengthScale of LENGTH_SCALE_CANDIDATES) {
       for (const rho of RHO_GRID) {
-        let gp;
-        try {
-          gp = fitOne(y, lengthScale, rho, stat.noiseScale);
-        } catch {
-          continue;
-        }
-        if (!best || gp.logMarginalLikelihood_ > best.logMarginalLikelihood_) {
-          best = gp;
-          best.chosenHyperparams = { lengthScale, noiseScale: stat.noiseScale, rho };
+        for (const dilation of DILATION_GRID) {
+          let gp;
+          try {
+            gp = fitOne(y, lengthScale, rho, dilation, stat.noiseScale);
+          } catch {
+            continue;
+          }
+          if (!best || gp.logMarginalLikelihood_ > best.logMarginalLikelihood_) {
+            best = gp;
+            best.chosenHyperparams = { lengthScale, noiseScale: stat.noiseScale, rho, dilation };
+          }
         }
       }
     }
