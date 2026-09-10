@@ -66,6 +66,8 @@ const registry = {
   watchlistRowsByCode: new Map(),
   leafletMap: null,
   defaultStyleByCode: new Map(),
+  tileByCode: new Map(),
+  tileSelFrame: null,
 };
 
 function selectRiding(code, { zoom = true } = {}) {
@@ -88,7 +90,21 @@ function selectRiding(code, { zoom = true } = {}) {
     selectedLayer
       .bindPopup(`<strong>${name}</strong><br>${entry.winner} ${(entry.shares[entry.winner] * 100).toFixed(0)}%`)
       .openPopup();
-    if (zoom && registry.leafletMap) registry.leafletMap.fitBounds(selectedLayer.getBounds(), { maxZoom: 9 });
+    const geoVisible = !document.getElementById("riding-map")?.hidden;
+    if (zoom && geoVisible && registry.leafletMap) {
+      registry.leafletMap.fitBounds(selectedLayer.getBounds(), { maxZoom: 9 });
+    }
+  }
+
+  // Tile cartogram: move the selection frame onto the chosen tile.
+  const tile = registry.tileByCode.get(code);
+  if (tile && registry.tileSelFrame) {
+    const f = registry.tileSelFrame;
+    f.setAttribute("x", tile.getAttribute("x"));
+    f.setAttribute("y", tile.getAttribute("y"));
+    f.setAttribute("width", tile.getAttribute("width"));
+    f.setAttribute("height", tile.getAttribute("height"));
+    f.removeAttribute("hidden");
   }
 
   // Watchlist: highlight the matching row (if it's in the top-N list) and
@@ -171,10 +187,26 @@ function renderTrendChart(fullSeries, polls, partyCodes) {
       for (const party of partyCodes) points.push({ date: new Date(row.date), party, ...row[party] });
     }
 
+    // End-of-line labels: party name + last predicted share, right of the
+    // last point. Labels whose values are close would overprint (LIB and CAQ
+    // are 1pt apart), so the y positions are relaxed apart with a minimum
+    // gap while the leader line still ends at the true value.
+    const last = series.at(-1);
+    const endLabels = partyCodes
+      .filter((p) => last?.[p])
+      .map((p) => ({ party: p, value: last[p].mean, label: `${p} ${(last[p].mean * 100).toFixed(1)}%` }))
+      .sort((a, b) => b.value - a.value);
+    const MIN_GAP = 0.022; // in share units, ~9px at this height
+    endLabels.forEach((d, i) => { d.y = d.value; });
+    for (let i = 1; i < endLabels.length; i++) {
+      if (endLabels[i - 1].y - endLabels[i].y < MIN_GAP) endLabels[i].y = endLabels[i - 1].y - MIN_GAP;
+    }
+
     const plot = Plot.plot({
       width: container.clientWidth || 900,
       height: 420,
       marginLeft: 55,
+      marginRight: 78,
       x: { label: "Date" },
       y: { label: "Intention de vote", percent: true, grid: true },
       color: colorScale(partyCodes),
@@ -182,19 +214,133 @@ function renderTrendChart(fullSeries, polls, partyCodes) {
         Plot.areaY(points, { x: "date", y1: "p05", y2: "p95", fill: "party", fillOpacity: 0.12 }),
         Plot.dot(dots, { x: "date", y: "share", fill: "party", r: 2.5, fillOpacity: 0.55, title: (d) => `${d.firm}\n${d.party}: ${(d.share * 100).toFixed(1)}%` }),
         Plot.lineY(points, { x: "date", y: "mean", stroke: "party", strokeWidth: 2.5, z: "party" }),
+        Plot.text(endLabels, {
+          x: () => new Date(last.date), y: "y", text: "label", fill: "party",
+          dx: 8, textAnchor: "start", fontWeight: 600, fontSize: 12,
+        }),
+        // Hover: nearest trend point, all parties' values at that date.
+        Plot.ruleX(points, Plot.pointerX({ x: "date", stroke: "#bbb" })),
+        Plot.tip(points, Plot.pointerX({
+          x: "date", y: "mean",
+          title: (d) => {
+            const row = series.find((r) => +new Date(r.date) === +d.date);
+            const at = d.date.toISOString().slice(0, 10);
+            const lines = partyCodes
+              .filter((p) => row?.[p])
+              .sort((a, b) => row[b].mean - row[a].mean)
+              .map((p) => `${p} : ${(row[p].mean * 100).toFixed(1)}%`);
+            return [at, ...lines].join("\n");
+          },
+        })),
         Plot.ruleY([0]),
       ],
     });
     chartHost.appendChild(plot);
   }
 
+  const buttons = [];
   for (const range of RANGES) {
     const btn = document.createElement("button");
     btn.textContent = range.label;
-    btn.onclick = () => draw(range);
+    btn.onclick = () => {
+      buttons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      draw(range);
+    };
+    buttons.push(btn);
     controls.appendChild(btn);
   }
-  draw(RANGES.find((r) => r.since === "2022-10-03")); // default: since the 2022 election
+  // Default: since the 2022 election -- shown as ALREADY PRESSED, since a
+  // control whose state is invisible reads as "nothing selected".
+  const defaultRange = RANGES.find((r) => r.since === "2022-10-03");
+  buttons[RANGES.indexOf(defaultRange)].classList.add("active");
+  draw(defaultRange);
+}
+
+// ---- Tile cartogram ---------------------------------------------------------
+// US-state-grid style: one equal-size tile per riding (layout precomputed in
+// qc_tile_layout.json from rank-normalised centroids). Equal tiles fix the
+// choropleth's central lie -- 27 island-of-Montreal ridings vanishing into
+// 0.1% of the pixels -- and make CLOSE RACES representable: the fill is the
+// favourite (opacity = its win probability across the simulation draws), and
+// when the race is close the tile's BORDER takes the runner-up's colour, a
+// mark only legible because every tile is big and uniform.
+
+const CLOSE_RACE_P = 0.75; // favourite below this = show the runner-up border
+
+function renderTileMap(layout, winProbs, ridingForecast) {
+  const host = document.getElementById("tile-map");
+  host.innerHTML = "";
+  const CELL = 64, PAD = 3;
+  const cols = 1 + Math.max(...Object.values(layout).map((t) => t.col));
+  const rows = 1 + Math.max(...Object.values(layout).map((t) => t.row));
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", `0 0 ${cols * CELL} ${rows * CELL}`);
+
+  for (const [code, t] of Object.entries(layout)) {
+    const probs = winProbs?.[code];
+    const ranked = probs
+      ? Object.entries(probs).sort((a, b) => b[1] - a[1])
+      : [[ridingForecast.get(code)?.winner ?? "AUTRES", 1]];
+    const [fav, pFav] = ranked[0];
+    const runner = ranked[1]?.[0];
+    const close = probs && pFav < CLOSE_RACE_P && runner;
+
+    const g = document.createElementNS(svg.namespaceURI, "g");
+    const rect = document.createElementNS(svg.namespaceURI, "rect");
+    rect.setAttribute("class", "tile");
+    rect.setAttribute("x", t.col * CELL + PAD);
+    rect.setAttribute("y", t.row * CELL + PAD);
+    rect.setAttribute("width", CELL - 2 * PAD);
+    rect.setAttribute("height", CELL - 2 * PAD);
+    rect.setAttribute("rx", 4);
+    rect.setAttribute("fill", PARTY_COLORS[fav] ?? "#ccc");
+    // Opacity carries certainty: a 52/48 race must not look like 90/10.
+    rect.setAttribute("fill-opacity", (0.25 + 0.7 * pFav).toFixed(2));
+    rect.setAttribute("stroke", close ? PARTY_COLORS[runner] ?? "#999" : "#ddd");
+    rect.setAttribute("stroke-width", close ? 4 : 1);
+    const title = document.createElementNS(svg.namespaceURI, "title");
+    title.textContent = probs
+      ? `${t.name}\n${ranked.slice(0, 3).filter(([, p]) => p >= 0.005)
+        .map(([p, v]) => `${p} : ${(v * 100).toFixed(0)}% de chances`).join("\n")}`
+      : t.name;
+    rect.appendChild(title);
+    rect.addEventListener("click", () => selectRiding(code, { zoom: false }));
+    registry.tileByCode.set(code, rect);
+    g.appendChild(rect);
+
+    const label = document.createElementNS(svg.namespaceURI, "text");
+    label.setAttribute("x", t.col * CELL + CELL / 2);
+    label.setAttribute("y", t.row * CELL + CELL / 2 + 3);
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("font-size", "10");
+    label.setAttribute("fill", pFav > 0.6 ? "#fff" : "#222");
+    label.textContent = t.abbr;
+    g.appendChild(label);
+    svg.appendChild(g);
+  }
+
+  // Selection frame: one reusable rect moved onto the selected tile.
+  const sel = document.createElementNS(svg.namespaceURI, "rect");
+  sel.setAttribute("fill", "none");
+  sel.setAttribute("stroke", "#000");
+  sel.setAttribute("stroke-width", 3.5);
+  sel.setAttribute("rx", 4);
+  sel.setAttribute("pointer-events", "none");
+  sel.setAttribute("hidden", "");
+  svg.appendChild(sel);
+  registry.tileSelFrame = sel;
+
+  host.appendChild(svg);
+
+  const note = document.createElement("p");
+  note.className = "note";
+  note.textContent =
+    "Chaque tuile est une circonscription, à taille égale (Montréal cesse de disparaître). " +
+    "Couleur : parti favori; intensité : sa probabilité de victoire sur 5 000 simulations. " +
+    `Contour coloré : course serrée (favori sous ${Math.round(CLOSE_RACE_P * 100)}%), aux couleurs du poursuivant. ` +
+    "La somme des probabilités de victoire d'un parti est son espérance de sièges — la seule décomposition par circonscription qui somme à 127.";
+  host.appendChild(note);
 }
 
 // ---- Riding map (Leaflet: pan/zoom, click-to-select) ------------------------
@@ -463,11 +609,12 @@ async function main() {
   // code is identical -- computeProjection.js, same library -- it just runs
   // in Node at build time instead of in every visitor's browser. Page load
   // went from ~20s of GP fitting to rendering a JSON.
-  const [projection, pollRows, geojson, leaders] = await Promise.all([
+  const [projection, pollRows, geojson, leaders, tileLayout] = await Promise.all([
     loadJSON("data/qc_projection.json"),
     loadJSON("data/qc_national_polls.json"),
     loadJSON("data/qc_ridings_2026.geojson"),
     loadJSON("data/qc_leaders.json"),
+    loadJSON("data/qc_tile_layout.json"),
   ]);
 
   const { meta, partyCodes, trendSeries, totalSeats } = projection;
@@ -500,7 +647,23 @@ async function main() {
     renderTrendChart(trendSeries, polls, partyCodes);
   });
 
+  section("tile-map", () => renderTileMap(tileLayout, projection.ridingWinProbs, ridingForecast));
   section("riding-map", () => renderMap(geojson, ridingForecast));
+
+  // Tiles by default; the geographic map stays one click away. Leaflet is
+  // initialised while hidden, so give it a size recompute when revealed.
+  const btnTiles = document.getElementById("btn-tiles");
+  const btnGeo = document.getElementById("btn-geo");
+  const setMode = (tiles) => {
+    document.getElementById("tile-map").hidden = !tiles;
+    document.getElementById("riding-map").hidden = tiles;
+    btnTiles.classList.toggle("active", tiles);
+    btnGeo.classList.toggle("active", !tiles);
+    if (!tiles && registry.leafletMap) setTimeout(() => registry.leafletMap.invalidateSize(), 0);
+  };
+  btnTiles.onclick = () => setMode(true);
+  btnGeo.onclick = () => setMode(false);
+  setMode(true);
   section("watchlist", () => renderWatchlist(ridingForecast, partyCodes));
   section("leader-ridings", () => renderLeaderRidings(leaders, partyCodes));
   section("seat-bar", () =>

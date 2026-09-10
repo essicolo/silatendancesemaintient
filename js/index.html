@@ -58,6 +58,11 @@
       font-size: 0.85rem;
     }
     .range-controls button:hover { background: var(--ink); color: var(--paper); }
+    .range-controls button.active { background: var(--ink); color: var(--paper); }
+
+    #tile-map svg { width: 100%; height: auto; display: block; }
+    #tile-map .tile { cursor: pointer; }
+    #tile-map text { pointer-events: none; font-family: inherit; }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
     th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--line); }
@@ -96,7 +101,14 @@
   </div>
 
   <div class="row explore">
-    <section><h2>Projection par circonscription (carte 2026)</h2><div id="riding-map"></div></section>
+    <section><h2>Projection par circonscription (carte 2026)</h2>
+      <div class="range-controls" id="map-mode">
+        <button id="btn-tiles">Tuiles</button>
+        <button id="btn-geo">Carte géographique</button>
+      </div>
+      <div id="tile-map"></div>
+      <div id="riding-map" hidden></div>
+    </section>
     <div class="side">
       <section><h2>Circonscription sélectionnée</h2><div id="riding-detail"></div></section>
       <section><h2>Circonscriptions les plus serrées</h2><div id="watchlist"></div>
@@ -158,7 +170,13 @@
     le point de départ de la projection, jamais le résultat 2022 affiché. S'ajoute une déviation
     locale prédite par un processus gaussien multivarié (noyau Matérn, un GP par
     coordonnée ILR, hyperparamètres par vraisemblance marginale ré-évaluée dans chaque pli de
-    validation).</p>
+    validation). La carte par tuiles donne à chaque circonscription une case de taille égale
+    (positions dérivées des centroïdes, coordonnées en rangs pour que Montréal reste lisible);
+    la couleur est le parti favori, l'intensité sa probabilité de victoire comptée sur les
+    5 000 simulations, et un contour aux couleurs du poursuivant signale une course serrée
+    (favori sous 75%). La somme des probabilités de victoire d'un parti égale son espérance
+    de sièges et ces espérances somment à 127 — la seule décomposition par circonscription
+    qui soit additive.</p>
     <h4>Variables du modèle de déviation locale</h4>
     <ul>
       <li>Langue: part de foyers de langue française, le reste en complément.</li>

@@ -258,6 +258,9 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
     // sums to the house size; unlike pointCounts it centres the simulated
     // OUTCOMES rather than the model inputs.
     medoidCounts: medoidDraw(simulation.draws, partyCodes),
+    // P(victory) per riding per party, tallied over the draws. Column sums
+    // are exact expected seats, the one additive per-riding decomposition.
+    ridingWinProbs: simulation.winProbs,
     totalSeats: simulation.totalSeats,
     scenarios: governmentScenarios(simulation.draws, simulation.totalSeats, partyCodes),
   };

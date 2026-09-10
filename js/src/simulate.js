@@ -145,6 +145,11 @@ export function simulateSeatCounts(
     ? Math.sqrt(systemic.sigmaIndustry ** 2 + (systemic.sigmaDaily2 ?? 0) * Math.max(0, systemic.daysToElection ?? 0))
     : 0;
 
+  // Per-riding win tally across draws. Its column sums are exact expected
+  // seats (sum over ridings of P(win) = E[seats], by linearity), so this is
+  // the one per-riding decomposition that adds up across the province.
+  const winTally = ridings.map(() => new Array(partyCodes.length).fill(0));
+
   const draws = provinceDraws.map((draw) => {
     const provDrawIlr = ilrRows([partyCodes.map((p) => draw[p])])[0];
     const delta = provDrawIlr.map((v, j) => v - provBaseIlr[j]);
@@ -170,15 +175,23 @@ export function simulateSeatCounts(
 
     const shares = ilrInv(shifted);
     const counts = Object.fromEntries(partyCodes.map((p) => [p, 0]));
-    for (const row of shares) {
+    shares.forEach((row, i) => {
       let best = 0;
       for (let j = 1; j < row.length; j++) if (row[j] > row[best]) best = j;
       counts[partyCodes[best]]++;
-    }
+      winTally[i][best]++;
+    });
     return counts;
   });
 
-  return { draws, totalSeats: ridings.length };
+  const winProbs = Object.fromEntries(
+    ridings.map((r, i) => [
+      String(r),
+      Object.fromEntries(partyCodes.map((p, j) => [p, winTally[i][j] / draws.length])),
+    ]),
+  );
+
+  return { draws, totalSeats: ridings.length, winProbs };
 }
 
 /**
