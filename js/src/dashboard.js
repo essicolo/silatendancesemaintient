@@ -349,7 +349,7 @@ function renderLeaderRidings(leaders, partyCodes) {
 // point estimate hides exactly what matters here: how wide the plausible
 // range is and how much of it sits above the majority line.
 
-function renderSeatDistributions(distributions, totalSeats, partyCodes, pointCounts) {
+function renderSeatDistributions(distributions, totalSeats, partyCodes, medoidCounts) {
   const host = document.getElementById("seat-bar");
   host.innerHTML = "";
   const threshold = Math.floor(totalSeats / 2) + 1;
@@ -373,13 +373,13 @@ function renderSeatDistributions(distributions, totalSeats, partyCodes, pointCou
       Plot.ruleX([threshold], { stroke: "#000", strokeDasharray: "3,3" }),
       Plot.areaY(data, { x: "seats", y: "height", fy: "party", fill: "party", fillOpacity: 0.5, curve: "step" }),
       Plot.lineY(data, { x: "seats", y: "height", fy: "party", stroke: "party", strokeWidth: 1.5, curve: "step" }),
-      // Two numbers, both needed. The POINT count matches the map and sums
-      // to the house size -- but for a party sitting narrowly second in many
-      // ridings it is systematically the floor (every 50.1/49.9 falls against
-      // them: CAQ showed 3 while its simulated MEDIAN was 11). The median
-      // shows where the distribution actually sits; medians alone don't sum
-      // to 127, which is why the point count leads.
-      Plot.text(ordered.map((p) => ({ party: p, label: `${pointCounts[p] ?? 0} · méd ${Math.round(distributions[p].p50)} [${distributions[p].p05}–${distributions[p].p95}]` })),
+      // The headline is the MEDOID: the simulated draw closest (mean L1) to
+      // all others -- the most typical JOINT scenario. Per-party medians are
+      // not jointly attainable (they don't sum to the house size), and the
+      // central point projection floors any party sitting narrowly second in
+      // many ridings (CAQ showed 3 while its simulated median was 11). The
+      // medoid is an actual draw: coherent across parties, sums to 127.
+      Plot.text(ordered.map((p) => ({ party: p, label: `${medoidCounts[p] ?? 0} [${distributions[p].p05}–${distributions[p].p95}]` })),
         { fy: "party", x: totalSeats, y: 0.5, text: "label", textAnchor: "end", fontSize: 11, fill: "#333" }),
     ],
   });
@@ -388,10 +388,10 @@ function renderSeatDistributions(distributions, totalSeats, partyCodes, pointCou
   const note = document.createElement("p");
   note.className = "note";
   note.textContent =
-    `Trait pointillé : seuil de majorité (${threshold} sièges). À droite : projection centrale ` +
-    `(identique à la carte, somme à ${totalSeats}), médiane simulée et intervalle 90%. Quand un parti ` +
-    `est deuxième de peu dans beaucoup de courses, la projection centrale est son plancher — la médiane dit ` +
-    `où la distribution se tient vraiment.`;
+    `Trait pointillé : seuil de majorité (${threshold} sièges). À droite : le scénario simulé le plus ` +
+    `typique (le tirage le plus proche de tous les autres — cohérent entre partis, somme à ${totalSeats}) ` +
+    `et l'intervalle à 90% de chaque parti. La carte montre le scénario central (toutes les sources ` +
+    `d'incertitude à leur moyenne), qui peut s'en écarter dans les courses serrées.`;
   host.appendChild(note);
 }
 
@@ -504,7 +504,8 @@ async function main() {
   section("watchlist", () => renderWatchlist(ridingForecast, partyCodes));
   section("leader-ridings", () => renderLeaderRidings(leaders, partyCodes));
   section("seat-bar", () =>
-    renderSeatDistributions(projection.seatDistributions, totalSeats, partyCodes, projection.pointCounts));
+    renderSeatDistributions(projection.seatDistributions, totalSeats, partyCodes,
+      projection.medoidCounts ?? projection.pointCounts));
   section("government-outcomes", () =>
     renderGovernmentScenarios(projection.scenarios, totalSeats, partyCodes));
 

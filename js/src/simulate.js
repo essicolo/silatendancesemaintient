@@ -181,6 +181,29 @@ export function simulateSeatCounts(
   return { draws, totalSeats: ridings.length };
 }
 
+/**
+ * The medoid draw: the simulated scenario minimising the mean L1 distance in
+ * seat space to every other draw -- the multivariate "most typical" outcome.
+ * Component-wise medians are NOT jointly attainable (they need not sum to
+ * the house size, since no draw realises every marginal median at once), and
+ * the joint MODE is not estimable from a few thousand draws in 6 dimensions
+ * (nearly every seat vector is unique). The medoid is the robust stand-in:
+ * an ACTUAL draw, coherent across parties, summing to the house size by
+ * construction. O(n^2) in the number of draws; fine at build time.
+ */
+export function medoidDraw(draws, partyCodes) {
+  const M = draws.map((d) => partyCodes.map((p) => d[p]));
+  let best = 0, bestSum = Infinity;
+  for (let i = 0; i < M.length; i++) {
+    let s = 0;
+    for (let j = 0; j < M.length; j++) {
+      for (let k = 0; k < partyCodes.length; k++) s += Math.abs(M[i][k] - M[j][k]);
+    }
+    if (s < bestSum) { bestSum = s; best = i; }
+  }
+  return { ...draws[best] };
+}
+
 /** Marginal seat distribution per party, for the posterior histograms. */
 export function seatDistributions(draws, partyCodes) {
   const out = {};

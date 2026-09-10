@@ -21,7 +21,7 @@ import {
   applyOpenSeatPenalty,
   applyCompositionFactor,
 } from "./swing.js";
-import { simulateSeatCounts, seatDistributions, governmentScenarios } from "./simulate.js";
+import { simulateSeatCounts, seatDistributions, governmentScenarios, medoidDraw } from "./simulate.js";
 import { fitRegionalTrend, REGIONS } from "./regionalTrend.js";
 import { residualIlr, ilrMatrix } from "./ridingEffects.js";
 import { trainRidingEffects, predictRidingEffects } from "./ridingProjection.js";
@@ -253,6 +253,11 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
     ),
     seatDistributions: seatDistributions(simulation.draws, partyCodes),
     pointCounts,
+    // The most TYPICAL joint scenario: the draw minimising mean L1 distance
+    // to all others. Unlike per-party medians it is jointly coherent and
+    // sums to the house size; unlike pointCounts it centres the simulated
+    // OUTCOMES rather than the model inputs.
+    medoidCounts: medoidDraw(simulation.draws, partyCodes),
     totalSeats: simulation.totalSeats,
     scenarios: governmentScenarios(simulation.draws, simulation.totalSeats, partyCodes),
   };
