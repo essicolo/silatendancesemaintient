@@ -74,6 +74,7 @@ function selectRiding(code, { zoom = true } = {}) {
   const name = registry.nameByCode.get(code) ?? code;
   const entry = registry.ridingForecast.get(code);
   if (!entry) return;
+  registry.selectedCode = code;
 
   renderRidingDetail(code, name, entry, registry.ridingBaseline.sharesFor(code), registry.partyCodes);
 
@@ -271,11 +272,15 @@ const CLOSE_RACE_P = 0.75; // favourite below this = show the runner-up border
 function renderTileMap(layout, winProbs, ridingForecast) {
   const host = document.getElementById("tile-map");
   host.innerHTML = "";
-  const CELL = 64, PAD = 3;
-  const cols = 1 + Math.max(...Object.values(layout).map((t) => t.col));
-  const rows = 1 + Math.max(...Object.values(layout).map((t) => t.row));
+  // Layout coordinates are TILE CENTRES in tile-side units (force-directed,
+  // precomputed by tools/make_tiles.mjs); U converts to pixels.
+  const U = 56, SIDE = U * 0.9;
+  const xs = Object.values(layout).map((t) => t.x);
+  const ys = Object.values(layout).map((t) => t.y);
+  const x0 = Math.min(...xs) - 0.65, x1 = Math.max(...xs) + 0.65;
+  const y0 = Math.min(...ys) - 0.65, y1 = Math.max(...ys) + 0.65;
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", `0 0 ${cols * CELL} ${rows * CELL}`);
+  svg.setAttribute("viewBox", `${x0 * U} ${y0 * U} ${(x1 - x0) * U} ${(y1 - y0) * U}`);
 
   for (const [code, t] of Object.entries(layout)) {
     const probs = winProbs?.[code];
@@ -289,10 +294,10 @@ function renderTileMap(layout, winProbs, ridingForecast) {
     const g = document.createElementNS(svg.namespaceURI, "g");
     const rect = document.createElementNS(svg.namespaceURI, "rect");
     rect.setAttribute("class", "tile");
-    rect.setAttribute("x", t.col * CELL + PAD);
-    rect.setAttribute("y", t.row * CELL + PAD);
-    rect.setAttribute("width", CELL - 2 * PAD);
-    rect.setAttribute("height", CELL - 2 * PAD);
+    rect.setAttribute("x", t.x * U - SIDE / 2);
+    rect.setAttribute("y", t.y * U - SIDE / 2);
+    rect.setAttribute("width", SIDE);
+    rect.setAttribute("height", SIDE);
     rect.setAttribute("rx", 4);
     rect.setAttribute("fill", PARTY_COLORS[fav] ?? "#ccc");
     // Opacity carries certainty: a 52/48 race must not look like 90/10.
@@ -310,8 +315,8 @@ function renderTileMap(layout, winProbs, ridingForecast) {
     g.appendChild(rect);
 
     const label = document.createElementNS(svg.namespaceURI, "text");
-    label.setAttribute("x", t.col * CELL + CELL / 2);
-    label.setAttribute("y", t.row * CELL + CELL / 2 + 3);
+    label.setAttribute("x", t.x * U);
+    label.setAttribute("y", t.y * U + 3);
     label.setAttribute("text-anchor", "middle");
     label.setAttribute("font-size", "10");
     label.setAttribute("fill", pFav > 0.6 ? "#fff" : "#222");
@@ -648,10 +653,11 @@ async function main() {
   });
 
   section("tile-map", () => renderTileMap(tileLayout, projection.ridingWinProbs, ridingForecast));
-  section("riding-map", () => renderMap(geojson, ridingForecast));
 
-  // Tiles by default; the geographic map stays one click away. Leaflet is
-  // initialised while hidden, so give it a size recompute when revealed.
+  // Tiles by default; the geographic map stays one click away. Leaflet
+  // CANNOT be initialised inside a hidden container (it computes its pixel
+  // size at init and gets zero -- the map then renders blank), so it is
+  // created lazily on the first switch, once the container is visible.
   const btnTiles = document.getElementById("btn-tiles");
   const btnGeo = document.getElementById("btn-geo");
   const setMode = (tiles) => {
@@ -659,7 +665,11 @@ async function main() {
     document.getElementById("riding-map").hidden = tiles;
     btnTiles.classList.toggle("active", tiles);
     btnGeo.classList.toggle("active", !tiles);
-    if (!tiles && registry.leafletMap) setTimeout(() => registry.leafletMap.invalidateSize(), 0);
+    if (!tiles && !registry.leafletMap) {
+      section("riding-map", () => renderMap(geojson, ridingForecast));
+      // Late init: re-apply the current selection so the map opens in sync.
+      if (registry.selectedCode) selectRiding(registry.selectedCode, { zoom: false });
+    }
   };
   btnTiles.onclick = () => setMode(true);
   btnGeo.onclick = () => setMode(false);

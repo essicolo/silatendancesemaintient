@@ -170,8 +170,11 @@
     le point de départ de la projection, jamais le résultat 2022 affiché. S'ajoute une déviation
     locale prédite par un processus gaussien multivarié (noyau Matérn, un GP par
     coordonnée ILR, hyperparamètres par vraisemblance marginale ré-évaluée dans chaque pli de
-    validation). La carte par tuiles donne à chaque circonscription une case de taille égale
-    (positions dérivées des centroïdes, coordonnées en rangs pour que Montréal reste lisible);
+    validation). La carte par tuiles donne à chaque circonscription une case de taille égale,
+    placée depuis les centroïdes par un mélange de géographie brute (la silhouette du Québec,
+    le vide nordique) et de rangs (qui décompressent l'île de Montréal) — mélange monotone par
+    axe, donc aucune relation est/ouest ou nord/sud n'est inversée — calculé une seule fois et
+    exporté en JSON;
     la couleur est le parti favori, l'intensité sa probabilité de victoire comptée sur les
     5 000 simulations, et un contour aux couleurs du poursuivant signale une course serrée
     (favori sous 75%). La somme des probabilités de victoire d'un parti égale son espérance
