@@ -48,15 +48,36 @@ const byLon = [...tiles].sort((a, b) => a.lon - b.lon);
 const byLat = [...tiles].sort((a, b) => b.lat - a.lat); // north at top
 byLon.forEach((c, i) => { c.rankX = i / (byLon.length - 1); });
 byLat.forEach((c, i) => { c.rankY = i / (byLat.length - 1); });
+// Which SHORE of the St. Lawrence a centroid sits on, for ridings east of
+// Montreal where the river actually separates the map (upstream it runs
+// through the metropolis). Approximate river polyline, cross-product side.
+const RIVER = [[-73.5, 45.62], [-72.55, 46.35], [-71.2, 46.82], [-68.5, 48.45], [-66.0, 49.2]];
+function shoreOf(lon, lat) {
+  if (lon < -73.3) return 0; // metro area and upstream: no split
+  let seg = RIVER.length - 2;
+  for (let i = 0; i < RIVER.length - 1; i++) if (lon < RIVER[i + 1][0]) { seg = i; break; }
+  const [x1, y1] = RIVER[seg], [x2, y2] = RIVER[seg + 1];
+  const cross = (x2 - x1) * (lat - y1) - (y2 - y1) * (lon - x1);
+  return cross > 0 ? -1 : 1; // -1 north shore (up), +1 south shore (down)
+}
+
 for (const c of tiles) {
   const geoX = (c.lon - minLon) / (maxLon - minLon);
   const geoY = (maxLat - c.lat) / (maxLat - minLat);
   c.tx = (ALPHA * geoX + (1 - ALPHA) * c.rankX) * (COLS - 1);
   c.ty = (ALPHA * geoY + (1 - ALPHA) * c.rankY) * (ROWS - 1);
+  // Pry the two shores apart: the diagonal void this creates IS the river,
+  // the single strongest geographic landmark a Quebec map can carry.
+  c.ty += shoreOf(c.lon, c.lat) * 0.95;
 }
 
+// BRICK lattice, not a square grid: odd rows sit half a tile over, which
+// breaks the rigid column alignment that made earlier versions read as a
+// checkerboard, while changing no ordering property of the assignment.
 const cells = [];
-for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) cells.push({ col: c, row: r });
+for (let r = 0; r < ROWS + 2; r++) {
+  for (let c = 0; c < COLS; c++) cells.push({ col: c + (r % 2) * 0.5, row: r });
+}
 const d2 = (t, cell) => (t.tx - cell.col) ** 2 + (t.ty - cell.row) ** 2;
 
 // Greedy hardest-first, then improvement (swaps + moves to empty cells).
@@ -127,11 +148,54 @@ const layout = Object.fromEntries(
     abbr: abbr(t.name),
   }]),
 );
-writeFileSync(new URL("qc_tile_layout.json", dataDir), JSON.stringify(layout, null, 1), "utf-8");
+// Region labels anchored on NAMED member ridings -- lat/lon boxes misfire
+// here because polygon centroids of the huge northern ridings (Roberval,
+// Lac-Saint-Jean) sit far north of their population. Labels are placed
+// above their cluster and lifted until they overlap no tile; decorative
+// bearings, not boundaries.
+const norm = (x) => x.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const REGION_GROUPS = [
+  ["Nord-du-Québec", "above", ["Ungava"]],
+  ["Côte-Nord", "above", ["Duplessis", "René-Lévesque"]],
+  ["Saguenay–Lac-St-Jean", "above", ["Chicoutimi", "Jonquière", "Dubuc", "Roberval", "Lac-Saint-Jean"]],
+  ["Abitibi", "above", ["Abitibi-Est", "Abitibi-Ouest", "Rouyn-Noranda"]],
+  ["Outaouais", "below", ["Hull", "Gatineau", "Pontiac", "Papineau", "Chapleau"]],
+  ["Gaspésie–Bas-St-Laurent", "above", ["Gaspé", "Matane", "Rimouski", "Bonaventure"]],
+  ["Montréal", "below", ["Westmount", "Mercier", "Hochelaga", "Acadie", "Saint-Laurent"]],
+  ["Estrie", "below", ["Orford", "Sherbrooke", "Mégantic", "Saint-François"]],
+];
+const width = Math.max(...tiles.map((t) => t.x)) - minX;
+const regions = [];
+for (const [label, side, keys] of REGION_GROUPS) {
+  const hit = tiles.filter((t) => keys.some((k) => norm(t.name).includes(norm(k))));
+  if (!hit.length) { console.warn(`  ! région sans membres: ${label}`); continue; }
+  const dir = side === "above" ? -1 : 1;
+  let lx = hit.reduce((s2, t) => s2 + t.x - minX, 0) / hit.length;
+  let ly = (side === "above"
+    ? Math.min(...hit.map((t) => t.y - minY)) - 1.0
+    : Math.max(...hit.map((t) => t.y - minY)) + 1.1);
+  const halfW = label.length * 0.085;
+  lx = Math.min(Math.max(lx, halfW + 0.2), width - halfW - 0.2);
+  // Lift AWAY from the map (up for northern clusters, down for southern
+  // ones): lifting bottom labels upward walked them through the dense
+  // St. Lawrence valley and parked ESTRIE on top of Taschereau.
+  const collidesTile = () =>
+    tiles.some((t) => Math.abs(t.x - minX - lx) < halfW + 0.6 && Math.abs(t.y - minY - ly) < 0.72);
+  const collidesLabel = () =>
+    regions.some((r) => Math.abs(r.x - lx) < halfW + r.label.length * 0.085 + 0.3 && Math.abs(r.y - ly) < 0.8);
+  for (let lift = 0; lift < 12 && (collidesTile() || collidesLabel()); lift++) ly += dir * 0.45;
+  regions.push({ label, x: +lx.toFixed(2), y: +ly.toFixed(2) });
+}
+
+writeFileSync(
+  new URL("qc_tile_layout.json", dataDir),
+  JSON.stringify({ tiles: layout, regions }, null, 1),
+  "utf-8",
+);
 
 // ASCII preview so layout changes are reviewable in a terminal or a diff.
-const grid = Array.from({ length: ROWS }, () => Array(COLS).fill("     "));
-for (const t of tiles) grid[t.cell.row][t.cell.col] = (abbr(t.name) + "     ").slice(0, 5);
+const grid = Array.from({ length: ROWS + 2 }, () => Array(COLS + 1).fill("     "));
+for (const t of tiles) if (grid[t.cell.row]) grid[t.cell.row][Math.round(t.cell.col)] = (abbr(t.name) + "     ").slice(0, 5);
 console.log(grid.map((r) => r.join("")).join("\n"));
 const w = Math.max(...tiles.map((t) => t.x)) - minX, h = Math.max(...tiles.map((t) => t.y)) - minY;
 console.log(`qc_tile_layout.json : ${tiles.length} tuiles, emprise ${w.toFixed(1)}x${h.toFixed(1)}`);

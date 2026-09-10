@@ -272,17 +272,18 @@ const CLOSE_RACE_P = 0.75; // favourite below this = show the runner-up border
 function renderTileMap(layout, winProbs, ridingForecast) {
   const host = document.getElementById("tile-map");
   host.innerHTML = "";
-  // Layout coordinates are TILE CENTRES in tile-side units (force-directed,
-  // precomputed by tools/make_tiles.mjs); U converts to pixels.
-  const U = 56, SIDE = U * 0.9;
-  const xs = Object.values(layout).map((t) => t.x);
-  const ys = Object.values(layout).map((t) => t.y);
+  // Layout coordinates are TILE CENTRES in tile-side units (precomputed by
+  // tools/make_tiles.mjs); U converts to pixels.
+  const tilesById = layout.tiles ?? layout;
+  const U = 56, SIDE = U * 0.94;
+  const xs = Object.values(tilesById).map((t) => t.x);
+  const ys = Object.values(tilesById).map((t) => t.y);
   const x0 = Math.min(...xs) - 0.65, x1 = Math.max(...xs) + 0.65;
-  const y0 = Math.min(...ys) - 0.65, y1 = Math.max(...ys) + 0.65;
+  const y0 = Math.min(...ys) - 1.3, y1 = Math.max(...ys) + 2.1; // room for the below-cluster region labels
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `${x0 * U} ${y0 * U} ${(x1 - x0) * U} ${(y1 - y0) * U}`);
 
-  for (const [code, t] of Object.entries(layout)) {
+  for (const [code, t] of Object.entries(tilesById)) {
     const probs = winProbs?.[code];
     const ranked = probs
       ? Object.entries(probs).sort((a, b) => b[1] - a[1])
@@ -316,25 +317,64 @@ function renderTileMap(layout, winProbs, ridingForecast) {
 
     const label = document.createElementNS(svg.namespaceURI, "text");
     label.setAttribute("x", t.x * U);
-    label.setAttribute("y", t.y * U + 3);
+    label.setAttribute("y", t.y * U + 5);
     label.setAttribute("text-anchor", "middle");
-    label.setAttribute("font-size", "10");
+    // Adaptive size: short codes get big type; only long two-part names drop
+    // smaller. The map column renders a tile at ~35 screen px, so anything
+    // below ~12px SVG units was unreadable.
+    label.setAttribute("font-size", t.abbr.length <= 4 ? "16" : t.abbr.length <= 6 ? "13" : "11");
+    label.setAttribute("font-weight", "600");
     label.setAttribute("fill", pFav > 0.6 ? "#fff" : "#222");
     label.textContent = t.abbr;
     g.appendChild(label);
     svg.appendChild(g);
   }
 
-  // Selection frame: one reusable rect moved onto the selected tile.
-  const sel = document.createElementNS(svg.namespaceURI, "rect");
-  sel.setAttribute("fill", "none");
-  sel.setAttribute("stroke", "#000");
-  sel.setAttribute("stroke-width", 3.5);
-  sel.setAttribute("rx", 4);
-  sel.setAttribute("pointer-events", "none");
-  sel.setAttribute("hidden", "");
-  svg.appendChild(sel);
-  registry.tileSelFrame = sel;
+  // Region labels on top (they sit in space the layout kept free): bearings,
+  // not boundaries.
+  for (const r of layout.regions ?? []) {
+    const lbl = document.createElementNS(svg.namespaceURI, "text");
+    lbl.setAttribute("x", r.x * U);
+    lbl.setAttribute("y", r.y * U);
+    lbl.setAttribute("text-anchor", "middle");
+    lbl.setAttribute("font-size", "13");
+    lbl.setAttribute("letter-spacing", "0.08em");
+    lbl.setAttribute("fill", "#8a8a8a");
+    lbl.textContent = r.label.toUpperCase();
+    svg.appendChild(lbl);
+  }
+
+  // Selection: a double HALO (white over black) drawn OUTSIDE the tile.
+  // A plain black border was indistinguishable from the PCQ navy fill and
+  // sat exactly where the runner-up border carries the close-race signal;
+  // the halo reads on any colour and covers nothing.
+  const halo = document.createElementNS(svg.namespaceURI, "g");
+  const mk = (stroke, width, grow) => {
+    const r = document.createElementNS(svg.namespaceURI, "rect");
+    r.setAttribute("fill", "none");
+    r.setAttribute("stroke", stroke);
+    r.setAttribute("stroke-width", width);
+    r.setAttribute("rx", 6);
+    r.setAttribute("pointer-events", "none");
+    r.dataset.grow = grow;
+    halo.appendChild(r);
+    return r;
+  };
+  const haloOuter = mk("#000", 2.5, 7);
+  const haloInner = mk("#fff", 2.5, 4.5);
+  halo.setAttribute("hidden", "");
+  svg.appendChild(halo);
+  registry.tileSelFrame = {
+    setAttribute(name, value) {
+      if (name === "hidden") { halo.setAttribute("hidden", value); return; }
+      for (const r of [haloOuter, haloInner]) {
+        const grow = +r.dataset.grow;
+        if (name === "x" || name === "y") r.setAttribute(name, +value - grow);
+        else r.setAttribute(name, +value + 2 * grow);
+      }
+    },
+    removeAttribute(name) { if (name === "hidden") halo.removeAttribute("hidden"); },
+  };
 
   host.appendChild(svg);
 

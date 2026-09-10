@@ -1,764 +1,808 @@
 {
- "117": {
-  "x": 14.56,
-  "y": 9.84,
-  "name": "Mégantic",
-  "abbr": "Még"
- },
- "119": {
-  "x": 14.56,
-  "y": 10.96,
-  "name": "Saint-François",
-  "abbr": "St·Fra"
- },
- "121": {
-  "x": 13.44,
-  "y": 9.84,
-  "name": "Sherbrooke",
-  "abbr": "She"
- },
- "127": {
-  "x": 13.44,
-  "y": 10.96,
-  "name": "Orford",
-  "abbr": "Orf"
- },
- "131": {
-  "x": 12.32,
-  "y": 8.72,
-  "name": "Daniel-Johnson",
-  "abbr": "Dan·Joh"
- },
- "137": {
-  "x": 12.32,
-  "y": 9.84,
-  "name": "Richmond",
-  "abbr": "Ric"
- },
- "139": {
-  "x": 12.32,
-  "y": 7.6,
-  "name": "Marie-Lacoste-Gérin-Lajoie",
-  "abbr": "Mar·Lac"
- },
- "141": {
-  "x": 13.44,
-  "y": 8.72,
-  "name": "Drummond–Bois-Francs",
-  "abbr": "Dru·Boi"
- },
- "147": {
-  "x": 12.32,
-  "y": 6.48,
-  "name": "Arthabaska-L'Érable",
-  "abbr": "Art·L'É"
- },
- "151": {
-  "x": 11.2,
-  "y": 6.48,
-  "name": "Nicolet-Bécancour",
-  "abbr": "Nic·Béc"
- },
- "157": {
-  "x": 12.32,
-  "y": 10.96,
-  "name": "Brome-Missisquoi",
-  "abbr": "Bro·Mis"
- },
- "159": {
-  "x": 11.2,
-  "y": 9.84,
-  "name": "Granby",
-  "abbr": "Gra"
- },
- "161": {
-  "x": 11.2,
-  "y": 10.96,
-  "name": "Iberville",
-  "abbr": "Ibe"
- },
- "167": {
-  "x": 10.08,
-  "y": 10.96,
-  "name": "Saint-Jean",
-  "abbr": "St·Jea"
- },
- "171": {
-  "x": 4.48,
-  "y": 10.96,
-  "name": "Huntingdon",
-  "abbr": "Hun"
- },
- "179": {
-  "x": 0,
-  "y": 10.96,
-  "name": "Beauharnois",
-  "abbr": "Bea"
- },
- "181": {
-  "x": 0,
-  "y": 9.84,
-  "name": "Soulanges",
-  "abbr": "Sou"
- },
- "187": {
-  "x": 1.12,
-  "y": 10.96,
-  "name": "Vaudreuil",
-  "abbr": "Vau"
- },
- "191": {
-  "x": 3.36,
-  "y": 10.96,
-  "name": "Châteauguay",
-  "abbr": "Châ"
- },
- "197": {
-  "x": 7.84,
-  "y": 10.96,
-  "name": "Sanguinet",
-  "abbr": "San"
- },
- "199": {
-  "x": 8.96,
-  "y": 10.96,
-  "name": "La Prairie",
-  "abbr": "Pra"
- },
- "201": {
-  "x": 10.08,
-  "y": 9.84,
-  "name": "La Pinière",
-  "abbr": "Pin"
- },
- "207": {
-  "x": 11.2,
-  "y": 8.72,
-  "name": "Chambly",
-  "abbr": "Cha"
- },
- "211": {
-  "x": 10.08,
-  "y": 8.72,
-  "name": "Vachon",
-  "abbr": "Vac"
- },
- "217": {
-  "x": 8.96,
-  "y": 8.72,
-  "name": "Pierre-Laporte",
-  "abbr": "Pie·Lap"
- },
- "219": {
-  "x": 7.84,
-  "y": 8.72,
-  "name": "Marie-Victorin",
-  "abbr": "Mar·Vic"
- },
- "221": {
-  "x": 8.96,
-  "y": 7.6,
-  "name": "Taillon",
-  "abbr": "Tai"
- },
- "227": {
-  "x": 10.08,
-  "y": 7.6,
-  "name": "Montarville",
-  "abbr": "Mon"
- },
- "231": {
-  "x": 8.96,
-  "y": 5.36,
-  "name": "Verchères",
-  "abbr": "Ver"
- },
- "237": {
-  "x": 10.08,
-  "y": 6.48,
-  "name": "Borduas",
-  "abbr": "Bor"
- },
- "239": {
-  "x": 11.2,
-  "y": 7.6,
-  "name": "Saint-Hyacinthe",
-  "abbr": "St·Hya"
- },
- "241": {
-  "x": 10.08,
-  "y": 5.36,
-  "name": "Richelieu",
-  "abbr": "Ric"
- },
- "247": {
-  "x": 8.96,
-  "y": 9.84,
-  "name": "Verdun",
-  "abbr": "Ver"
- },
- "251": {
-  "x": 6.72,
-  "y": 10.96,
-  "name": "Marguerite-Bourgeoys",
-  "abbr": "Mar·Bou"
- },
- "257": {
-  "x": 4.48,
-  "y": 9.84,
-  "name": "Marquette",
-  "abbr": "Mar"
- },
- "259": {
-  "x": 2.24,
-  "y": 10.96,
-  "name": "Jacques-Cartier",
-  "abbr": "Jac·Car"
- },
- "261": {
-  "x": 1.12,
-  "y": 9.84,
-  "name": "Nelligan",
-  "abbr": "Nel"
- },
- "267": {
-  "x": 2.24,
-  "y": 9.84,
-  "name": "Robert-Baldwin",
-  "abbr": "Rob·Bal"
- },
- "271": {
-  "x": 3.36,
-  "y": 9.84,
-  "name": "Saint-Laurent",
-  "abbr": "St·Lau"
- },
- "277": {
-  "x": 5.6,
-  "y": 9.84,
-  "name": "D'Arcy-McGee",
-  "abbr": "D'A·McG"
- },
- "279": {
-  "x": 5.6,
-  "y": 10.96,
-  "name": "Notre-Dame-de-Grâce",
-  "abbr": "Not·Dam"
- },
- "281": {
-  "x": 7.84,
-  "y": 9.84,
-  "name": "Saint-Henri–Sainte-Anne",
-  "abbr": "St·Hen"
- },
- "287": {
-  "x": 6.72,
-  "y": 8.72,
-  "name": "Sainte-Marie–Saint-Jacques",
-  "abbr": "Ste·Mar"
- },
- "291": {
-  "x": 6.72,
-  "y": 9.84,
-  "name": "Westmount–Saint-Louis",
-  "abbr": "Wes·St"
- },
- "297": {
-  "x": 4.48,
-  "y": 8.72,
-  "name": "Mont-Royal–Outremont",
-  "abbr": "Mon·Roy"
- },
- "299": {
-  "x": 3.36,
-  "y": 8.72,
-  "name": "Acadie",
-  "abbr": "Aca"
- },
- "301": {
-  "x": 4.48,
-  "y": 7.6,
-  "name": "Maurice-Richard",
-  "abbr": "Mau·Ric"
- },
- "307": {
-  "x": 5.6,
-  "y": 8.72,
-  "name": "Laurier-Dorion",
-  "abbr": "Lau·Dor"
- },
- "311": {
-  "x": 5.6,
-  "y": 7.6,
-  "name": "Gouin",
-  "abbr": "Gou"
- },
- "313": {
-  "x": 6.72,
-  "y": 7.6,
-  "name": "Mercier",
-  "abbr": "Mer"
- },
- "317": {
-  "x": 7.84,
-  "y": 7.6,
-  "name": "Hochelaga-Maisonneuve",
-  "abbr": "Hoc·Mai"
- },
- "319": {
-  "x": 6.72,
-  "y": 6.48,
-  "name": "Rosemont",
-  "abbr": "Ros"
- },
- "321": {
-  "x": 5.6,
-  "y": 6.48,
-  "name": "Viau",
-  "abbr": "Via"
- },
- "327": {
-  "x": 4.48,
-  "y": 6.48,
-  "name": "Bourassa-Sauvé",
-  "abbr": "Bou·Sau"
- },
- "331": {
-  "x": 5.6,
-  "y": 5.36,
-  "name": "Jeanne-Mance–Viger",
-  "abbr": "Jea·Man"
- },
- "337": {
-  "x": 8.96,
-  "y": 6.48,
-  "name": "Camille-Laurin",
-  "abbr": "Cam·Lau"
- },
- "339": {
-  "x": 6.72,
-  "y": 5.36,
-  "name": "LaFontaine",
-  "abbr": "LaF"
- },
- "341": {
-  "x": 7.84,
-  "y": 5.36,
-  "name": "Pointe-aux-Trembles",
-  "abbr": "Poi·aux"
- },
- "347": {
-  "x": 3.36,
-  "y": 7.6,
-  "name": "Laval-des-Rapides",
-  "abbr": "Lav·Rap"
- },
- "351": {
-  "x": 2.24,
-  "y": 7.6,
-  "name": "Chomedey",
-  "abbr": "Cho"
- },
- "357": {
-  "x": 2.24,
-  "y": 8.72,
-  "name": "Fabre",
-  "abbr": "Fab"
- },
- "359": {
-  "x": 3.36,
-  "y": 6.48,
-  "name": "Sainte-Rose",
-  "abbr": "Ste·Ros"
- },
- "569": {
-  "x": 4.48,
-  "y": 5.36,
-  "name": "Vimont-Auteuil",
-  "abbr": "Vim·Aut"
- },
- "571": {
-  "x": 5.6,
-  "y": 4.24,
-  "name": "Mille-Îles",
-  "abbr": "Mil·Île"
- },
- "577": {
-  "x": 2.24,
-  "y": 6.48,
-  "name": "Groulx",
-  "abbr": "Gro"
- },
- "581": {
-  "x": 1.12,
-  "y": 8.72,
-  "name": "Deux-Montagnes",
-  "abbr": "Deu·Mon"
- },
- "587": {
-  "x": 1.12,
-  "y": 7.6,
-  "name": "Mirabel",
-  "abbr": "Mir"
- },
- "589": {
-  "x": 1.12,
-  "y": 5.36,
-  "name": "Argenteuil",
-  "abbr": "Arg"
- },
- "591": {
-  "x": 1.12,
-  "y": 6.48,
-  "name": "Bellefeuille",
-  "abbr": "Bel"
- },
- "597": {
-  "x": 2.24,
-  "y": 5.36,
-  "name": "Saint-Jérôme",
-  "abbr": "St·Jér"
- },
- "601": {
-  "x": 3.36,
-  "y": 4.24,
-  "name": "Les Plaines",
-  "abbr": "Pla"
- },
- "607": {
-  "x": 3.36,
-  "y": 5.36,
-  "name": "Blainville",
-  "abbr": "Bla"
- },
- "609": {
-  "x": 4.48,
-  "y": 4.24,
-  "name": "Terrebonne",
-  "abbr": "Ter"
- },
- "611": {
-  "x": 6.72,
-  "y": 4.24,
-  "name": "Masson",
-  "abbr": "Mas"
- },
- "617": {
-  "x": 7.84,
-  "y": 4.24,
-  "name": "Repentigny",
-  "abbr": "Rep"
- },
- "621": {
-  "x": 8.96,
-  "y": 4.24,
-  "name": "L'Assomption",
-  "abbr": "L'A"
- },
- "627": {
-  "x": 4.48,
-  "y": 3.12,
-  "name": "Berthier",
-  "abbr": "Ber"
- },
- "629": {
-  "x": 6.72,
-  "y": 3.12,
-  "name": "Joliette",
-  "abbr": "Jol"
- },
- "631": {
-  "x": 5.6,
-  "y": 3.12,
-  "name": "Rousseau",
-  "abbr": "Rou"
- },
- "637": {
-  "x": 1.12,
-  "y": 4.24,
-  "name": "Prévost",
-  "abbr": "Pré"
- },
- "641": {
-  "x": 2.24,
-  "y": 4.24,
-  "name": "Bertrand",
-  "abbr": "Ber"
- },
- "649": {
-  "x": 2.24,
-  "y": 3.12,
-  "name": "Labelle",
-  "abbr": "Lab"
- },
- "651": {
-  "x": 0,
-  "y": 8.72,
-  "name": "Hull",
-  "abbr": "Hul"
- },
- "657": {
-  "x": 0,
-  "y": 5.36,
-  "name": "Pontiac",
-  "abbr": "Pon"
- },
- "661": {
-  "x": 1.12,
-  "y": 3.12,
-  "name": "Gatineau",
-  "abbr": "Gat"
- },
- "667": {
-  "x": 0,
-  "y": 7.6,
-  "name": "Chapleau",
-  "abbr": "Cha"
- },
- "669": {
-  "x": 0,
-  "y": 6.48,
-  "name": "Papineau",
-  "abbr": "Pap"
- },
- "671": {
-  "x": 0,
-  "y": 4.24,
-  "name": "Rouyn-Noranda–Témiscamingue",
-  "abbr": "Rou·Nor"
- },
- "681": {
-  "x": 0,
-  "y": 2,
-  "name": "Abitibi-Ouest",
-  "abbr": "Abi·Oue"
- },
- "689": {
-  "x": 0,
-  "y": 3.12,
-  "name": "Abitibi-Est",
-  "abbr": "Abi·Est"
- },
- "691": {
-  "x": 11.2,
-  "y": 5.36,
-  "name": "Trois-Rivières",
-  "abbr": "Tro·Riv"
- },
- "693": {
-  "x": 7.84,
-  "y": 3.12,
-  "name": "Maskinongé",
-  "abbr": "Mas"
- },
- "697": {
-  "x": 6.72,
-  "y": 2,
-  "name": "Laviolette–Saint-Maurice",
-  "abbr": "Lav·St"
- },
- "701": {
-  "x": 10.08,
-  "y": 4.24,
-  "name": "Champlain",
-  "abbr": "Cha"
- },
- "707": {
-  "x": 13.44,
-  "y": 5.36,
-  "name": "Jean-Talon",
-  "abbr": "Jea·Tal"
- },
- "709": {
-  "x": 11.2,
-  "y": 4.24,
-  "name": "Louis-Hébert",
-  "abbr": "Lou·Héb"
- },
- "727": {
-  "x": 8.96,
-  "y": 3.12,
-  "name": "Portneuf",
-  "abbr": "Por"
- },
- "729": {
-  "x": 11.2,
-  "y": 3.12,
-  "name": "La Peltrie",
-  "abbr": "Pel"
- },
- "749": {
-  "x": 12.32,
-  "y": 5.36,
-  "name": "Vanier-Les Rivières",
-  "abbr": "Van·Riv"
- },
- "751": {
-  "x": 14.56,
-  "y": 5.36,
-  "name": "Taschereau",
-  "abbr": "Tas"
- },
- "757": {
-  "x": 13.44,
-  "y": 4.24,
-  "name": "Jean-Lesage",
-  "abbr": "Jea·Les"
- },
- "761": {
-  "x": 12.32,
-  "y": 3.12,
-  "name": "Montmorency",
-  "abbr": "Mon"
- },
- "767": {
-  "x": 12.32,
-  "y": 4.24,
-  "name": "Charlesbourg",
-  "abbr": "Cha"
- },
- "769": {
-  "x": 10.08,
-  "y": 3.12,
-  "name": "Chauveau",
-  "abbr": "Cha"
- },
- "771": {
-  "x": 13.44,
-  "y": 3.12,
-  "name": "Charlevoix–Côte-de-Beaupré",
-  "abbr": "Cha·Côt"
- },
- "777": {
-  "x": 15.68,
-  "y": 7.6,
-  "name": "Beauce-Sud",
-  "abbr": "Bea·Sud"
- },
- "781": {
-  "x": 14.56,
-  "y": 8.72,
-  "name": "Beauce-Nord",
-  "abbr": "Bea·Nor"
- },
- "787": {
-  "x": 13.44,
-  "y": 7.6,
-  "name": "Lotbinière-Frontenac",
-  "abbr": "Lot·Fro"
- },
- "789": {
-  "x": 13.44,
-  "y": 6.48,
-  "name": "Chutes-de-la-Chaudière",
-  "abbr": "Chu·Cha"
- },
- "791": {
-  "x": 14.56,
-  "y": 6.48,
-  "name": "Lévis",
-  "abbr": "Lév"
- },
- "797": {
-  "x": 14.56,
-  "y": 7.6,
-  "name": "Bellechasse",
-  "abbr": "Bel"
- },
- "799": {
-  "x": 14.56,
-  "y": 4.24,
-  "name": "Côte-du-Sud",
-  "abbr": "Côt·Sud"
- },
- "801": {
-  "x": 15.68,
-  "y": 6.48,
-  "name": "Rivière-du-Loup–Témiscouata–Les Basques",
-  "abbr": "Riv·Lou"
- },
- "803": {
-  "x": 14.56,
-  "y": 3.12,
-  "name": "Rimouski",
-  "abbr": "Rim"
- },
- "807": {
-  "x": 15.68,
-  "y": 4.24,
-  "name": "Matane-Matapédia-Mitis",
-  "abbr": "Mat·Mat"
- },
- "809": {
-  "x": 16.8,
-  "y": 4.24,
-  "name": "Gaspé",
-  "abbr": "Gas"
- },
- "811": {
-  "x": 18.8,
-  "y": 6.48,
-  "name": "Îles-de-la-Madeleine",
-  "abbr": "Île·Mad"
- },
- "813": {
-  "x": 16.8,
-  "y": 2,
-  "name": "Duplessis",
-  "abbr": "Dup"
- },
- "817": {
-  "x": 13.44,
-  "y": 2,
-  "name": "René-Lévesque",
-  "abbr": "Ren·Lév"
- },
- "819": {
-  "x": 12.32,
-  "y": 2,
-  "name": "Dubuc",
-  "abbr": "Dub"
- },
- "821": {
-  "x": 11.2,
-  "y": 2,
-  "name": "Chicoutimi",
-  "abbr": "Chi"
- },
- "823": {
-  "x": 10.08,
-  "y": 2,
-  "name": "Jonquière",
-  "abbr": "Jon"
- },
- "827": {
-  "x": 8.96,
-  "y": 2,
-  "name": "Lac-Saint-Jean",
-  "abbr": "Lac·St"
- },
- "829": {
-  "x": 7.84,
-  "y": 2,
-  "name": "Roberval",
-  "abbr": "Rob"
- },
- "831": {
-  "x": 10.08,
-  "y": 0,
-  "name": "Ungava",
-  "abbr": "Ung"
- },
- "833": {
-  "x": 7.84,
-  "y": 6.48,
-  "name": "Anjou–Louis-Riel",
-  "abbr": "Anj·Lou"
- },
- "837": {
-  "x": 15.68,
-  "y": 5.36,
-  "name": "Bonaventure",
-  "abbr": "Bon"
- }
+ "tiles": {
+  "117": {
+   "x": 12.32,
+   "y": 13.2,
+   "name": "Mégantic",
+   "abbr": "Még"
+  },
+  "119": {
+   "x": 11.76,
+   "y": 14.32,
+   "name": "Saint-François",
+   "abbr": "St·Fra"
+  },
+  "121": {
+   "x": 11.76,
+   "y": 12.08,
+   "name": "Sherbrooke",
+   "abbr": "She"
+  },
+  "127": {
+   "x": 11.2,
+   "y": 13.2,
+   "name": "Orford",
+   "abbr": "Orf"
+  },
+  "131": {
+   "x": 10.64,
+   "y": 12.08,
+   "name": "Daniel-Johnson",
+   "abbr": "Dan·Joh"
+  },
+  "137": {
+   "x": 11.2,
+   "y": 10.96,
+   "name": "Richmond",
+   "abbr": "Ric"
+  },
+  "139": {
+   "x": 10.64,
+   "y": 9.84,
+   "name": "Marie-Lacoste-Gérin-Lajoie",
+   "abbr": "Mar·Lac"
+  },
+  "141": {
+   "x": 11.76,
+   "y": 9.84,
+   "name": "Drummond–Bois-Francs",
+   "abbr": "Dru·Boi"
+  },
+  "147": {
+   "x": 11.2,
+   "y": 8.72,
+   "name": "Arthabaska-L'Érable",
+   "abbr": "Art·L'É"
+  },
+  "151": {
+   "x": 10.08,
+   "y": 8.72,
+   "name": "Nicolet-Bécancour",
+   "abbr": "Nic·Béc"
+  },
+  "157": {
+   "x": 10.64,
+   "y": 14.32,
+   "name": "Brome-Missisquoi",
+   "abbr": "Bro·Mis"
+  },
+  "159": {
+   "x": 10.08,
+   "y": 13.2,
+   "name": "Granby",
+   "abbr": "Gra"
+  },
+  "161": {
+   "x": 9.52,
+   "y": 14.32,
+   "name": "Iberville",
+   "abbr": "Ibe"
+  },
+  "167": {
+   "x": 8.96,
+   "y": 13.2,
+   "name": "Saint-Jean",
+   "abbr": "St·Jea"
+  },
+  "171": {
+   "x": 3.92,
+   "y": 14.32,
+   "name": "Huntingdon",
+   "abbr": "Hun"
+  },
+  "179": {
+   "x": 1.68,
+   "y": 14.32,
+   "name": "Beauharnois",
+   "abbr": "Bea"
+  },
+  "181": {
+   "x": 0.56,
+   "y": 14.32,
+   "name": "Soulanges",
+   "abbr": "Sou"
+  },
+  "187": {
+   "x": 1.12,
+   "y": 13.2,
+   "name": "Vaudreuil",
+   "abbr": "Vau"
+  },
+  "191": {
+   "x": 2.8,
+   "y": 14.32,
+   "name": "Châteauguay",
+   "abbr": "Châ"
+  },
+  "197": {
+   "x": 6.16,
+   "y": 14.32,
+   "name": "Sanguinet",
+   "abbr": "San"
+  },
+  "199": {
+   "x": 7.28,
+   "y": 14.32,
+   "name": "La Prairie",
+   "abbr": "Pra"
+  },
+  "201": {
+   "x": 7.84,
+   "y": 13.2,
+   "name": "La Pinière",
+   "abbr": "Pin"
+  },
+  "207": {
+   "x": 8.4,
+   "y": 14.32,
+   "name": "Chambly",
+   "abbr": "Cha"
+  },
+  "211": {
+   "x": 8.96,
+   "y": 10.96,
+   "name": "Vachon",
+   "abbr": "Vac"
+  },
+  "217": {
+   "x": 8.4,
+   "y": 12.08,
+   "name": "Pierre-Laporte",
+   "abbr": "Pie·Lap"
+  },
+  "219": {
+   "x": 7.84,
+   "y": 10.96,
+   "name": "Marie-Victorin",
+   "abbr": "Mar·Vic"
+  },
+  "221": {
+   "x": 8.4,
+   "y": 9.84,
+   "name": "Taillon",
+   "abbr": "Tai"
+  },
+  "227": {
+   "x": 8.96,
+   "y": 8.72,
+   "name": "Montarville",
+   "abbr": "Mon"
+  },
+  "231": {
+   "x": 9.52,
+   "y": 7.6,
+   "name": "Verchères",
+   "abbr": "Ver"
+  },
+  "237": {
+   "x": 10.08,
+   "y": 10.96,
+   "name": "Borduas",
+   "abbr": "Bor"
+  },
+  "239": {
+   "x": 9.52,
+   "y": 12.08,
+   "name": "Saint-Hyacinthe",
+   "abbr": "St·Hya"
+  },
+  "241": {
+   "x": 9.52,
+   "y": 9.84,
+   "name": "Richelieu",
+   "abbr": "Ric"
+  },
+  "247": {
+   "x": 6.72,
+   "y": 13.2,
+   "name": "Verdun",
+   "abbr": "Ver"
+  },
+  "251": {
+   "x": 5.04,
+   "y": 14.32,
+   "name": "Marguerite-Bourgeoys",
+   "abbr": "Mar·Bou"
+  },
+  "257": {
+   "x": 3.36,
+   "y": 13.2,
+   "name": "Marquette",
+   "abbr": "Mar"
+  },
+  "259": {
+   "x": 2.24,
+   "y": 13.2,
+   "name": "Jacques-Cartier",
+   "abbr": "Jac·Car"
+  },
+  "261": {
+   "x": 0.56,
+   "y": 12.08,
+   "name": "Nelligan",
+   "abbr": "Nel"
+  },
+  "267": {
+   "x": 1.68,
+   "y": 12.08,
+   "name": "Robert-Baldwin",
+   "abbr": "Rob·Bal"
+  },
+  "271": {
+   "x": 2.8,
+   "y": 12.08,
+   "name": "Saint-Laurent",
+   "abbr": "St·Lau"
+  },
+  "277": {
+   "x": 4.48,
+   "y": 13.2,
+   "name": "D'Arcy-McGee",
+   "abbr": "D'A·McG"
+  },
+  "279": {
+   "x": 5.04,
+   "y": 12.08,
+   "name": "Notre-Dame-de-Grâce",
+   "abbr": "Not·Dam"
+  },
+  "281": {
+   "x": 5.6,
+   "y": 13.2,
+   "name": "Saint-Henri–Sainte-Anne",
+   "abbr": "St·Hen"
+  },
+  "287": {
+   "x": 7.28,
+   "y": 12.08,
+   "name": "Sainte-Marie–Saint-Jacques",
+   "abbr": "Ste·Mar"
+  },
+  "291": {
+   "x": 6.16,
+   "y": 12.08,
+   "name": "Westmount–Saint-Louis",
+   "abbr": "Wes·St"
+  },
+  "297": {
+   "x": 3.92,
+   "y": 12.08,
+   "name": "Mont-Royal–Outremont",
+   "abbr": "Mon·Roy"
+  },
+  "299": {
+   "x": 3.36,
+   "y": 10.96,
+   "name": "Acadie",
+   "abbr": "Aca"
+  },
+  "301": {
+   "x": 3.92,
+   "y": 9.84,
+   "name": "Maurice-Richard",
+   "abbr": "Mau·Ric"
+  },
+  "307": {
+   "x": 4.48,
+   "y": 10.96,
+   "name": "Laurier-Dorion",
+   "abbr": "Lau·Dor"
+  },
+  "311": {
+   "x": 5.6,
+   "y": 10.96,
+   "name": "Gouin",
+   "abbr": "Gou"
+  },
+  "313": {
+   "x": 6.72,
+   "y": 10.96,
+   "name": "Mercier",
+   "abbr": "Mer"
+  },
+  "317": {
+   "x": 7.28,
+   "y": 9.84,
+   "name": "Hochelaga-Maisonneuve",
+   "abbr": "Hoc·Mai"
+  },
+  "319": {
+   "x": 6.16,
+   "y": 9.84,
+   "name": "Rosemont",
+   "abbr": "Ros"
+  },
+  "321": {
+   "x": 5.04,
+   "y": 9.84,
+   "name": "Viau",
+   "abbr": "Via"
+  },
+  "327": {
+   "x": 4.48,
+   "y": 8.72,
+   "name": "Bourassa-Sauvé",
+   "abbr": "Bou·Sau"
+  },
+  "331": {
+   "x": 5.6,
+   "y": 8.72,
+   "name": "Jeanne-Mance–Viger",
+   "abbr": "Jea·Man"
+  },
+  "337": {
+   "x": 7.84,
+   "y": 8.72,
+   "name": "Camille-Laurin",
+   "abbr": "Cam·Lau"
+  },
+  "339": {
+   "x": 6.16,
+   "y": 7.6,
+   "name": "LaFontaine",
+   "abbr": "LaF"
+  },
+  "341": {
+   "x": 7.28,
+   "y": 7.6,
+   "name": "Pointe-aux-Trembles",
+   "abbr": "Poi·aux"
+  },
+  "347": {
+   "x": 3.36,
+   "y": 8.72,
+   "name": "Laval-des-Rapides",
+   "abbr": "Lav·Rap"
+  },
+  "351": {
+   "x": 2.8,
+   "y": 9.84,
+   "name": "Chomedey",
+   "abbr": "Cho"
+  },
+  "357": {
+   "x": 2.24,
+   "y": 10.96,
+   "name": "Fabre",
+   "abbr": "Fab"
+  },
+  "359": {
+   "x": 2.24,
+   "y": 8.72,
+   "name": "Sainte-Rose",
+   "abbr": "Ste·Ros"
+  },
+  "569": {
+   "x": 3.92,
+   "y": 7.6,
+   "name": "Vimont-Auteuil",
+   "abbr": "Vim·Aut"
+  },
+  "571": {
+   "x": 5.04,
+   "y": 7.6,
+   "name": "Mille-Îles",
+   "abbr": "Mil·Île"
+  },
+  "577": {
+   "x": 1.68,
+   "y": 9.84,
+   "name": "Groulx",
+   "abbr": "Gro"
+  },
+  "581": {
+   "x": 1.12,
+   "y": 10.96,
+   "name": "Deux-Montagnes",
+   "abbr": "Deu·Mon"
+  },
+  "587": {
+   "x": 0.56,
+   "y": 9.84,
+   "name": "Mirabel",
+   "abbr": "Mir"
+  },
+  "589": {
+   "x": 0.56,
+   "y": 7.6,
+   "name": "Argenteuil",
+   "abbr": "Arg"
+  },
+  "591": {
+   "x": 1.12,
+   "y": 8.72,
+   "name": "Bellefeuille",
+   "abbr": "Bel"
+  },
+  "597": {
+   "x": 1.68,
+   "y": 7.6,
+   "name": "Saint-Jérôme",
+   "abbr": "St·Jér"
+  },
+  "601": {
+   "x": 3.36,
+   "y": 6.48,
+   "name": "Les Plaines",
+   "abbr": "Pla"
+  },
+  "607": {
+   "x": 2.8,
+   "y": 7.6,
+   "name": "Blainville",
+   "abbr": "Bla"
+  },
+  "609": {
+   "x": 4.48,
+   "y": 6.48,
+   "name": "Terrebonne",
+   "abbr": "Ter"
+  },
+  "611": {
+   "x": 5.6,
+   "y": 6.48,
+   "name": "Masson",
+   "abbr": "Mas"
+  },
+  "617": {
+   "x": 8.4,
+   "y": 7.6,
+   "name": "Repentigny",
+   "abbr": "Rep"
+  },
+  "621": {
+   "x": 6.72,
+   "y": 6.48,
+   "name": "L'Assomption",
+   "abbr": "L'A"
+  },
+  "627": {
+   "x": 3.92,
+   "y": 5.36,
+   "name": "Berthier",
+   "abbr": "Ber"
+  },
+  "629": {
+   "x": 7.84,
+   "y": 6.48,
+   "name": "Joliette",
+   "abbr": "Jol"
+  },
+  "631": {
+   "x": 5.04,
+   "y": 5.36,
+   "name": "Rousseau",
+   "abbr": "Rou"
+  },
+  "637": {
+   "x": 2.24,
+   "y": 6.48,
+   "name": "Prévost",
+   "abbr": "Pré"
+  },
+  "641": {
+   "x": 2.8,
+   "y": 5.36,
+   "name": "Bertrand",
+   "abbr": "Ber"
+  },
+  "649": {
+   "x": 1.68,
+   "y": 5.36,
+   "name": "Labelle",
+   "abbr": "Lab"
+  },
+  "651": {
+   "x": 0,
+   "y": 13.2,
+   "name": "Hull",
+   "abbr": "Hul"
+  },
+  "657": {
+   "x": 0,
+   "y": 6.48,
+   "name": "Pontiac",
+   "abbr": "Pon"
+  },
+  "661": {
+   "x": 1.12,
+   "y": 6.48,
+   "name": "Gatineau",
+   "abbr": "Gat"
+  },
+  "667": {
+   "x": 0,
+   "y": 10.96,
+   "name": "Chapleau",
+   "abbr": "Cha"
+  },
+  "669": {
+   "x": 0,
+   "y": 8.72,
+   "name": "Papineau",
+   "abbr": "Pap"
+  },
+  "671": {
+   "x": 0.56,
+   "y": 5.36,
+   "name": "Rouyn-Noranda–Témiscamingue",
+   "abbr": "Rou·Nor"
+  },
+  "681": {
+   "x": 0,
+   "y": 4.24,
+   "name": "Abitibi-Ouest",
+   "abbr": "Abi·Oue"
+  },
+  "689": {
+   "x": 1.12,
+   "y": 4.24,
+   "name": "Abitibi-Est",
+   "abbr": "Abi·Est"
+  },
+  "691": {
+   "x": 8.96,
+   "y": 6.48,
+   "name": "Trois-Rivières",
+   "abbr": "Tro·Riv"
+  },
+  "693": {
+   "x": 8.4,
+   "y": 5.36,
+   "name": "Maskinongé",
+   "abbr": "Mas"
+  },
+  "697": {
+   "x": 7.28,
+   "y": 5.36,
+   "name": "Laviolette–Saint-Maurice",
+   "abbr": "Lav·St"
+  },
+  "701": {
+   "x": 9.52,
+   "y": 5.36,
+   "name": "Champlain",
+   "abbr": "Cha"
+  },
+  "707": {
+   "x": 10.64,
+   "y": 7.6,
+   "name": "Jean-Talon",
+   "abbr": "Jea·Tal"
+  },
+  "709": {
+   "x": 10.08,
+   "y": 6.48,
+   "name": "Louis-Hébert",
+   "abbr": "Lou·Héb"
+  },
+  "727": {
+   "x": 8.96,
+   "y": 4.24,
+   "name": "Portneuf",
+   "abbr": "Por"
+  },
+  "729": {
+   "x": 10.64,
+   "y": 5.36,
+   "name": "La Peltrie",
+   "abbr": "Pel"
+  },
+  "749": {
+   "x": 11.2,
+   "y": 6.48,
+   "name": "Vanier-Les Rivières",
+   "abbr": "Van·Riv"
+  },
+  "751": {
+   "x": 11.76,
+   "y": 7.6,
+   "name": "Taschereau",
+   "abbr": "Tas"
+  },
+  "757": {
+   "x": 12.32,
+   "y": 6.48,
+   "name": "Jean-Lesage",
+   "abbr": "Jea·Les"
+  },
+  "761": {
+   "x": 11.2,
+   "y": 4.24,
+   "name": "Montmorency",
+   "abbr": "Mon"
+  },
+  "767": {
+   "x": 11.76,
+   "y": 5.36,
+   "name": "Charlesbourg",
+   "abbr": "Cha"
+  },
+  "769": {
+   "x": 10.08,
+   "y": 4.24,
+   "name": "Chauveau",
+   "abbr": "Cha"
+  },
+  "771": {
+   "x": 12.88,
+   "y": 5.36,
+   "name": "Charlevoix–Côte-de-Beaupré",
+   "abbr": "Cha·Côt"
+  },
+  "777": {
+   "x": 13.44,
+   "y": 10.96,
+   "name": "Beauce-Sud",
+   "abbr": "Bea·Sud"
+  },
+  "781": {
+   "x": 12.88,
+   "y": 9.84,
+   "name": "Beauce-Nord",
+   "abbr": "Bea·Nor"
+  },
+  "787": {
+   "x": 12.32,
+   "y": 10.96,
+   "name": "Lotbinière-Frontenac",
+   "abbr": "Lot·Fro"
+  },
+  "789": {
+   "x": 12.32,
+   "y": 8.72,
+   "name": "Chutes-de-la-Chaudière",
+   "abbr": "Chu·Cha"
+  },
+  "791": {
+   "x": 12.88,
+   "y": 7.6,
+   "name": "Lévis",
+   "abbr": "Lév"
+  },
+  "797": {
+   "x": 13.44,
+   "y": 8.72,
+   "name": "Bellechasse",
+   "abbr": "Bel"
+  },
+  "799": {
+   "x": 13.44,
+   "y": 6.48,
+   "name": "Côte-du-Sud",
+   "abbr": "Côt·Sud"
+  },
+  "801": {
+   "x": 14,
+   "y": 7.6,
+   "name": "Rivière-du-Loup–Témiscouata–Les Basques",
+   "abbr": "Riv·Lou"
+  },
+  "803": {
+   "x": 14.56,
+   "y": 6.48,
+   "name": "Rimouski",
+   "abbr": "Rim"
+  },
+  "807": {
+   "x": 15.12,
+   "y": 7.6,
+   "name": "Matane-Matapédia-Mitis",
+   "abbr": "Mat·Mat"
+  },
+  "809": {
+   "x": 15.68,
+   "y": 6.48,
+   "name": "Gaspé",
+   "abbr": "Gas"
+  },
+  "811": {
+   "x": 18.8,
+   "y": 8.72,
+   "name": "Îles-de-la-Madeleine",
+   "abbr": "Île·Mad"
+  },
+  "813": {
+   "x": 16.8,
+   "y": 2,
+   "name": "Duplessis",
+   "abbr": "Dup"
+  },
+  "817": {
+   "x": 14,
+   "y": 3.12,
+   "name": "René-Lévesque",
+   "abbr": "Ren·Lév"
+  },
+  "819": {
+   "x": 11.76,
+   "y": 3.12,
+   "name": "Dubuc",
+   "abbr": "Dub"
+  },
+  "821": {
+   "x": 12.32,
+   "y": 4.24,
+   "name": "Chicoutimi",
+   "abbr": "Chi"
+  },
+  "823": {
+   "x": 10.64,
+   "y": 3.12,
+   "name": "Jonquière",
+   "abbr": "Jon"
+  },
+  "827": {
+   "x": 9.52,
+   "y": 3.12,
+   "name": "Lac-Saint-Jean",
+   "abbr": "Lac·St"
+  },
+  "829": {
+   "x": 7.84,
+   "y": 4.24,
+   "name": "Roberval",
+   "abbr": "Rob"
+  },
+  "831": {
+   "x": 10.08,
+   "y": 0,
+   "name": "Ungava",
+   "abbr": "Ung"
+  },
+  "833": {
+   "x": 6.72,
+   "y": 8.72,
+   "name": "Anjou–Louis-Riel",
+   "abbr": "Anj·Lou"
+  },
+  "837": {
+   "x": 14.56,
+   "y": 8.72,
+   "name": "Bonaventure",
+   "abbr": "Bon"
+  }
+ },
+ "regions": [
+  {
+   "label": "Nord-du-Québec",
+   "x": 10.08,
+   "y": -1
+  },
+  {
+   "label": "Côte-Nord",
+   "x": 15.4,
+   "y": 1
+  },
+  {
+   "label": "Saguenay–Lac-St-Jean",
+   "x": 10.42,
+   "y": 2.12
+  },
+  {
+   "label": "Abitibi",
+   "x": 0.8,
+   "y": 3.24
+  },
+  {
+   "label": "Outaouais",
+   "x": 0.97,
+   "y": 15.2
+  },
+  {
+   "label": "Gaspésie–Bas-St-Laurent",
+   "x": 14.98,
+   "y": 4.58
+  },
+  {
+   "label": "Montréal",
+   "x": 5.26,
+   "y": 15.43
+  },
+  {
+   "label": "Estrie",
+   "x": 11.76,
+   "y": 15.42
+  }
+ ]
 }
