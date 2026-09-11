@@ -131,15 +131,16 @@
     Mainstreet, Synopsis, Angus Reid, Abacus et autres. Recensement 2021 par circonscription
     (Statistique Canada, agrégé par aire de diffusion). Résultats de 2014, 2018 et 2022
     (Élections Québec), exprimés sur la carte électorale 2026 (127 circonscriptions) par réagrégation
-    géographique des sections de vote, et partielles tenues depuis 2022 (DGEQ, cinq à ce jour) —
-    une mesure locale récente que le modèle utilise explicitement. Députés sortants, retraits et
+    géographique des sections de vote, et partielles tenues depuis 2022 (DGEQ, cinq à ce jour),
+    que le modèle de circonscription intègre directement. Députés sortants, retraits et
     chefs depuis les pages de l'Assemblée nationale sur Wikipédia.</p>
     <h4>Agrégation des sondages</h4>
     <p>Les intentions de vote sont traitées comme une composition (les parts somment à 1) et manipulées
     en coordonnées log-ratio isométriques (ILR), où les opérations linéaires sont valides (une
     différence de points de pourcentage n'a pas le même sens à 4% qu'à 40%). La tendance est un
-    processus gaussien par coordonnée ILR, avec un bruit d'observation par sondage proportionnel à
-    l'inverse de la taille d'échantillon; l'échelle du bruit et la portée temporelle sont choisies par
+    processus gaussien par coordonnée ILR, avec un bruit d'observation par sondage décroissant
+    en 1/√n avec la taille d'échantillon (la forme 1/n issue de la théorie de l'échantillonnage
+    a été testée par validation croisée, sans gain mesurable) ; l'échelle du bruit et la portée temporelle sont choisies par
     vraisemblance marginale, et le noyau admet des points de rupture aux changements
     de chefs (14 janvier et 12 avril 2026) : la corrélation entre régimes est elle-même ajustée par
     vraisemblance, la valeur 1 redonnant le modèle stationnaire, et l'évidence a retenu une rupture
@@ -172,21 +173,24 @@
     le point de départ de la projection, jamais le résultat 2022 affiché. S'ajoute une déviation
     locale prédite par un processus gaussien multivarié (noyau Matérn, un GP par
     coordonnée ILR, hyperparamètres par vraisemblance marginale ré-évaluée dans chaque pli de
-    validation). Depuis l'élection 2022, chaque partielle est de surcroît une mesure locale
-    directe et récente : son écart au swing provincial (net de la prime au sortant retirée et de
-    la composante régionale déjà appliquée) est fondu à demi-poids dans la déviation prédite —
-    cinq partielles, quatre gagnées par le PQ dans d'anciens sièges caquistes. Ce poids est un
-    a priori documenté (turnout faible, vote de contestation, candidats locaux, redécoupage
-    2017→2026), non un paramètre ajusté : la table de sensibilité vit dans
+    validation). Depuis l'élection 2022, chaque partielle fournit une mesure locale directe et
+    récente : l'écart entre son résultat et le swing provincial, corrigé de la prime au sortant
+    retirée et de la composante régionale déjà appliquée, est intégré à la déviation prédite avec
+    un poids de 0,5. Cinq partielles ont été tenues, dont quatre remportées par le PQ dans
+    d'anciens sièges caquistes. Ce poids est un a priori documenté plutôt qu'un paramètre
+    ajusté : les partielles se tiennent à faible participation, sous une dynamique de
+    contestation, avec des candidatures locales particulières, et sur les limites de la carte 2017
+    appliquées à la carte 2026 ; aucune série de partielles anciennes ne permettrait de
+    l'estimer. La table de sensibilité est disponible dans
     <code>js/tools/byelection_test.mjs</code>. La carte par tuiles donne à chaque circonscription une case de taille égale,
     placée depuis les centroïdes par un mélange de géographie brute (la silhouette du Québec,
-    le vide nordique) et de rangs (qui décompressent l'île de Montréal) — mélange monotone par
-    axe, donc aucune relation est/ouest ou nord/sud n'est inversée — calculé une seule fois et
-    exporté en JSON;
+    le vide nordique) et de rangs (qui décompressent l'île de Montréal). Ce mélange est monotone
+    par axe, de sorte qu'aucune relation est-ouest ou nord-sud n'est inversée ; le placement est
+    calculé une seule fois et exporté en JSON;
     la couleur est le parti favori, l'intensité sa probabilité de victoire comptée sur les
     5 000 simulations, et un contour aux couleurs du poursuivant signale une course serrée
     (favori sous 75%). La somme des probabilités de victoire d'un parti égale son espérance
-    de sièges et ces espérances somment à 127 — la seule décomposition par circonscription
+    de sièges et ces espérances somment à 127 ; c'est la seule décomposition par circonscription
     qui soit additive.</p>
     <h4>Variables du modèle de déviation locale</h4>
     <ul>
@@ -201,8 +205,9 @@
     </ul>
     <p>Les groupes compositionnels sont fermés avec une part résiduelle explicite puis transformés en
     ILR avant d'entrer au modèle. Aucune sélection de variables : tout entre, et le GP atténue de
-    lui-même ce qui ne porte pas de signal. R² multivarié hors échantillon (50% ×15) : 0,44,
-    contre 0,38 pour la régression ridge qu'il remplace.</p>
+    lui-même ce qui ne porte pas de signal. Le GP démographique atteint un R² multivarié hors
+    échantillon de 0,44 (validation croisée excluant aléatoirement 50 % des circonscriptions,
+    répétée 15 fois), contre 0,38 pour la régression ridge qu'il remplace.</p>
     <h4>Incertitude</h4>
     <p>La simulation Monte Carlo (5 000 tirages) propage quatre sources d'incertitude : (1) la
     distribution a posteriori de la tendance nationale; (2) un choc systémique commun à
@@ -211,10 +216,10 @@
     2022); (3) un facteur régional (Montréal / Québec / reste), car les déviations locales sont
     corrélées dans l'espace; (4) la déviation propre de chaque circonscription, rééchantillonnée des
     erreurs de prédiction hors échantillon du modèle (élargie pour les circonscriptions où le modèle
-    ne prédit rien). Le chiffre de sièges affiché est le scénario simulé le plus typique (le médoïde :
-    le tirage minimisant la distance moyenne aux autres) — un vrai scénario joint, cohérent entre
-    partis et sommant à 127, là où des médianes parti par parti ne décrivent aucun scénario
-    atteignable. Les intentions affichées sont l'état de l'opinion aujourd'hui; la simulation de
+    ne prédit rien). Le chiffre de sièges affiché est le scénario simulé le plus typique (le
+    médoïde, soit le tirage minimisant la distance moyenne aux autres tirages) : un scénario
+    joint réel, cohérent entre partis et sommant à 127, alors que des médianes partielles par
+    parti ne décrivent aucun scénario atteignable. Les intentions affichées sont l'état de l'opinion aujourd'hui; la simulation de
     sièges porte sur le jour du scrutin.</p>
     <h4>Limites</h4>
     <p>Deux validations, chacune sur une seule élection. Sur 2022 (swing seul) : 89% des
@@ -222,12 +227,13 @@
     temporel inversé faute d'une troisième élection) : 89% des circonscriptions, 97% des serrées,
     contre 52% pour une projection sans changement. Le choc systémique est calibré sur deux élections
     seulement. La réputation d'un candidat en particulier n'est pas modélisée, ni la participation
-    différentielle. Les covariances entre partis dans la tendance ne sont pas modélisées — testées
-    et laissées de côté : la corrélation empirique des résidus de sondages ne s'applique pas telle
-    quelle à l'incertitude latente, et l'effet sur les sièges reste dans le bruit de simulation. Les
-    effets de maison de sondage ont été estimés et validés par validation croisée temporelle : aucun
-    gain de prévision, non retenus. Les portées par variable (ARD) du modèle local ont aussi été
-    testées : surcharge hors échantillon, rejetées. Le signal des partielles n'est pas validable sur l'histoire
+    différentielle. Les covariances entre partis dans la tendance ne sont pas modélisées ; elles
+    ont été testées puis écartées : la corrélation empirique des résidus de sondages ne
+    s'applique pas telle quelle à l'incertitude latente, et l'effet sur les sièges reste dans le
+    bruit de simulation. Les effets de maison de sondage ont été estimés puis évalués par
+    validation croisée temporelle : aucun gain de prévision, ils ne sont pas retenus. Les portées
+    par variable (ARD) du modèle local ont également été testées et écartées : elles dégradent
+    la prédiction hors échantillon. Le signal des partielles n'est pas validable sur l'histoire
     (aucune série de partielles anciennes en base) : son poids est un a priori documenté.</p>
     <h4>Code source</h4>
     <p><i>Si la tendance se maintient</i> est un flux de calcul et une plateforme de diffusion développée

@@ -674,7 +674,8 @@ async function main() {
   };
 
   const effectsNote = meta.effectsR2 != null
-    ? ` · effets locaux R²=${meta.effectsR2.toFixed(2)} sur ${meta.effectsCount} circonscriptions`
+    ? ` · effets locaux : GP démographique R²=${meta.effectsR2.toFixed(2)} sur ${meta.effectsCount} circonscriptions` +
+      (meta.nByelections ? `, ${meta.nByelections} partielles` : "")
     : " · effets locaux indisponibles";
   // generatedAt is ISO UTC; the audience is Quebec, so show Eastern time
   // (America/Toronto follows the same DST rules as Montreal).
