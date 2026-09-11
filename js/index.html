@@ -246,9 +246,14 @@
     sans changement. Le choc systémique n'est calibré que sur deux élections. Ne sont pas
     modélisées : la notoriété individuelle des candidats (testée via la notoriété Wikipédia,
     redondante avec le profil démographique, sans gain hors échantillon), la participation
-    différentielle, et la covariance entre partis dans la tendance (testée : la corrélation
-    empirique des résidus de sondages ne se transpose pas à l'incertitude latente, et l'effet
-    sur les sièges reste dans le bruit de simulation). Les effets de maison de sondage,
+    différentielle, et la covariance entre partis dans la tendance. Cette dernière a été
+    évaluée deux fois : par injection de la corrélation empirique des résidus de sondages
+    (rejetée, l'effet sur les sièges restant dans le bruit de simulation), puis par
+    corégionalisation intrinsèque, la matrice de couplage B étant estimée conjointement par
+    vraisemblance marginale sur les coordonnées ILR empilées; le gain de vraisemblance
+    in-sample (+7 nats sur le modèle indépendant) ne survit pas à la validation croisée
+    (log-vraisemblance prédictive inférieure de 25 nats sur 1 355 observations, couverture
+    inchangée), signature d'un surajustement des hyperparamètres de couplage. Les effets de maison de sondage,
     évalués par validation croisée temporelle, n'apportent aucun gain prédictif et ne sont pas
     retenus; les portées par variable (ARD) du modèle local dégradent la prédiction hors
     échantillon et sont écartées. Le poids du signal des partielles demeure un a priori non
