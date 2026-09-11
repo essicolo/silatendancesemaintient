@@ -131,8 +131,9 @@
     Mainstreet, Synopsis, Angus Reid, Abacus et autres. Recensement 2021 par circonscription
     (Statistique Canada, agrégé par aire de diffusion). Résultats de 2014, 2018 et 2022
     (Élections Québec), exprimés sur la carte électorale 2026 (127 circonscriptions) par réagrégation
-    géographique des sections de vote. Députés sortants, retraits et chefs depuis les pages de
-    l'Assemblée nationale sur Wikipédia.</p>
+    géographique des sections de vote, et partielles tenues depuis 2022 (DGEQ, cinq à ce jour) —
+    une mesure locale récente que le modèle utilise explicitement. Députés sortants, retraits et
+    chefs depuis les pages de l'Assemblée nationale sur Wikipédia.</p>
     <h4>Agrégation des sondages</h4>
     <p>Les intentions de vote sont traitées comme une composition (les parts somment à 1) et manipulées
     en coordonnées log-ratio isométriques (ILR), où les opérations linéaires sont valides (une
@@ -147,7 +148,8 @@
     opère de plus sur un temps dilaté : un jour de campagne (du décret au scrutin, fenêtres
     2014, 2018, 2022 et 2026) compte pour k jours, k choisi par vraisemblance sur les campagnes
     passées, la valeur 1 redonnant l'horloge uniforme; l'évidence retient une forte dilatation
-    (portée effective d'environ 40 à 60 jours en campagne, contre 300 à 1500 hors campagne).
+    (portée effective d'environ 40 à 190 jours en campagne selon la coordonnée, contre 300 à 1500
+    hors campagne).
     La calibration des intervalles est vérifiée par validation croisée :
     91% des sondages tombent dans l'intervalle à 90%. Les sondages régionaux
     (ventilations Montréal / Québec / reste) entrent dans le même modèle comme observations d'un
@@ -224,7 +226,8 @@
     et laissées de côté : la corrélation empirique des résidus de sondages ne s'applique pas telle
     quelle à l'incertitude latente, et l'effet sur les sièges reste dans le bruit de simulation. Les
     effets de maison de sondage ont été estimés et validés par validation croisée temporelle : aucun
-    gain de prévision, non retenus. Le signal des partielles n'est pas validable sur l'histoire
+    gain de prévision, non retenus. Les portées par variable (ARD) du modèle local ont aussi été
+    testées : surcharge hors échantillon, rejetées. Le signal des partielles n'est pas validable sur l'histoire
     (aucune série de partielles anciennes en base) : son poids est un a priori documenté.</p>
     <h4>Code source</h4>
     <p><i>Si la tendance se maintient</i> est un flux de calcul et une plateforme de diffusion développée
