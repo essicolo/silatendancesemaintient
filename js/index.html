@@ -170,7 +170,13 @@
     le point de départ de la projection, jamais le résultat 2022 affiché. S'ajoute une déviation
     locale prédite par un processus gaussien multivarié (noyau Matérn, un GP par
     coordonnée ILR, hyperparamètres par vraisemblance marginale ré-évaluée dans chaque pli de
-    validation). La carte par tuiles donne à chaque circonscription une case de taille égale,
+    validation). Depuis l'élection 2022, chaque partielle est de surcroît une mesure locale
+    directe et récente : son écart au swing provincial (net de la prime au sortant retirée et de
+    la composante régionale déjà appliquée) est fondu à demi-poids dans la déviation prédite —
+    cinq partielles, quatre gagnées par le PQ dans d'anciens sièges caquistes. Ce poids est un
+    a priori documenté (turnout faible, vote de contestation, candidats locaux, redécoupage
+    2017→2026), non un paramètre ajusté : la table de sensibilité vit dans
+    <code>js/tools/byelection_test.mjs</code>. La carte par tuiles donne à chaque circonscription une case de taille égale,
     placée depuis les centroïdes par un mélange de géographie brute (la silhouette du Québec,
     le vide nordique) et de rangs (qui décompressent l'île de Montréal) — mélange monotone par
     axe, donc aucune relation est/ouest ou nord/sud n'est inversée — calculé une seule fois et
@@ -214,7 +220,12 @@
     temporel inversé faute d'une troisième élection) : 89% des circonscriptions, 97% des serrées,
     contre 52% pour une projection sans changement. Le choc systémique est calibré sur deux élections
     seulement. La réputation d'un candidat en particulier n'est pas modélisée, ni la participation
-    différentielle. Les covariances entre partis dans la tendance ne sont pas modélisées.</p>
+    différentielle. Les covariances entre partis dans la tendance ne sont pas modélisées — testées
+    et laissées de côté : la corrélation empirique des résidus de sondages ne s'applique pas telle
+    quelle à l'incertitude latente, et l'effet sur les sièges reste dans le bruit de simulation. Les
+    effets de maison de sondage ont été estimés et validés par validation croisée temporelle : aucun
+    gain de prévision, non retenus. Le signal des partielles n'est pas validable sur l'histoire
+    (aucune série de partielles anciennes en base) : son poids est un a priori documenté.</p>
     <h4>Code source</h4>
     <p><i>Si la tendance se maintient</i> est un flux de calcul et une plateforme de diffusion développée
     par <a href="https://github.com/essicolo">Essi Parent</a>. Les calculs sont effectuées en JavaScript grâce

@@ -139,6 +139,21 @@ async function exportRidingResults(con: DuckDBConnection): Promise<Record<string
   return rows.map((r) => ({ ...r, riding_code: normalizeRidingCode(r.riding_code) }));
 }
 
+/** By-elections since the 2022 general: each is a direct, recent, local
+ * measurement the model blends into the riding effects (src/byelections.js).
+ * The rows carry the riding NAME in riding_code (that is how the DGEQ
+ * one-off loaders ingest them), plus their map year; future by-elections
+ * flow through here automatically. */
+async function exportByelections(con: DuckDBConnection): Promise<Record<string, unknown>[]> {
+  return await all(
+    con,
+    `SELECT election_date::VARCHAR AS election_date, boundary_year, riding_code, party_code, votes
+     FROM election_results
+     WHERE jurisdiction_code = 'qc-provincial' AND riding_code IS NOT NULL
+       AND election_date > '2022-10-03'::DATE`,
+  );
+}
+
 export async function exportAll(): Promise<void> {
   mkdirSync(fileURLToPath(OUT_DIR), { recursive: true });
   const con = await connect();
@@ -163,6 +178,7 @@ export async function exportAll(): Promise<void> {
     write(`qc_riding_features_${year}.json`, await exportRidingFeatures(con, year), `riding feature rows (${year} map)`);
   }
   write("qc_riding_results.json", await exportRidingResults(con), "riding result rows");
+  write("qc_byelections.json", await exportByelections(con), "by-election rows");
 
   con.closeSync();
 }

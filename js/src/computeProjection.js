@@ -25,6 +25,7 @@ import { simulateSeatCounts, seatDistributions, governmentScenarios, medoidDraw 
 import { fitRegionalTrend, REGIONS } from "./regionalTrend.js";
 import { residualIlr, ilrMatrix } from "./ridingEffects.js";
 import { trainRidingEffects, predictRidingEffects } from "./ridingProjection.js";
+import { byelectionDeviations, blendByelectionEffects } from "./byelections.js";
 
 const ELECTION_DATE = "2026-10-05";
 
@@ -48,13 +49,18 @@ function applyEffectsToForecast(ridingForecast, effects, partyCodes) {
 
 /**
  * @param {Object} data every input JSON, keyed by short name
- * @param {Object} opts {asOf} -- defaults to today
+ * @param {Object} opts {asOf} -- defaults to today; {trendCorr} optional
+ *        k-1 x k-1 correlation matrix for the national draws (see
+ *        sampleTrendDraws) — null keeps the independent-coordinate draws;
+ *        {effectsTransform} optional (Map) -> Map applied to the riding-
+ *        effects before the by-election blend (test hook).
  * @returns serializable projection object
  */
-export function computeProjection(data, { asOf = new Date().toISOString().slice(0, 10) } = {}) {
+export function computeProjection(data, { asOf = new Date().toISOString().slice(0, 10), trendCorr = null, effectsTransform = null } = {}) {
   const {
     pollRows, baselineRows, leaders, ridingResults, features2017, features2026,
     systemicParams, ridingRegions, incumbents, leaderEffect, regionalPollRows,
+    byelectionRows = [],
   } = data;
 
   const { polls, partyCodes } = pivotPolls(pollRows);
@@ -133,6 +139,7 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   // 2022 deviation already in the baseline. Validated on 2022 (MAE 3.06 vs
   // 3.61pp for uniform swing).
   let regionalInfo = null;
+  let regionAdj = null; // region -> ILR vector of the adjustment applied below
   const regionByCode = new Map(ridingRegions.map((r) => [String(r.riding_code), r.region_code]));
   try {
     const w = { MTL: 0, QC: 0, REG: 0 };
@@ -161,12 +168,21 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
       const allIlr = ilrMatrix([...regShares2022, provShares2022]);
       const provIlr2022 = allIlr[allIlr.length - 1];
 
+      // One adjustment vector per region: current regional deviation minus
+      // the 2022 deviation already in the baseline. Kept per region (not
+      // per riding) so the by-election signal can subtract exactly what the
+      // regional block applies to every riding of that region.
+      regionAdj = new Map(
+        REGIONS.map((reg, ri) => [
+          reg,
+          devNow[reg].map((v, j) => v - (allIlr[ri][j] - provIlr2022[j])),
+        ])
+      );
+
       for (const [code, shares] of projectionBaselineMap) {
         const reg = regionByCode.get(String(code));
         if (!reg) continue;
-        const ri = REGIONS.indexOf(reg);
-        const dev2022 = allIlr[ri].map((v, j) => v - provIlr2022[j]);
-        const adj = devNow[reg].map((v, j) => v - dev2022[j]);
+        const adj = regionAdj.get(reg);
         const shifted = ilrMatrix([shares])[0].map((v, j) => v + adj[j]);
         projectionBaselineMap.set(code, mva.composition.ilrInv([shifted])[0]);
       }
@@ -181,12 +197,30 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
 
   // Riding-effects GP (Matérn), trained 2017-map transitions, applied to the
   // 2026 map. Degrades to national swing on failure.
-  let effectsInfo = null, ridingEffects = null;
+  let effectsInfo = null, ridingEffects = null, byelectionInfo = null;
   try {
     const trained = trainRidingEffects(features2017, ridingResults, partyCodes);
     if (trained) {
       ridingEffects = predictRidingEffects(trained, features2026, ridingResults, partyCodes);
+      if (typeof effectsTransform === "function") ridingEffects = effectsTransform(ridingEffects);
       effectsInfo = trained;
+
+      // By-election signal: each partielle since 2022 is a direct, recent
+      // measurement of that riding's departure from the provincial swing
+      // (four of the five went to the PQ in former CAQ seats). Blended into
+      // the GP effect with shrinkage; the regional component is subtracted
+      // so it is not counted twice (see byelections.js for the honest
+      // limits: low turnout, protest dynamics, map mismatch, no historical
+      // validation -- lambda is a documented prior, not a fitted parameter).
+      const { byCode } = byelectionDeviations({
+        byRows: byelectionRows, ridingResults, features2017, features2026,
+        model, partyCodes, regionAdj, regionByCode,
+      });
+      if (byCode.size) {
+        ridingEffects = blendByelectionEffects(ridingEffects, byCode);
+        byelectionInfo = [...byCode.values()].map(({ name, date }) => ({ name, date }));
+      }
+
       applyEffectsToForecast(ridingForecast, ridingEffects, partyCodes);
     }
   } catch (err) {
@@ -204,7 +238,7 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   const trendSeries = predictTrendSeries(model, dates, { nSamples: 300, seed: 1 });
 
   // Simulation.
-  const provinceDraws = sampleTrendDraws(model, asOf, 5000, 1);
+  const provinceDraws = sampleTrendDraws(model, asOf, 5000, 1, { corr: trendCorr });
   const residuals = effectsInfo?.modelResiduals
     ?? residualIlr(ridingResults, "2018-10-01", "2017", "2022-10-03", "2017", partyCodes).Y;
   const codeByName = new Map(features2026.filter((f) => f.riding_name).map((f) => [f.riding_name, String(f.riding_code)]));
@@ -242,6 +276,8 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
       effectsR2: effectsInfo ? effectsInfo.r2 : null,
       effectsCount: ridingEffects ? ridingEffects.size : 0,
       nRegionalPolls: regionalInfo ? regionalInfo.n : 0,
+      nByelections: byelectionInfo ? byelectionInfo.length : 0,
+      byelections: byelectionInfo ?? [],
     },
     partyCodes,
     trendSeries,

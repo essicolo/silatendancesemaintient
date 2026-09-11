@@ -55,7 +55,14 @@ export function ridingBaselineFromRows(rows, partyCodes) {
  * @param {Map<string, number[]>} baseline riding_code -> share vector (mutated)
  * @param {Set<string>} openSeatCodes riding codes whose seat is open
  */
-export function applyOpenSeatPenalty(baseline, openSeatCodes, factor = Math.exp(0.118)) {
+/** The personal incumbency vote, estimated 2018->2022 (log-share excess
+ * growth of winners who ran again vs those who didn't; model/incumbency.py):
+ * exp(0.118) ~= 1.125, i.e. ~4.3 points at a typical 40% winning share.
+ * Shared by the open-seat penalty and the by-election departure baseline
+ * (byelections.js) so both measure against the same adjusted 2022 result. */
+export const INCUMBENCY_FACTOR = Math.exp(0.118);
+
+export function applyOpenSeatPenalty(baseline, openSeatCodes, factor = INCUMBENCY_FACTOR) {
   for (const code of openSeatCodes) {
     const shares = baseline.get(code);
     if (!shares) continue;

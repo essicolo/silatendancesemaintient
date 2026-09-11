@@ -10,6 +10,9 @@ import { computeProjection } from "./computeProjection.js";
 
 export function writeProjection(dataDir = new URL("../data/", import.meta.url)) {
   const load = (f) => JSON.parse(readFileSync(new URL(f, dataDir), "utf-8"));
+  const loadOptional = (f) => {
+    try { return load(f); } catch { return []; } // by-elections: absent = none
+  };
 
   const t0 = Date.now();
   const projection = computeProjection({
@@ -24,6 +27,7 @@ export function writeProjection(dataDir = new URL("../data/", import.meta.url)) 
     incumbents: load("qc_incumbents.json"),
     leaderEffect: load("qc_leader_effect.json"),
     regionalPollRows: load("qc_regional_polls.json"),
+    byelectionRows: loadOptional("qc_byelections.json"),
   });
 
   writeFileSync(new URL("qc_projection.json", dataDir), JSON.stringify(projection), "utf-8");

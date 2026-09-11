@@ -126,11 +126,33 @@ export function toX(t0, dates) {
 }
 
 /**
+ * Relative noise shape for `polls` (variance ~ 1/sqrt(n), the production
+ * convention), normalized so the quietest poll of `refPolls` carries 1 --
+ * refPolls defaults to polls itself; pass the TRAIN set to score held-out
+ * polls under the normalization the fit actually used.
+ */
+export function relativeNoiseShape(polls, refPolls = polls) {
+  const shape = (ps) => {
+    const w = sampleSizeWeight(ps);
+    const wMax = Math.max(...w);
+    return ps.map((_, i) => 1 / Math.max(w[i] / wMax, 0.05));
+  };
+  const refMin = Math.min(...shape(refPolls));
+  return shape(polls).map((v) => v / refMin);
+}
+
+/**
  * @param {Array<object>} polls
  * @param {string[]} partyCodes
+ * @param {Object} [opts]
+ * @param {number[]|null} [opts.noiseMultiplier] per-poll SD multiplier m_i
+ *   (e.g. a per-firm noise level): alpha is a variance, so it scales by m_i^2.
+ * @param {"sqrt"|"n"} [opts.noiseShape] shape of the relative noise across
+ *   sample sizes. "sqrt" (default, production) makes the variance ~ 1/sqrt(n);
+ *   "n" squares the relative shape to give the sampling-theory variance ~ 1/n.
  * @returns {{gps: ml.GaussianProcessRegressor[], t0: string, partyCodes: string[]}}
  */
-export function fitTrend(polls, partyCodes) {
+export function fitTrend(polls, partyCodes, { noiseMultiplier = null, noiseShape = "sqrt" } = {}) {
   const comp = toClosedComposition(polls, partyCodes);
   const ilrMat = ilr(comp); // k-1 orthonormal coordinates, full rank
 
@@ -143,6 +165,12 @@ export function fitTrend(polls, partyCodes) {
   const baseNoise = wNorm.map((v) => 1 / v);
   const baseMin = Math.min(...baseNoise);
   const relNoise = baseNoise.map((v) => v / baseMin); // relative shape: best poll = 1
+
+  // alpha is a per-observation VARIANCE. Production keeps the historical
+  // shape (variance ~ 1/sqrt(n)); noiseShape "n" squares the relative shape
+  // for the sampling-theory 1/n. A per-poll SD multiplier enters squared.
+  let relVar = noiseShape === "n" ? relNoise.map((v) => v * v) : relNoise;
+  if (noiseMultiplier) relVar = relVar.map((v, i) => v * noiseMultiplier[i] * noiseMultiplier[i]);
 
   // The library's own optimizer (optimize: true) tunes kernel parameters by
   // gradient ascent, but the noise SCALE multiplying the per-poll vector is
@@ -160,7 +188,7 @@ export function fitTrend(polls, partyCodes) {
       kernel: new ChangepointKernel({ lengthScale, rho, dilation }),
       normalizeY: true,
     });
-    gp.fit(x, y, { alpha: relNoise.map((v) => v * noiseScale) });
+    gp.fit(x, y, { alpha: relVar.map((v) => v * noiseScale) });
     return gp;
   };
 
@@ -228,13 +256,42 @@ function mulberry32(seed) {
   };
 }
 
+/** Lower-triangular Cholesky of a correlation-like matrix (jittered). */
+function cholLower(m) {
+  const n = m.length;
+  const L = Array.from({ length: n }, () => new Array(n).fill(0));
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j <= i; j++) {
+      let s = m[i][j];
+      for (let r = 0; r < j; r++) s -= L[i][r] * L[j][r];
+      L[i][j] = i === j ? Math.sqrt(Math.max(s, 1e-12)) : s / L[j][j];
+    }
+  }
+  return L;
+}
+
 /**
- * Draw `nSamples` joint composition samples at `asOf`: one independent
- * Normal draw per ILR coordinate from its own GP posterior, then inverse-ILR
- * back to the simplex. All k-1 coordinates are sampled -- none is
- * reconstructed from the others.
+ * Draw `nSamples` joint composition samples at `asOf`: one Normal draw per
+ * ILR coordinate from its own GP posterior, then inverse-ILR back to the
+ * simplex. All k-1 coordinates are sampled -- none is reconstructed from
+ * the others.
+ *
+ * `corr` (k-1 x k-1 correlation matrix, e.g. the empirical correlation of
+ * ILR poll residuals, shrunk toward identity) makes the per-coordinate draws
+ * CORRELATED instead of independent: the per-coordinate GPs cannot express
+ * cross-party co-movement, and independent ILR draws impose an isotropic
+ * joint covariance that the poll scatter visibly contradicts (when one
+ * party is under-polled the excess lands somewhere measurable). Marginals
+ * are unchanged by construction; only the joint distribution moves.
+ *
+ * NOTE: tested 2026-09-11 and left UNUSED in production -- injecting the
+ * empirical poll-residual correlation moved the share-space joint FARTHER
+ * from the observed scatter (poll noise correlation is not latent-trend
+ * correlation) and the seat impact stayed inside MC noise. The option stays
+ * because it is the natural hook the day a latent covariance is identifiable
+ * (multi-output GP); see tools/coord_covariance.mjs for the record.
  */
-export function sampleTrendDraws(model, asOf, nSamples = 2000, seed = null) {
+export function sampleTrendDraws(model, asOf, nSamples = 2000, seed = null, { corr = null } = {}) {
   const x = toX(model.t0, [asOf]);
   const rng = seed !== null ? mulberry32(seed) : Math.random;
 
@@ -245,9 +302,19 @@ export function sampleTrendDraws(model, asOf, nSamples = 2000, seed = null) {
     stds.push(std[0]);
   }
 
+  const Lc = corr ? cholLower(corr) : null;
   const samplesIlr = [];
   for (let s = 0; s < nSamples; s++) {
-    samplesIlr.push(means.map((m, i) => m + stds[i] * randnBoxMuller(rng)));
+    const z = means.map(() => randnBoxMuller(rng));
+    samplesIlr.push(
+      Lc
+        ? means.map((m, i) => {
+            let v = 0;
+            for (let j = 0; j <= i; j++) v += Lc[i][j] * z[j];
+            return m + stds[i] * v;
+          })
+        : means.map((m, i) => m + stds[i] * z[i])
+    );
   }
   const samplesSimplex = ilrInv(samplesIlr);
   return samplesSimplex.map((row) => Object.fromEntries(model.partyCodes.map((p, i) => [p, row[i]])));
