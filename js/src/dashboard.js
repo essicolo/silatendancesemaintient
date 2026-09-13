@@ -381,10 +381,8 @@ function renderTileMap(layout, winProbs, ridingForecast) {
   const note = document.createElement("p");
   note.className = "note";
   note.textContent =
-    "Chaque tuile est une circonscription, à taille égale (Montréal cesse de disparaître). " +
-    "Couleur : parti favori; intensité : sa probabilité de victoire sur 5 000 simulations. " +
-    `Contour coloré : course serrée (favori sous ${Math.round(CLOSE_RACE_P * 100)}%), aux couleurs du poursuivant. ` +
-    "La somme des probabilités de victoire d'un parti est son espérance de sièges — la seule décomposition par circonscription qui somme à 127.";
+    "Couleur : parti favori · intensité : probabilité de victoire · " +
+    `contour : parti poursuivant lorsque le favori est sous ${Math.round(CLOSE_RACE_P * 100)}%.`;
   host.appendChild(note);
 }
 
