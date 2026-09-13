@@ -307,8 +307,8 @@ function renderTileMap(layout, winProbs, ridingForecast) {
     rect.setAttribute("stroke-width", close ? 4 : 1);
     const title = document.createElementNS(svg.namespaceURI, "title");
     title.textContent = probs
-      ? `${t.name}\n${ranked.slice(0, 3).filter(([, p]) => p >= 0.005)
-        .map(([p, v]) => `${p} : ${(v * 100).toFixed(0)}% de chances`).join("\n")}`
+      ? `${t.name}\nProbabilité de victoire :\n${ranked.slice(0, 3).filter(([, p]) => p >= 0.005)
+        .map(([p, v]) => `${p} ${(v * 100).toFixed(0)} %`).join("\n")}`
       : t.name;
     rect.appendChild(title);
     rect.addEventListener("click", () => selectRiding(code, { zoom: false }));
@@ -629,9 +629,10 @@ function renderGovernmentScenarios(scenarios, totalSeats, partyCodes) {
   const note = document.createElement("p");
   note.className = "note";
   note.textContent =
-    "Scénarios mutuellement exclusifs : chaque simulation compte une seule fois, les probabilités totalisent 100% " +
-    "(les scénarios sous 1% ne sont pas affichés). La balance du pouvoir désigne le plus petit parti dont les sièges " +
-    "suffiraient à donner la majorité au parti arrivé en tête. C'est de l'arithmétique, pas une prédiction d'entente.";
+    "Chaque simulation est classée dans un scénario unique; les probabilités somment à 100 % " +
+    "(scénarios sous 1 % omis). La balance du pouvoir désigne le plus petit parti dont les sièges, " +
+    "ajoutés à ceux du parti arrivé en tête, atteindraient la majorité; elle décrit une possibilité " +
+    "arithmétique et non une entente anticipée.";
   host.appendChild(note);
 }
 
