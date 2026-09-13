@@ -577,10 +577,10 @@ function renderSeatDistributions(distributions, totalSeats, partyCodes, medoidCo
   const note = document.createElement("p");
   note.className = "note";
   note.textContent =
-    `Trait pointillé : seuil de majorité (${threshold} sièges). À droite : le scénario simulé le plus ` +
-    `typique (le tirage le plus proche de tous les autres — cohérent entre partis, somme à ${totalSeats}) ` +
-    `et l'intervalle à 90% de chaque parti. La carte montre le scénario central (toutes les sources ` +
-    `d'incertitude à leur moyenne), qui peut s'en écarter dans les courses serrées.`;
+    `Distribution du nombre de sièges par parti sur 5 000 simulations. ` +
+    `Trait pointillé : seuil de majorité (${threshold} sièges). ` +
+    `Valeurs à droite : sièges dans le scénario médian de la distribution jointe (médoïde), ` +
+    `suivis de l'intervalle à 90 %.`;
   host.appendChild(note);
 }
 
