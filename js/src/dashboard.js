@@ -76,7 +76,8 @@ function selectRiding(code, { zoom = true } = {}) {
   if (!entry) return;
   registry.selectedCode = code;
 
-  renderRidingDetail(code, name, entry, registry.ridingBaseline.sharesFor(code), registry.partyCodes);
+  renderRidingDetail(code, name, entry, registry.ridingBaseline.sharesFor(code), registry.partyCodes,
+    registry.winProbs?.[code] ?? null);
 
   // Map: reset every layer to its default style, then highlight the
   // selected one with a heavy black outline that stays until the next
@@ -125,7 +126,7 @@ function selectRiding(code, { zoom = true } = {}) {
   detailSection.classList.add("flash");
 }
 
-function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCodes) {
+function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCodes, winProbs) {
   const host = document.getElementById("riding-detail");
   host.innerHTML = "";
 
@@ -134,17 +135,29 @@ function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCode
   host.appendChild(title);
 
   const rows = partyCodes
-    .map((p) => ({ party: p, projected: forecastEntry.shares[p], baseline: baselineShares?.[p] ?? null }))
+    .map((p) => ({
+      party: p,
+      projected: forecastEntry.shares[p],
+      baseline: baselineShares?.[p] ?? null,
+      pWin: winProbs?.[p] ?? null,
+    }))
     .sort((a, b) => b.projected - a.projected);
 
+  // The central-scenario leader and the most probable winner can differ in a
+  // close multi-way race (unequal uncertainties across parties), so the win
+  // probability is shown beside the shares -- it is the map's colour.
   const table = document.createElement("table");
-  table.innerHTML = "<thead><tr><th>Parti</th><th>Projection 2026</th><th>Résultat 2022</th></tr></thead>";
+  table.innerHTML =
+    "<thead><tr><th>Parti</th><th>Projection 2026</th><th>P(victoire)</th><th>Résultat 2022</th></tr></thead>";
   const tbody = document.createElement("tbody");
   for (const r of rows) {
     const tr = document.createElement("tr");
     const proj = (r.projected * 100).toFixed(1) + "%";
     const base = r.baseline !== null ? (r.baseline * 100).toFixed(1) + "%" : "n/d";
-    tr.innerHTML = `<td style="border-left:4px solid ${PARTY_COLORS[r.party]}; padding-left:6px">${r.party}</td><td>${proj}</td><td>${base}</td>`;
+    const pw = r.pWin !== null ? (r.pWin * 100).toFixed(0) + "%" : "n/d";
+    tr.innerHTML =
+      `<td style="border-left:4px solid ${PARTY_COLORS[r.party]}; padding-left:6px">${r.party}</td>` +
+      `<td>${proj}</td><td>${pw}</td><td>${base}</td>`;
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
@@ -668,6 +681,7 @@ async function main() {
   );
   const ridingForecast = new Map(Object.entries(projection.ridingForecast));
   registry.ridingForecast = ridingForecast;
+  registry.winProbs = projection.ridingWinProbs ?? null;
   registry.ridingBaseline = {
     sharesFor: (code) => projection.ridingBaseline2022[String(code)] ?? null,
   };
