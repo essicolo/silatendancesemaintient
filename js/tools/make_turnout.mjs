@@ -41,6 +41,8 @@ const CROSSTABS = [
     PQ: [29, 19, 37, 28], CAQ: [24, 14, 13, 37], LIB: [22, 27, 14, 25], PCQ: [15, 18, 26, 7], QS: [10, 21, 10, 3] },
   { source: "Léger 2026-09-07 (Rapport-intentions-de-vote-7-septembre-2026-VF.pdf, p.7)",
     PQ: [29, 24, 38, 24], CAQ: [23, 8, 14, 37], LIB: [22, 29, 19, 21], PCQ: [15, 17, 17, 12], QS: [10, 19, 12, 5] },
+  { source: "Léger 2026-09-14 (VMEDIA1_Rapport-intentions-de-vote-14-septembre-2026-Finale.pdf, p.7)",
+    PQ: [29, 20, 33, 30], CAQ: [21, 11, 11, 34], LIB: [23, 29, 20, 21], PCQ: [17, 20, 22, 12], QS: [10, 19, 12, 3] },
 ];
 
 const gradient = {};
