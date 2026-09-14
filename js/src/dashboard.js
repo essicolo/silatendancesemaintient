@@ -141,23 +141,25 @@ function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCode
       baseline: baselineShares?.[p] ?? null,
       pWin: winProbs?.[p] ?? null,
     }))
-    .sort((a, b) => b.projected - a.projected);
+    .sort((a, b) => (b.pWin ?? b.projected) - (a.pWin ?? a.projected) || b.projected - a.projected);
 
-  // The central-scenario leader and the most probable winner can differ in a
-  // close multi-way race (unequal uncertainties across parties), so the win
-  // probability is shown beside the shares -- it is the map's colour.
+  // Ranked by CHANCE OF WINNING, the number that colours the map, so the
+  // first row always matches the tile -- ranking by projected share instead
+  // made the panel contradict the map in close multi-way races (Jean-Lesage:
+  // QS ahead by 0.8 in the central scenario, PCQ the likelier winner).
+  // Plain-language headers on purpose.
   const table = document.createElement("table");
   table.innerHTML =
-    "<thead><tr><th>Parti</th><th>Projection 2026</th><th>P(victoire)</th><th>Résultat 2022</th></tr></thead>";
+    "<thead><tr><th>Parti</th><th>Chances de gagner</th><th>Appui projeté</th><th>Résultat 2022</th></tr></thead>";
   const tbody = document.createElement("tbody");
   for (const r of rows) {
     const tr = document.createElement("tr");
     const proj = (r.projected * 100).toFixed(1) + "%";
     const base = r.baseline !== null ? (r.baseline * 100).toFixed(1) + "%" : "n/d";
-    const pw = r.pWin !== null ? (r.pWin * 100).toFixed(0) + "%" : "n/d";
+    const pw = r.pWin !== null ? Math.round(r.pWin * 100) + " sur 100" : "n/d";
     tr.innerHTML =
       `<td style="border-left:4px solid ${PARTY_COLORS[r.party]}; padding-left:6px">${r.party}</td>` +
-      `<td>${proj}</td><td>${pw}</td><td>${base}</td>`;
+      `<td>${pw}</td><td>${proj}</td><td>${base}</td>`;
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
