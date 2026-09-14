@@ -156,7 +156,7 @@ function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCode
     const tr = document.createElement("tr");
     const proj = (r.projected * 100).toFixed(1) + "%";
     const base = r.baseline !== null ? (r.baseline * 100).toFixed(1) + "%" : "n/d";
-    const pw = r.pWin !== null ? Math.round(r.pWin * 100) + " sur 100" : "n/d";
+    const pw = r.pWin !== null ? Math.round(r.pWin * 100) + " %" : "n/d";
     tr.innerHTML =
       `<td style="border-left:4px solid ${PARTY_COLORS[r.party]}; padding-left:6px">${r.party}</td>` +
       `<td>${pw}</td><td>${proj}</td><td>${base}</td>`;
