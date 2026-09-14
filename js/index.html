@@ -187,8 +187,17 @@
 
     <h4>5. Modèle de circonscription</h4>
     <p>Le point de départ de chaque circonscription est son résultat de 2022 exprimé sur la
-    carte de 2026. Le mouvement provincial estimé (section 3), corrigé de l'écart régional
-    courant net de l'écart régional de 2022 (section 4), lui est appliqué en log-ratios. Trois
+    carte de 2026. Le mouvement provincial estimé (section 3) est d'abord converti de la
+    population adulte, que décrivent les sondages, vers l'électorat probable : la part de
+    chaque parti est multipliée par le rapport de son mélange d'âge sous les poids de
+    participation et sous les poids de population, où le profil d'âge des partis provient des
+    ventilations par âge du cycle 2026 mutualisées en log-ratios, les taux de participation
+    par âge de l'élection de 2022 (Élections Québec) et la structure d'âge du recensement.
+    Cette correction de participation différentielle, validée sur les sept sondages finaux de
+    2022 (erreur absolue moyenne réduite de 2,02 à 1,88 point, robuste aux variantes de poids
+    et de taux), s'applique à la projection et à la simulation, non à la tendance affichée,
+    qui décrit l'opinion de la population adulte. Le mouvement ainsi converti, net de l'écart
+    régional courant moins celui de 2022 (section 4), est appliqué en log-ratios. Trois
     ajustements estimés s'y superposent, tous en perturbation compositionnelle :</p>
     <ul>
       <li>Prime au sortant : un siège dont le député ne se représente pas ou siège désormais
@@ -244,10 +253,13 @@
     (swing seul) : 89 % des circonscriptions correctement classées, 78 % des courses serrées.
     Sur 2018 (pipeline complet, en validation temporelle inversée faute d'une troisième
     élection) : 89 % des circonscriptions et 97 % des serrées, contre 52 % pour la projection
-    sans changement. Le choc systémique n'est calibré que sur deux élections. Ne sont pas
-    modélisées : la notoriété individuelle des candidats (testée via la notoriété Wikipédia,
-    redondante avec le profil démographique, sans gain hors échantillon), la participation
-    différentielle, et la covariance entre partis dans la tendance. Cette dernière a été
+    sans changement. Le choc systémique n'est calibré que sur deux élections. La correction de
+    participation différentielle repose sur une seule élection de validation, sur les taux de
+    2022 comme a priori de la participation de 2026, et sur un gradient d'âge estimé de deux
+    ventilations publiées; la participation différentielle selon d'autres dimensions (langue,
+    région) n'est pas modélisée. Ne sont pas modélisées non plus : la notoriété individuelle
+    des candidats (testée via la notoriété Wikipédia, redondante avec le profil démographique,
+    sans gain hors échantillon) et la covariance entre partis dans la tendance. Cette dernière a été
     évaluée deux fois : par injection de la corrélation empirique des résidus de sondages
     (rejetée, l'effet sur les sièges restant dans le bruit de simulation), puis par
     corégionalisation intrinsèque, la matrice de couplage B étant estimée conjointement par

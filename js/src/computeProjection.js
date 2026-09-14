@@ -60,10 +60,42 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   const {
     pollRows, baselineRows, leaders, ridingResults, features2017, features2026,
     systemicParams, ridingRegions, incumbents, leaderEffect, regionalPollRows,
-    byelectionRows = [],
+    byelectionRows = [], turnout = null,
   } = data;
 
   const { polls, partyCodes } = pivotPolls(pollRows);
+
+  // Differential-turnout correction: polls describe the adult population,
+  // seats are decided by the electorate, which skews older. Per party, the
+  // topline is scaled by (sum_a wVote_a e^{g_pa}) / (sum_a wPop_a e^{g_pa}),
+  // where g is the pooled 2026 age gradient (log band/topline) and wVote is
+  // the population mix reweighted by official turnout; the ratio is
+  // level-free, so it is one fixed factor per party. Validated on the 2022
+  // final polls (tools/turnout_test.ts); parameters in qc_turnout.json.
+  // Applied to the PROJECTION and the SIMULATION draws, never to the trend
+  // series, which keeps describing opinion in the adult population.
+  let turnoutFactor = null;
+  if (turnout) {
+    const wSum = turnout.wPop.reduce((a, b) => a + b, 0);
+    const vRaw = turnout.wPop.map((w, a) => w * turnout.tau[a]);
+    const vSum = vRaw.reduce((a, b) => a + b, 0);
+    turnoutFactor = Object.fromEntries(partyCodes.map((p) => {
+      const g = turnout.gradient[p] ?? turnout.bands.map(() => 0);
+      let mixP = 0, mixV = 0;
+      for (let a = 0; a < g.length; a++) {
+        mixP += (turnout.wPop[a] / wSum) * Math.exp(g[a]);
+        mixV += (vRaw[a] / vSum) * Math.exp(g[a]);
+      }
+      return [p, mixV / mixP];
+    }));
+  }
+  const toElectorate = (shares) => {
+    if (!turnoutFactor) return shares;
+    const scaled = partyCodes.map((p) => (shares[p] ?? 0) * turnoutFactor[p]);
+    const s = scaled.reduce((a, b) => a + b, 0);
+    return Object.fromEntries(partyCodes.map((p, i) => [p, scaled[i] / s]));
+  };
+
   const model = fitTrend(polls, partyCodes);
   const daysToElection = Math.max(0, (new Date(ELECTION_DATE) - new Date(asOf)) / 86_400_000);
 
@@ -192,7 +224,9 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
     console.error("[compute] regional trend failed, national swing only:", err.message);
   }
 
-  const forecastPoint = Object.fromEntries(partyCodes.map((p) => [p, predictTrend(model, asOf, { seed: 42 })[p].mean]));
+  const forecastPoint = toElectorate(
+    Object.fromEntries(partyCodes.map((p) => [p, predictTrend(model, asOf, { seed: 42 })[p].mean])),
+  );
   const ridingForecast = uniformClrSwing(projectionBaselineMap, provinceBaseline2022, forecastPoint, partyCodes);
 
   // Riding-effects GP (Matérn), trained 2017-map transitions, applied to the
@@ -238,7 +272,7 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   const trendSeries = predictTrendSeries(model, dates, { nSamples: 300, seed: 1 });
 
   // Simulation.
-  const provinceDraws = sampleTrendDraws(model, asOf, 5000, 1, { corr: trendCorr });
+  const provinceDraws = sampleTrendDraws(model, asOf, 5000, 1, { corr: trendCorr }).map(toElectorate);
   const residuals = effectsInfo?.modelResiduals
     ?? residualIlr(ridingResults, "2018-10-01", "2017", "2022-10-03", "2017", partyCodes).Y;
   const codeByName = new Map(features2026.filter((f) => f.riding_name).map((f) => [f.riding_name, String(f.riding_code)]));
@@ -276,6 +310,7 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
       effectsR2: effectsInfo ? effectsInfo.r2 : null,
       effectsCount: ridingEffects ? ridingEffects.size : 0,
       nRegionalPolls: regionalInfo ? regionalInfo.n : 0,
+      turnoutFactor: turnoutFactor,
       nByelections: byelectionInfo ? byelectionInfo.length : 0,
       byelections: byelectionInfo ?? [],
     },

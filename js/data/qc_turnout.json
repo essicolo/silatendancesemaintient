@@ -1,0 +1,58 @@
+{
+ "bands": [
+  "18-34",
+  "35-54",
+  "55+"
+ ],
+ "wPop": [
+  0.256,
+  0.334,
+  0.41
+ ],
+ "tau": [
+  0.544,
+  0.633,
+  0.732
+ ],
+ "gradient": {
+  "PQ": [
+   -0.306,
+   0.257,
+   -0.1122
+  ],
+  "CAQ": [
+   -0.7975,
+   -0.5548,
+   0.4541
+  ],
+  "LIB": [
+   0.2405,
+   -0.2993,
+   0.0407
+  ],
+  "PCQ": [
+   0.1537,
+   0.3376,
+   -0.4926
+  ],
+  "QS": [
+   0.6919,
+   0.0912,
+   -0.9486
+  ],
+  "AUTRES": [
+   0,
+   0,
+   0
+  ]
+ },
+ "sources": {
+  "tau": "Élections Québec, DGE-6281, tableau 1 (élection générale 2022)",
+  "wPop": "Recensement, structure d'âge 18+",
+  "gradient": [
+   "Léger 2026-08-31 (Rapport-intentions-de-vote-31-aout-2026-VF.pdf, p.7)",
+   "Léger 2026-09-07 (Rapport-intentions-de-vote-7-septembre-2026-VF.pdf, p.7)"
+  ],
+  "validation": "js/tools/turnout_test.ts (backtest 2022 : MAE finaux 2,015 -> 1,877 pp)"
+ }
+}

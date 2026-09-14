@@ -28,6 +28,7 @@ export function writeProjection(dataDir = new URL("../data/", import.meta.url)) 
     leaderEffect: load("qc_leader_effect.json"),
     regionalPollRows: load("qc_regional_polls.json"),
     byelectionRows: loadOptional("qc_byelections.json"),
+    turnout: (() => { try { return load("qc_turnout.json"); } catch { return null; } })(),
   });
 
   writeFileSync(new URL("qc_projection.json", dataDir), JSON.stringify(projection), "utf-8");
