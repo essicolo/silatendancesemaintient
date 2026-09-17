@@ -599,6 +599,59 @@ function renderSeatDistributions(distributions, totalSeats, partyCodes, medoidCo
   host.appendChild(note);
 }
 
+// ---- Vote-vs-seat disproportion ----------------------------------------------
+// Each simulation draw carries both a national vote composition and a seat
+// allocation, so the electoral system's distortion is a joint distribution:
+// dumbbells show expected vote share vs expected seat share per party, the
+// note carries the Gallagher index summarised over the draws.
+
+function renderDisproportion(d, partyCodes) {
+  const host = document.getElementById("disproportion");
+  if (!d) { host.textContent = "n/d"; return; }
+  host.innerHTML = "";
+
+  const ordered = [...partyCodes]
+    .filter((p) => d.voteShare[p] > 0.5 || d.seatShare[p] > 0.5)
+    .sort((a, b) => d.voteShare[b] - d.voteShare[a]);
+  const rows = ordered.map((p) => ({
+    party: p,
+    votes: d.voteShare[p],
+    sieges: d.seatShare[p],
+    gap: d.gaps[p].p50,
+  }));
+
+  const plot = Plot.plot({
+    width: 640,
+    height: 46 * rows.length + 50,
+    marginLeft: 62,
+    marginRight: 175,
+    x: { label: "% des votes (rond) et des sièges (carré)", grid: true },
+    y: { domain: ordered, label: null },
+    color: colorScale(partyCodes),
+    marks: [
+      Plot.link(rows, { x1: "votes", x2: "sieges", y1: "party", y2: "party", stroke: "party", strokeWidth: 2.5 }),
+      Plot.dot(rows, { x: "votes", y: "party", fill: "party", r: 5.5 }),
+      Plot.dot(rows, { x: "sieges", y: "party", fill: "party", r: 5.5, symbol: "square" }),
+      Plot.text(rows, {
+        x: (r) => Math.max(r.votes, r.sieges), y: "party",
+        text: (r) => `${r.votes.toFixed(0)} % des votes → ${r.sieges.toFixed(0) } % des sièges`,
+        dx: 10, textAnchor: "start", fontSize: 11, fill: "#333",
+      }),
+    ],
+  });
+  host.appendChild(plot);
+
+  const note = document.createElement("p");
+  note.className = "note";
+  note.textContent =
+    `Espérances sur les 5 000 simulations : part des votes (électorat probable) contre part des ` +
+    `127 sièges. Le scrutin uninominal amplifie le parti en tête et pénalise les appuis dispersés. ` +
+    `Indice de disproportion de Gallagher : ${d.gallagher.p50.toFixed(1)} ` +
+    `[intervalle à 90 % : ${d.gallagher.p05.toFixed(1)}–${d.gallagher.p95.toFixed(1)}] ; ` +
+    `repères : 4 à 6 sous un scrutin proportionnel, 17,8 au Québec en 2022.`;
+  host.appendChild(note);
+}
+
 // ---- Government scenarios ---------------------------------------------------
 // Mutually exclusive by construction: every simulation lands in exactly one
 // row, so the probabilities partition to 100%. The "balance of power" column
@@ -737,6 +790,8 @@ async function main() {
       projection.medoidCounts ?? projection.pointCounts));
   section("government-outcomes", () =>
     renderGovernmentScenarios(projection.scenarios, totalSeats, partyCodes));
+  section("disproportion", () =>
+    renderDisproportion(projection.disproportion, partyCodes));
 
   // Default selection so the detail panel isn't empty on first load, and so
   // it's obvious from the start that clicking updates it.

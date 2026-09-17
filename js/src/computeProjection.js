@@ -300,6 +300,42 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   const pointCounts = Object.fromEntries(partyCodes.map((p) => [p, 0]));
   for (const entry of ridingForecast.values()) pointCounts[entry.winner]++;
 
+  // Vote-vs-seat disproportion. Each draw i carries BOTH a national vote
+  // composition (provinceDraws[i], probable-electorate basis) and a seat
+  // allocation (simulation.draws[i], same index by construction), so the
+  // distortion of the electoral system is a joint distribution obtained for
+  // free: per-party gaps (seat share minus vote share) and the Gallagher
+  // least-squares index sqrt(1/2 sum (v-s)^2), summarised over draws.
+  const nDraws = Math.min(provinceDraws.length, simulation.draws.length);
+  const gallagherDraws = new Array(nDraws);
+  const gapDraws = Object.fromEntries(partyCodes.map((p) => [p, new Array(nDraws)]));
+  const voteMean = Object.fromEntries(partyCodes.map((p) => [p, 0]));
+  const seatMean = Object.fromEntries(partyCodes.map((p) => [p, 0]));
+  for (let i = 0; i < nDraws; i++) {
+    let sq = 0;
+    for (const p of partyCodes) {
+      const v = (provinceDraws[i][p] ?? 0) * 100;
+      const s = ((simulation.draws[i][p] ?? 0) / simulation.totalSeats) * 100;
+      sq += (v - s) ** 2;
+      gapDraws[p][i] = s - v;
+      voteMean[p] += v / nDraws;
+      seatMean[p] += s / nDraws;
+    }
+    gallagherDraws[i] = Math.sqrt(sq / 2);
+  }
+  const q = (arr, p) => {
+    const s = [...arr].sort((a, b) => a - b);
+    return s[Math.floor((p / 100) * (s.length - 1))];
+  };
+  const disproportion = {
+    voteShare: voteMean,
+    seatShare: seatMean,
+    gaps: Object.fromEntries(partyCodes.map((p) => [p, {
+      p05: q(gapDraws[p], 5), p50: q(gapDraws[p], 50), p95: q(gapDraws[p], 95),
+    }])),
+    gallagher: { p05: q(gallagherDraws, 5), p50: q(gallagherDraws, 50), p95: q(gallagherDraws, 95) },
+  };
+
   return {
     meta: {
       generatedAt: new Date().toISOString(),
@@ -329,6 +365,7 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
     // sums to the house size; unlike pointCounts it centres the simulated
     // OUTCOMES rather than the model inputs.
     medoidCounts: medoidDraw(simulation.draws, partyCodes),
+    disproportion,
     // P(victory) per riding per party, tallied over the draws. Column sums
     // are exact expected seats, the one additive per-riding decomposition.
     ridingWinProbs: simulation.winProbs,

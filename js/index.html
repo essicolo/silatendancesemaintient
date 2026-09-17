@@ -122,6 +122,7 @@
   <div class="row bottom">
     <section><h2>Distribution des sièges</h2><div id="seat-bar"></div></section>
     <section><h2>Scénarios de gouvernement</h2><div id="government-outcomes"></div></section>
+    <section><h2>Votes et sièges : la distorsion du scrutin</h2><div id="disproportion"></div></section>
   </div>
 
   <details class="methodology">
@@ -246,7 +247,11 @@
     marginales, qui ne correspond à aucun scénario atteignable et ne somme pas au nombre de
     sièges, le médoïde est une réalisation effective, cohérente entre partis. Les intentions
     de vote rapportées décrivent l'état de l'opinion à la date du calcul; la simulation de
-    sièges porte sur le jour du scrutin (5 octobre 2026).</p>
+    sièges porte sur le jour du scrutin (5 octobre 2026). Chaque tirage portant à la fois une
+    composition nationale de votes et une allocation de sièges, la distorsion du mode de
+    scrutin est elle-même une distribution jointe : le panneau votes-sièges rapporte les
+    espérances des deux parts par parti et l'indice des moindres carrés de Gallagher,
+    √(½Σ(v−s)²), résumé en médiane et intervalle à 90 % sur les tirages.</p>
 
     <h4>7. Validation et limites</h4>
     <p>Le pipeline a été validé rétrospectivement sur les deux élections disponibles. Sur 2022
