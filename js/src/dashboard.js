@@ -642,11 +642,31 @@ function renderDisproportion(d, partyCodes) {
         stroke: "party", strokeWidth: 2, headLength: 5,
       }),
       Plot.dot(rows, { x: "votes", y: "party", fill: "party", r: 4 }),
-      Plot.text(rows, {
-        x: (r) => Math.max(r.votes, r.sieges), y: "party",
-        text: (r) => `${r.votes.toFixed(0)} % des votes → ${r.sieges.toFixed(0) } % des sièges`,
-        dx: 10, textAnchor: "start", fontSize: 11, fill: "#333",
-      }),
+      // Labels sit at their own mark: "% des votes" beside the dot on the
+      // side AWAY from the arrow, "% des sièges" beyond the arrowhead. When
+      // the arrow is too short for side-by-side text, the two stack.
+      ...(() => {
+        const vLbl = (r) => `${r.votes.toFixed(0)} % des votes`;
+        const sLbl = (r) => `${r.sieges.toFixed(0)} % des sièges`;
+        const wide = rows.filter((r) => Math.abs(r.sieges - r.votes) >= 3);
+        const tight = rows.filter((r) => Math.abs(r.sieges - r.votes) < 3);
+        const right = wide.filter((r) => r.sieges > r.votes);
+        const left = wide.filter((r) => r.sieges < r.votes);
+        // A left-pointing head near the axis has no room for an end-anchored
+        // label (QS at 3 % overprinted the axis): it goes above the head.
+        const leftFar = left.filter((r) => r.sieges >= 8);
+        const leftEdge = left.filter((r) => r.sieges < 8);
+        const T = { fontSize: 11, fill: "#333", y: "party" };
+        return [
+          Plot.text(right, { ...T, x: "votes", text: vLbl, dx: -9, textAnchor: "end" }),
+          Plot.text(right, { ...T, x: "sieges", text: sLbl, dx: 11, textAnchor: "start" }),
+          Plot.text(left, { ...T, x: "votes", text: vLbl, dx: 9, textAnchor: "start" }),
+          Plot.text(leftFar, { ...T, x: "sieges", text: sLbl, dx: -11, textAnchor: "end" }),
+          Plot.text(leftEdge, { ...T, x: "sieges", text: sLbl, dx: -4, dy: -12, textAnchor: "start" }),
+          Plot.text(tight, { ...T, x: (r) => Math.max(r.votes, r.sieges), text: sLbl, dx: 10, dy: -7, textAnchor: "start" }),
+          Plot.text(tight, { ...T, x: (r) => Math.max(r.votes, r.sieges), text: vLbl, dx: 10, dy: 7, textAnchor: "start" }),
+        ];
+      })(),
     ],
   });
   host.appendChild(plot);
