@@ -1,0 +1,891 @@
+{
+ "117": {
+  "CAQ": "François Jacques",
+  "LIB": "Sylvain Houle",
+  "QS": "Marilyn Ouellet",
+  "PQ": "Debbie Fennety",
+  "PCQ": "Jimmy Gagnon"
+ },
+ "119": {
+  "CAQ": "Geneviève Hébert",
+  "LIB": "Jacqueline Belleau",
+  "QS": "Mia Fréchette",
+  "PQ": "Sylvie Tanguay",
+  "PCQ": "Esteban Méndez-Hord"
+ },
+ "121": {
+  "CAQ": "Fadéla Hamou",
+  "LIB": "Pierre Cossette",
+  "QS": "Stéphanie Vachon",
+  "PQ": "Gabriel Pallotta",
+  "PCQ": "Jonathan Brault"
+ },
+ "127": {
+  "CAQ": "Allison Turner",
+  "LIB": "Charles Milliard",
+  "QS": "Eve-Lyne Clusiault",
+  "PQ": "Jocelyn Caron",
+  "PCQ": "Benoît Robitaille"
+ },
+ "131": {
+  "CAQ": "Christine Nadeau",
+  "LIB": "Éric Sévigny",
+  "QS": "Tony Martel",
+  "PQ": "Nathalie Boisclair",
+  "PCQ": "Marc Distexhe"
+ },
+ "137": {
+  "CAQ": "Guillaume Rousseau",
+  "LIB": "Hugo Fontaine",
+  "QS": "David Poulin-Latulippe",
+  "PQ": "Bernard Sévigny",
+  "PCQ": "Dominic Bouffard"
+ },
+ "139": {
+  "CAQ": "Patrick Saindon",
+  "LIB": "Alexandra Houle",
+  "QS": "Sébastien Bage",
+  "PQ": "Natalie Bisaillon",
+  "PCQ": "Laura Tremblay"
+ },
+ "141": {
+  "CAQ": "Sébastien Schneeberger",
+  "LIB": "Colin Hendry",
+  "QS": "Lila Houde",
+  "PQ": "Charles Page",
+  "PCQ": "Myriam Cournoyer"
+ },
+ "147": {
+  "CAQ": "Keven Brasseur",
+  "LIB": "Thomas Guérette",
+  "QS": "Stéphanie Poirier",
+  "PQ": "Alex Boissonneault",
+  "PCQ": "Tarek Henoud"
+ },
+ "151": {
+  "CAQ": "Donald Martel",
+  "LIB": "Sophie Martinbeault",
+  "QS": "Milan Codebecq-Pérusse",
+  "PQ": "Jérôme Gagnon",
+  "PCQ": "Guillaume Langlois"
+ },
+ "157": {
+  "CAQ": "Manuela Goya",
+  "LIB": "Frédéric Beauchemin",
+  "QS": "Michelle Corcos",
+  "PQ": "Patrick Melchior",
+  "PCQ": "David Alarie"
+ },
+ "159": {
+  "CAQ": "Claudine Leroux",
+  "LIB": "Claudie Bérubé",
+  "QS": "Méliane St-Amand",
+  "PQ": "Jean-François Arsenault",
+  "PCQ": "Marc-Antoine Huet-Mailly"
+ },
+ "161": {
+  "CAQ": "Audrey Bogemans",
+  "LIB": "Vanessa Riendeau",
+  "QS": "Nicolas Chatel-Launay",
+  "PQ": "Camille Pellerin-Forget",
+  "PCQ": "Mathieu Guérin"
+ },
+ "167": {
+  "CAQ": "Yves Bisson",
+  "LIB": "Patrice Léger-Bourgoin",
+  "QS": "Pierre Luc Lavertu",
+  "PQ": "Gaétan Bédard",
+  "PCQ": "Luc Sanfaçon"
+ },
+ "171": {
+  "CAQ": "Stéphane Bisaillon",
+  "LIB": "Connor Stacey",
+  "QS": "Valérie Dubois",
+  "PQ": "Frédéric Laplante",
+  "PCQ": "Chantal Dauphinais"
+ },
+ "179": {
+  "CAQ": "Claude Reid",
+  "LIB": "Charles Royer Tremblay",
+  "QS": "Virginie Helene Hockers",
+  "PQ": "Alexandre Daneau",
+  "PCQ": "Angélika Homère"
+ },
+ "181": {
+  "CAQ": "Marilyne Picard",
+  "LIB": "Olivier Bertin-Mahieux",
+  "QS": "Florian Martin",
+  "PQ": "Francis Deroo",
+  "PCQ": "Kristian Solarik"
+ },
+ "187": {
+  "CAQ": "Chantal Darcy",
+  "LIB": "James Hughes",
+  "QS": "Jeannette Uwantege",
+  "PQ": "Meili Faille",
+  "PCQ": "Patrick Caron"
+ },
+ "191": {
+  "CAQ": "Marie-Belle Gendron",
+  "LIB": "Félix Rhéaume",
+  "QS": "Marianne Pharand-Roy",
+  "PQ": "Yannick Trudeau",
+  "PCQ": "Mohsen Eshtiaghi"
+ },
+ "197": {
+  "CAQ": "Jean Lacroix",
+  "LIB": "Pinou Thong",
+  "QS": "Virginie Bernier",
+  "PQ": "Alain Therrien",
+  "PCQ": "Serge Benoit"
+ },
+ "199": {
+  "CAQ": "Pierre Guillot-Hurtubise",
+  "LIB": "Sonia Ziadé",
+  "QS": "Francine Van Winden",
+  "PQ": "Frédéric Côté",
+  "PCQ": "Marie Pelletier"
+ },
+ "201": {
+  "CAQ": "Clément Mireault",
+  "LIB": "Linda Caron",
+  "QS": "Jacinthe Chapleau",
+  "PQ": "Sarah Plante",
+  "PCQ": "Tzarevna Bratkova"
+ },
+ "207": {
+  "CAQ": "Jean-François Roberge",
+  "LIB": "Sarah Belbey",
+  "QS": "Jessyca Sorel",
+  "PQ": "Julie Guyot",
+  "PCQ": "Margarita Kantor"
+ },
+ "211": {
+  "CAQ": "Ian Lafrenière",
+  "LIB": "Affine Lwalalika",
+  "QS": "Magdouda Oudjit",
+  "PQ": "Stephan Fogaing",
+  "PCQ": "Martine Boucher"
+ },
+ "217": {
+  "CAQ": "Mélanie Martin",
+  "LIB": "David Bowles",
+  "QS": "Claude Lefrançois",
+  "PQ": "Anne-Sophie Maguire Armand",
+  "PCQ": "Mi Jie"
+ },
+ "219": {
+  "CAQ": "Shirley Dorismond",
+  "LIB": "Lyes Chekal",
+  "QS": "Lauréline Manassero",
+  "PQ": "Nicolas Marceau",
+  "PCQ": "Amélie Legeay"
+ },
+ "221": {
+  "CAQ": "Stéphane Lavoie",
+  "LIB": "Boubacar Camara",
+  "QS": "David Lalumière",
+  "PQ": "Sandra Hernández",
+  "PCQ": "Samuel Bérubé"
+ },
+ "227": {
+  "CAQ": "Nathalie Roy",
+  "LIB": "Mathieu Lavoie",
+  "QS": "Ginette Langlois",
+  "PQ": "Jean-François Cloutier",
+  "PCQ": "Marc Rondeau"
+ },
+ "231": {
+  "CAQ": "Marie-Hélène Leboeuf",
+  "LIB": "Yacine Masrouki",
+  "QS": "Léonie Thibault Rousseau",
+  "PQ": "Guy Jr Lapointe",
+  "PCQ": "Julien Malo"
+ },
+ "237": {
+  "CAQ": "Simon Jolin-Barrette",
+  "LIB": "Xavier Mercier",
+  "QS": "Audrey Mc Nicoll",
+  "PQ": "Cédric Gagnon-Ducharme",
+  "PCQ": "Frederic Phaneuf"
+ },
+ "239": {
+  "CAQ": "Jessika Gardner",
+  "LIB": "Mariliz Turla-Vadnais",
+  "QS": "Philippe Daigneault",
+  "PQ": "Simon-Pierre Savard-Tremblay",
+  "PCQ": "Alexandre Dion-Rolland"
+ },
+ "241": {
+  "CAQ": "Jean-Bernard Émond",
+  "LIB": "Gilles Delorme",
+  "QS": "Julien Bergeron",
+  "PQ": "Jocelyn Desjardins",
+  "PCQ": "Christian Blouin"
+ },
+ "247": {
+  "CAQ": "Roseline Olory",
+  "LIB": "Antoine Dionne-Charest",
+  "QS": "Alejandra Zaga Mendez",
+  "PQ": "Elena Kozynchenko",
+  "PCQ": "Lucien Koty"
+ },
+ "251": {
+  "CAQ": "Adam Ahmad",
+  "LIB": "Michel Leblanc",
+  "QS": "Bryan Gingras",
+  "PQ": "Luc Côté",
+  "PCQ": "Sean Ross"
+ },
+ "257": {
+  "CAQ": "Mahsa Barani",
+  "LIB": "Enrico Ciccone",
+  "QS": "Pascal Malo",
+  "PQ": "Guillaume de Palma-Demers",
+  "PCQ": "Richard Zilversmit"
+ },
+ "259": {
+  "CAQ": "Santiago Proteau Sanchez",
+  "LIB": "Gregory Kelley",
+  "QS": "Gabriel Laurence-Brook",
+  "PQ": "Céline Dauphinais",
+  "PCQ": "Pina Di Dio"
+ },
+ "261": {
+  "CAQ": "Tom Tang",
+  "LIB": "Monsef Derraji",
+  "QS": "Dominique Naud",
+  "PQ": "Martine Dubois",
+  "PCQ": "Gary Charles"
+ },
+ "267": {
+  "CAQ": "Sophie Leroux",
+  "LIB": "Brigitte Garceau",
+  "QS": "Alexandra Lacoste",
+  "PQ": "Maurice Daude",
+  "PCQ": "Axel Lellouche"
+ },
+ "271": {
+  "CAQ": "Tahmina Kabir",
+  "LIB": "Valérie Assouline",
+  "QS": "Étienne Loiselle-Schiettekatte",
+  "PQ": "Pierre-Étienne Nantel",
+  "PCQ": "Barry Rolbin"
+ },
+ "277": {
+  "CAQ": "Junlian Leblanc",
+  "LIB": "Elisabeth Prass",
+  "QS": "Lucian Costin",
+  "PQ": "Maïté Larouche",
+  "PCQ": "Adrien Pouliot"
+ },
+ "279": {
+  "CAQ": "Kaan Altintas",
+  "LIB": "Désirée McGraw",
+  "QS": "Élise Davignon",
+  "PQ": "Vincent Hubert",
+  "PCQ": "Guillaume St-Pierre"
+ },
+ "281": {
+  "CAQ": "Anthony Lavoie",
+  "LIB": "Benoit Clermont",
+  "QS": "Guillaume Cliche-Rivard",
+  "PQ": "Caroline Julie Fortin",
+  "PCQ": "Edouard Stephan Valdescault"
+ },
+ "287": {
+  "CAQ": "Eli Zytoon",
+  "LIB": "Justine McIntyre",
+  "QS": "Roxane Milot",
+  "PQ": "Philippe Schnobb",
+  "PCQ": "Antoine Corminboeuf"
+ },
+ "291": {
+  "CAQ": "Karim Abi Haila",
+  "LIB": "Jennifer Maccarone",
+  "QS": "Olivier Sylvestre",
+  "PQ": "Victoria Piscina",
+  "PCQ": "Guy Diotte"
+ },
+ "297": {
+  "CAQ": "Sarah Beaumier",
+  "LIB": "Michelle Setlakwe",
+  "QS": "Marianne Locas-Ouimet",
+  "PQ": "Ariane Bureau",
+  "PCQ": "Yaron Avsker"
+ },
+ "299": {
+  "CAQ": "Christian Gnali",
+  "LIB": "André Albert Morin",
+  "QS": "Marie-Laurence Nault",
+  "PQ": "Pierrick Jasmin",
+  "PCQ": "Amine Difallah"
+ },
+ "301": {
+  "CAQ": "Georges Chartier",
+  "LIB": "Nada Boumeftah",
+  "QS": "Anne Latendresse",
+  "PQ": "Aisha Issa",
+  "PCQ": "Doréus Mercidieu"
+ },
+ "307": {
+  "CAQ": "Emil Parfyonov",
+  "LIB": "Randy Legault-Rankin",
+  "QS": "Andrés Fontecilla",
+  "PQ": "Kelly Lazo de la Vega",
+  "PCQ": "Marc-Antoine Cusson"
+ },
+ "311": {
+  "CAQ": "Frank Tremblay",
+  "LIB": "Hoang Annie Nguyen",
+  "QS": "Alexandre Boulerice",
+  "PQ": "Isabelle Daoust",
+  "PCQ": "Édouard Prud'homme"
+ },
+ "313": {
+  "CAQ": "Kelly-Anne Gagné",
+  "LIB": "Thierno Diallo",
+  "QS": "Ruba Ghazal",
+  "PQ": "Phoudsady Vanny",
+  "PCQ": "François Plamondon"
+ },
+ "317": {
+  "CAQ": "Béatrice Hodonou",
+  "LIB": "Janny Gaspard",
+  "QS": "Alexandre Leduc",
+  "PQ": "Maude Brossard-Sabourin",
+  "PCQ": "Elena Penta"
+ },
+ "319": {
+  "CAQ": "Nour Aliyah Attié",
+  "LIB": "David Lavoie",
+  "QS": "Gisèle Pouhe Njall",
+  "PQ": "Pierre-Luc Brillant",
+  "PCQ": "Mildred Mathieu"
+ },
+ "321": {
+  "CAQ": "Frane Bisseck",
+  "LIB": "Frantz Benjamin",
+  "QS": "Saïd Kassabie",
+  "PQ": "Clara Bélisle",
+  "PCQ": "Venel Aladin"
+ },
+ "327": {
+  "CAQ": "Isabelle Lamy",
+  "LIB": "Madwa-Nika Cadet",
+  "QS": "Mara Hermione Pierre",
+  "PQ": "Edline Henri",
+  "PCQ": "Ismaila Marega"
+ },
+ "331": {
+  "CAQ": "Ernest Denon",
+  "LIB": "Filomena Rotiroti",
+  "QS": "Dalila Assefsaf",
+  "PQ": "Adnane Najahi",
+  "PCQ": "Chakib Saad"
+ },
+ "337": {
+  "CAQ": "Matys Lavigne",
+  "LIB": "Earl Corales",
+  "QS": "René Gauvreau",
+  "PQ": "Paul St-Pierre Plamondon",
+  "PCQ": "Jessy Comtois"
+ },
+ "339": {
+  "CAQ": "Guepsly Florvil",
+  "LIB": "Marc Tanguay",
+  "QS": "Kim Fontaine",
+  "PQ": "Joyd Rolkins Daréus",
+  "PCQ": "Andréanne Bareil"
+ },
+ "341": {
+  "CAQ": "Chantal Rouleau",
+  "LIB": "Naïma Marylene Indira Som",
+  "QS": "Mégane Charron",
+  "PQ": "Stéphane Paquet",
+  "PCQ": "Maxim Tremblay"
+ },
+ "347": {
+  "CAQ": "Vincent Bolduc",
+  "LIB": "Caroline De Guire",
+  "QS": "Sabrina Di Matteo",
+  "PQ": "Fatima Aboubakr",
+  "PCQ": "Ronny Niro"
+ },
+ "351": {
+  "CAQ": "Cattiouceca Ambroise",
+  "LIB": "Madeleine Féquière",
+  "QS": "Geru Schneider",
+  "PQ": "Marie-Jeanne Rivest",
+  "PCQ": "Leon Der Stepanian"
+ },
+ "357": {
+  "CAQ": "Lucie Létourneau",
+  "LIB": "Marie-Claude Fournier",
+  "QS": "Josée Chevalier",
+  "PQ": "Catherine Dansereau-Redhead",
+  "PCQ": "Stéphane Turmel"
+ },
+ "359": {
+  "CAQ": "Christopher Skeete",
+  "LIB": "Cécile Tremblay",
+  "QS": "Karine Cliche",
+  "PQ": "Judith Cardin",
+  "PCQ": "Alexandre Arrata"
+ },
+ "569": {
+  "CAQ": "Valérie Schmaltz",
+  "LIB": "Louis Ialenti",
+  "QS": "Stella Bourgon-Germain",
+  "PQ": "Amin Ouazragh-Marchand",
+  "PCQ": "Mackenley Raphael"
+ },
+ "571": {
+  "CAQ": "Sonia Amedome",
+  "LIB": "Virginie Dufour",
+  "QS": "Zachary Robert",
+  "PQ": "Mathieu Trottier-Kavanagh",
+  "PCQ": "Nare Stepanyan"
+ },
+ "577": {
+  "CAQ": "Eric Girard",
+  "LIB": "Julie Tourangeau",
+  "QS": "Marie-Noëlle Aubertin",
+  "PQ": "Marie-Claude Sarrazin",
+  "PCQ": "Ariane Desrochers"
+ },
+ "581": {
+  "CAQ": "Christine Maestracci",
+  "LIB": "Marc Allaire",
+  "QS": "Guillaume Ducharme",
+  "PQ": "Linda Vaillant",
+  "PCQ": "Samuel Lévesque"
+ },
+ "587": {
+  "CAQ": "Marjolaine Ferron",
+  "LIB": "Daniela Rodriguez",
+  "QS": "Marjolaine Goudreau",
+  "PQ": "Geneviève Couture",
+  "PCQ": "Francis Brosseau"
+ },
+ "589": {
+  "CAQ": "Julie-Andrée Numainville",
+  "LIB": "Émilie Jutras",
+  "QS": "Pénéloppe Dagenais-Lavoie",
+  "PQ": "Pierre Nantel",
+  "PCQ": "Marie-France Lemay"
+ },
+ "591": {
+  "CAQ": "Rachel Renaud",
+  "LIB": "Maud Laporte-Roy",
+  "QS": "Normand Lalonde",
+  "PQ": "Audrey Bujold",
+  "PCQ": "Pier-Luc Chayer"
+ },
+ "597": {
+  "CAQ": "Carla Pierre-Paul",
+  "LIB": "Suzanne Pomerleau",
+  "QS": "Orphée Dubé-Gervais",
+  "PQ": "Sandrine Michon",
+  "PCQ": "Myriam Laroche"
+ },
+ "601": {
+  "CAQ": "Fatou Diop",
+  "LIB": "Agathe Owona",
+  "QS": "Irène Dubé",
+  "PQ": "Dieudonné Ella Oyono",
+  "PCQ": "Habib Diarra"
+ },
+ "607": {
+  "CAQ": "Mario Laframboise",
+  "LIB": "Sébastien Daoust",
+  "QS": "Louis Piette",
+  "PQ": "Nadine Le Gal",
+  "PCQ": "Pascal Quevillon"
+ },
+ "609": {
+  "CAQ": "Valérie Doyon",
+  "LIB": "Ange Claude Bigilimana",
+  "QS": "Ariane Drainville",
+  "PQ": "Catherine Gentilcore",
+  "PCQ": "Marianne Poirier"
+ },
+ "611": {
+  "CAQ": "Anik Girard",
+  "LIB": "Martin Gaulin",
+  "QS": "Stéphane Durupt",
+  "PQ": "Stéphane Handfield",
+  "PCQ": "Benoit Lanoue"
+ },
+ "617": {
+  "CAQ": "Pascale Déry",
+  "LIB": "Yvena Luc",
+  "QS": "Martin Lefebvre",
+  "PQ": "Nicolas Girard",
+  "PCQ": "Vincent Côté"
+ },
+ "621": {
+  "CAQ": "Geneviève Pettersen",
+  "LIB": "Marie-Claire Anglade",
+  "QS": "Benoit Bourbonnais",
+  "PQ": "Maxime Laporte",
+  "PCQ": "Patrick Lemieux"
+ },
+ "627": {
+  "CAQ": "Alex Gagné",
+  "LIB": "Louis-Victor Sylvestre",
+  "QS": "Amélie Drainville",
+  "PQ": "Elsie Lefebvre",
+  "PCQ": "Steve Piché"
+ },
+ "629": {
+  "CAQ": "Clodine Desrochers",
+  "LIB": "Sana Arfaoui",
+  "QS": "Flavie Trudel",
+  "PQ": "Véronique Venne",
+  "PCQ": "Rémi Lafrenière"
+ },
+ "631": {
+  "CAQ": "Louis-Charles Thouin",
+  "LIB": "Sashmir Sidney",
+  "QS": "Hind Rihani",
+  "PQ": "Mathieu Lebrun",
+  "PCQ": "Marie-Ève Boucher"
+ },
+ "637": {
+  "CAQ": "Sonia Bélanger",
+  "LIB": "Paul Landry",
+  "QS": "Alix Gravel",
+  "PQ": "Anne Nguyen",
+  "PCQ": "Joyce Sauriol"
+ },
+ "641": {
+  "CAQ": "France-Élaine Duranceau",
+  "LIB": "Felipe Morales",
+  "QS": "Nataël Bureau",
+  "PQ": "Alexandre Girard-Duchaine",
+  "PCQ": "Éliot Gallant"
+ },
+ "649": {
+  "CAQ": "Chantal Roussel",
+  "LIB": "Shawn Latulippe",
+  "QS": "Julie B. Savard",
+  "PQ": "Catherine Drouin",
+  "PCQ": "Jean-François Frigon"
+ },
+ "651": {
+  "CAQ": "Suzanne Tremblay",
+  "LIB": "Sacha Cannon",
+  "QS": "Mariève Forest",
+  "PQ": "Paul Fauteux",
+  "PCQ": "Anne-Marie Couturier"
+ },
+ "657": {
+  "CAQ": "Mariana Mefleh",
+  "LIB": "André Fortin",
+  "QS": "Bianca Baldo",
+  "PQ": "Marcela Cazas",
+  "PCQ": "Osmar Llanos Martinez"
+ },
+ "661": {
+  "CAQ": "William Robertson",
+  "LIB": "David Logue",
+  "QS": "Emmanuelle Tremblay",
+  "PQ": "Raphaël Déry",
+  "PCQ": "Ogbognon Bertin Aboussou"
+ },
+ "667": {
+  "CAQ": "Mathieu Lévesque",
+  "LIB": "Michel Langevin",
+  "QS": "Doryan Pansanel",
+  "PQ": "Meixia Maltais",
+  "PCQ": "Denis Charron"
+ },
+ "669": {
+  "CAQ": "Linda Gauthier",
+  "LIB": "Isabelle Sabourin",
+  "QS": "Benoit Renaud",
+  "PQ": "Isabelle Millette",
+  "PCQ": "Michel Kadri"
+ },
+ "671": {
+  "CAQ": "Béatrice Déry",
+  "LIB": "Leanne Loney",
+  "QS": "France Marion",
+  "PQ": "Diane Dallaire",
+  "PCQ": "Francis Lapointe"
+ },
+ "681": {
+  "CAQ": "Suzanne Blais",
+  "LIB": "Marc-André Fortin",
+  "QS": "Joanie Bolduc",
+  "PQ": "Sébastien D'Astous",
+  "PCQ": "Daniel Guillemette"
+ },
+ "689": {
+  "CAQ": "Manon Barbe",
+  "LIB": "Pierre Dufour",
+  "QS": "Sara Germain",
+  "PQ": "Stéphane Tremblay",
+  "PCQ": "Jean-Philip Girard"
+ },
+ "691": {
+  "CAQ": "Christine Fréchette",
+  "LIB": "Valérie Renaud-Martin",
+  "QS": "Steven Roy Cullen",
+  "PQ": "Jean Pellerin",
+  "PCQ": "Jonathan Couturier"
+ },
+ "693": {
+  "CAQ": "Simon Allaire",
+  "LIB": "Nancy Mignault",
+  "QS": "Simon Piotte",
+  "PQ": "Isabelle Blais",
+  "PCQ": "Marc-André Cloutier"
+ },
+ "697": {
+  "CAQ": "Guy Veillette",
+  "LIB": "Laurent Bélisle",
+  "QS": "Rébéka Frédette",
+  "PQ": "Élodie Murphy-Gauthier",
+  "PCQ": "Charles Paquin"
+ },
+ "701": {
+  "CAQ": "Marie-Ève Myrand",
+  "LIB": "Annie Pronovost",
+  "QS": "Katherine Heckersbruch",
+  "PQ": "René Branchaud",
+  "PCQ": "Adriana Szalontai"
+ },
+ "707": {
+  "CAQ": "William Denis",
+  "LIB": "Julie White",
+  "QS": "Sonia Tchuembou",
+  "PQ": "Pascal Paradis",
+  "PCQ": "Jesse Robitaille"
+ },
+ "709": {
+  "CAQ": "Marc-Antoine Bernier",
+  "LIB": "Richard Bélanger",
+  "QS": "Anne-Sophie Roy",
+  "PQ": "Chloé Fauchon",
+  "PCQ": "Marcos Archambault"
+ },
+ "727": {
+  "CAQ": "Vincent Caron",
+  "LIB": "Jeremy Ouellet-Rousseau",
+  "QS": "Anne-Marie Melançon",
+  "PQ": "Raymond Francoeur",
+  "PCQ": "Marcel Bouchard"
+ },
+ "729": {
+  "CAQ": "Véronique Laprise",
+  "LIB": "Alain Chandonnet",
+  "QS": "Frédéric Aubé",
+  "PQ": "Julie Vignola",
+  "PCQ": "Maïté Blanchette Vézina"
+ },
+ "749": {
+  "CAQ": "Françoise Faverjon-Fortin",
+  "LIB": "Charles Hudon",
+  "QS": "Karoline Boucher",
+  "PQ": "Stéphanie Martin",
+  "PCQ": "Patrick Paquet"
+ },
+ "751": {
+  "CAQ": "Brigitte Martin",
+  "LIB": "Farnell Morisset",
+  "QS": "Étienne Grandmont",
+  "PQ": "Christian Savard",
+  "PCQ": "Eliot Estévez-Verville"
+ },
+ "757": {
+  "CAQ": "Nathalie St-Pierre",
+  "LIB": "Gertrude Bourdon",
+  "QS": "Sol Zanetti",
+  "PQ": "Claude Villeneuve",
+  "PCQ": "Nancy Joannette"
+ },
+ "761": {
+  "CAQ": "Jean-François Simard",
+  "LIB": "René-Paul Coly",
+  "QS": "Annie-Pierre Bélanger",
+  "PQ": "Nathalie Gagnon",
+  "PCQ": "Marie-Josée Hélie"
+ },
+ "767": {
+  "CAQ": "Marie-Josée Morency",
+  "LIB": "Seynabou Top",
+  "QS": "Georges Goma",
+  "PQ": "Gabriel Coulombe",
+  "PCQ": "Éloïse Coulombe"
+ },
+ "769": {
+  "CAQ": "Christian Lachance",
+  "LIB": "John McGrath",
+  "QS": "Émilie Couture",
+  "PQ": "Mathieu Foltz",
+  "PCQ": "Karim Elayoubi"
+ },
+ "771": {
+  "CAQ": "Kariane Bourassa",
+  "LIB": "Michel Bureau",
+  "QS": "Dulce Vivar",
+  "PQ": "François Gariépy",
+  "PCQ": "Caroline Simard"
+ },
+ "777": {
+  "CAQ": "Samuel Poulin",
+  "LIB": "Alvaro Peressutti",
+  "QS": "Amélie Carrier",
+  "PQ": "Angèle Bouffard",
+  "PCQ": "Jonathan Poulin"
+ },
+ "781": {
+  "CAQ": "Philippe Simard",
+  "LIB": "Nancy Labbé",
+  "QS": "Julie Dionne",
+  "PQ": "Éric Gagnon Poulin",
+  "PCQ": "Patricia Drouin"
+ },
+ "787": {
+  "CAQ": "Roch Gamache",
+  "LIB": "Ludovic Beauregard",
+  "QS": "Elisabeth St-Aubin",
+  "PQ": "Jonathan Moreau",
+  "PCQ": "Renaud Labrecque"
+ },
+ "789": {
+  "CAQ": "Martine Biron",
+  "LIB": "Stéphane Clavet",
+  "QS": "Jean-Benoît Ouellet",
+  "PQ": "Serge Bonin",
+  "PCQ": "Dominique Dumas"
+ },
+ "791": {
+  "CAQ": "Bernard Drainville",
+  "LIB": "Brittany Blais",
+  "QS": "Simon Beauchamp-Léveillé",
+  "PQ": "Yanick Godbout",
+  "PCQ": "Karine Laflamme"
+ },
+ "797": {
+  "CAQ": "Stéphanie Lachance",
+  "LIB": "Richard Garon",
+  "QS": "Raphaël Bédard",
+  "PQ": "Jérôme Couture",
+  "PCQ": "Éric Duhaime"
+ },
+ "799": {
+  "CAQ": "Mathieu Rivest",
+  "LIB": "Nancy St-Pierre",
+  "QS": "Jordan Veillette",
+  "PQ": "Valérie Hamel",
+  "PCQ": "Frédéric Poulin"
+ },
+ "801": {
+  "CAQ": "Amélie Dionne",
+  "LIB": "Karine Malenfant",
+  "QS": "Pierre-Erik Isabelle",
+  "PQ": "Ariane Boyer",
+  "PCQ": "Louise Moreault"
+ },
+ "803": {
+  "CAQ": "Julia Brillant-Ruest",
+  "LIB": "Michel Bienvenu",
+  "QS": "Virginie Chevalier-Archambault",
+  "PQ": "Yohann St-Pierre",
+  "PCQ": "Cédric Gauthier"
+ },
+ "807": {
+  "CAQ": "Henry Maclaren",
+  "LIB": "André Côté",
+  "QS": "Gabriel Plante",
+  "PQ": "Pascal Bérubé",
+  "PCQ": "Patrice Caron"
+ },
+ "809": {
+  "CAQ": "Stéphane Sainte-Croix",
+  "LIB": "Michel Marin",
+  "QS": "Emmanuelle Babin",
+  "PQ": "Méganne Perry Mélançon",
+  "PCQ": "Christian Pierry"
+ },
+ "811": {
+  "CAQ": "Linda Lebel",
+  "LIB": "Gil Thériault",
+  "QS": "Zachary Jean",
+  "PQ": "Joël Arseneau",
+  "PCQ": "Evan Leblanc"
+ },
+ "813": {
+  "CAQ": "Kateri Champagne Jourdain",
+  "LIB": "Samuel Murray",
+  "QS": "Jani Bellefleur-Kaltush",
+  "PQ": "Meggie Richard",
+  "PCQ": "Roberto Stea"
+ },
+ "817": {
+  "CAQ": "Yves Montigny",
+  "LIB": "William Huynh-Jan",
+  "QS": "Philippe C.-Boudreau",
+  "PQ": "Odette Lavigne",
+  "PCQ": "Esther Besrest"
+ },
+ "819": {
+  "CAQ": "Marc Grandbois",
+  "LIB": "Virginie Bouchard",
+  "QS": "Ève Laguë",
+  "PQ": "Émile Simard",
+  "PCQ": "Catherine Morissette"
+ },
+ "821": {
+  "CAQ": "Sandra Larouche",
+  "LIB": "Jean-Marc Allard",
+  "QS": "Jeanne Palardy",
+  "PQ": "Marie-Karlynn Laflamme",
+  "PCQ": "Gabriella-Myriam Mathieu"
+ },
+ "823": {
+  "CAQ": "Yannick Gagnon",
+  "LIB": "Wilda Solon",
+  "QS": "Serge Bergeron",
+  "PQ": "Jimmy Bouchard",
+  "PCQ": "Yannick Pelletier"
+ },
+ "827": {
+  "CAQ": "François Cormier",
+  "LIB": "Anne Pâquet",
+  "QS": "Antoine Bessette",
+  "PQ": "William Fradette",
+  "PCQ": "Tommy Gauthier"
+ },
+ "829": {
+  "CAQ": "Yanick Baillargeon",
+  "LIB": "Serge Bergeron",
+  "QS": "Guillaume David",
+  "PQ": "Isabelle Thibeault",
+  "PCQ": "Pierre Gagné"
+ },
+ "831": {
+  "CAQ": "Amélie Béchard",
+  "LIB": "Sandrine Rioux",
+  "QS": "Antoine Côté",
+  "PQ": "Sonia Caron",
+  "PCQ": "Marc Damant"
+ },
+ "833": {
+  "CAQ": "Karine Boivin Roy",
+  "LIB": "Nicolas Plourde",
+  "QS": "Edissya Boukrif",
+  "PQ": "Younès Dadoun",
+  "PCQ": "Helder Da Costa Leitao"
+ },
+ "837": {
+  "CAQ": "Catherine Blouin",
+  "LIB": "Christian Cyr",
+  "QS": "Yv Bonnier Viger",
+  "PQ": "Pier-Luc Bujold",
+  "PCQ": "Dominique Côté"
+ }
+}

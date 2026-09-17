@@ -77,7 +77,7 @@ function selectRiding(code, { zoom = true } = {}) {
   registry.selectedCode = code;
 
   renderRidingDetail(code, name, entry, registry.ridingBaseline.sharesFor(code), registry.partyCodes,
-    registry.winProbs?.[code] ?? null);
+    registry.winProbs?.[code] ?? null, registry.candidates?.[code] ?? null);
 
   // Map: reset every layer to its default style, then highlight the
   // selected one with a heavy black outline that stays until the next
@@ -126,7 +126,7 @@ function selectRiding(code, { zoom = true } = {}) {
   detailSection.classList.add("flash");
 }
 
-function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCodes, winProbs) {
+function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCodes, winProbs, candidates) {
   const host = document.getElementById("riding-detail");
   host.innerHTML = "";
 
@@ -149,17 +149,19 @@ function renderRidingDetail(code, name, forecastEntry, baselineShares, partyCode
   // QS ahead by 0.8 in the central scenario, PCQ the likelier winner).
   // Plain-language headers on purpose.
   const table = document.createElement("table");
+  const candCol = candidates ? "<th>Candidat.e</th>" : "";
   table.innerHTML =
-    "<thead><tr><th>Parti</th><th>Chances de gagner</th><th>Appui projeté</th><th>Résultat 2022</th></tr></thead>";
+    `<thead><tr><th>Parti</th>${candCol}<th>Chances de gagner</th><th>Appui projeté</th><th>Résultat 2022</th></tr></thead>`;
   const tbody = document.createElement("tbody");
   for (const r of rows) {
     const tr = document.createElement("tr");
     const proj = (r.projected * 100).toFixed(1) + "%";
     const base = r.baseline !== null ? (r.baseline * 100).toFixed(1) + "%" : "n/d";
     const pw = r.pWin !== null ? Math.round(r.pWin * 100) + " %" : "n/d";
+    const cand = candidates ? `<td>${candidates[r.party] ?? '<span class="muted-cell">n/d</span>'}</td>` : "";
     tr.innerHTML =
       `<td style="border-left:4px solid ${PARTY_COLORS[r.party]}; padding-left:6px">${r.party}</td>` +
-      `<td>${pw}</td><td>${proj}</td><td>${base}</td>`;
+      `${cand}<td>${pw}</td><td>${proj}</td><td>${base}</td>`;
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);
@@ -462,7 +464,13 @@ function renderWatchlist(ridingForecast, partyCodes, n = 20) {
   for (const r of rows.slice(0, n)) {
     const tr = document.createElement("tr");
     tr.className = "clickable-row";
-    tr.innerHTML = `<td>${r.name}</td><td style="color:${PARTY_COLORS[r.winner]}">${r.winner}</td><td>${r.runnerUp}</td><td>${(r.margin * 100).toFixed(1)} pt</td>`;
+    const cands = registry.candidates?.[r.code];
+    const withName = (party) => {
+      const n = cands?.[party];
+      return n ? `${party}<br><span class="muted-cell" style="font-size:0.85em">${n}</span>` : party;
+    };
+    tr.innerHTML = `<td>${r.name}</td><td style="color:${PARTY_COLORS[r.winner]}">${withName(r.winner)}</td>` +
+      `<td>${withName(r.runnerUp)}</td><td>${(r.margin * 100).toFixed(1)} pt</td>`;
     tr.onclick = () => selectRiding(r.code);
     registry.watchlistRowsByCode.set(r.code, tr);
     tbody.appendChild(tr);
@@ -723,13 +731,15 @@ async function main() {
   // code is identical -- computeProjection.js, same library -- it just runs
   // in Node at build time instead of in every visitor's browser. Page load
   // went from ~20s of GP fitting to rendering a JSON.
-  const [projection, pollRows, geojson, leaders, tileLayout] = await Promise.all([
+  const [projection, pollRows, geojson, leaders, tileLayout, candidates] = await Promise.all([
     loadJSON("data/qc_projection.json"),
     loadJSON("data/qc_national_polls.json"),
     loadJSON("data/qc_ridings_2026.geojson"),
     loadJSON("data/qc_leaders.json"),
     loadJSON("data/qc_tile_layout.json"),
+    loadJSON("data/qc_candidates.json").catch(() => null), // optional
   ]);
+  registry.candidates = candidates;
 
   const { meta, partyCodes, trendSeries, totalSeats } = projection;
   registry.partyCodes = partyCodes;
