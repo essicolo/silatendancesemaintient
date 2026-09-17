@@ -64,6 +64,11 @@
     #tile-map .tile { cursor: pointer; }
     #tile-map text { pointer-events: none; font-family: inherit; }
 
+    /* Observable Plot fixe 10px sur le svg racine, dont héritent axes et
+       graduations — illisible; on force une taille de base plus grande, les
+       tailles posées explicitement par marque restent inchangées. */
+    svg[class*="plot-"] { font-size: 13px !important; }
+
     table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
     th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--line); }
     th { font-weight: 600; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
