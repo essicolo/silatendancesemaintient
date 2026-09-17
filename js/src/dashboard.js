@@ -631,8 +631,9 @@ function renderDisproportion(d, partyCodes) {
     marks: [
       Plot.arrow(rows, {
         x1: "votes", x2: "sieges", y1: "party", y2: "party",
-        stroke: "party", strokeWidth: 2.5, headLength: 10,
+        stroke: "party", strokeWidth: 2, headLength: 5,
       }),
+      Plot.dot(rows, { x: "votes", y: "party", fill: "party", r: 4 }),
       Plot.text(rows, {
         x: (r) => Math.max(r.votes, r.sieges), y: "party",
         text: (r) => `${r.votes.toFixed(0)} % des votes → ${r.sieges.toFixed(0) } % des sièges`,
