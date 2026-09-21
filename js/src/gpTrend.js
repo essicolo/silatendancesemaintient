@@ -26,7 +26,7 @@
  */
 
 import { ml, mva } from "@tangent.to/ds";
-import { toClosedComposition, sampleSizeWeight } from "./compositional.js";
+import { toClosedComposition, sampleSizeWeight, ilrSamplingVariance } from "./compositional.js";
 
 const { ilr, ilrInv } = mva.composition;
 
@@ -152,7 +152,7 @@ export function relativeNoiseShape(polls, refPolls = polls) {
  *   "n" squares the relative shape to give the sampling-theory variance ~ 1/n.
  * @returns {{gps: ml.GaussianProcessRegressor[], t0: string, partyCodes: string[]}}
  */
-export function fitTrend(polls, partyCodes, { noiseMultiplier = null, noiseShape = "sqrt" } = {}) {
+export function fitTrend(polls, partyCodes, { noiseMultiplier = null, noiseShape = "ilr" } = {}) {
   const comp = toClosedComposition(polls, partyCodes);
   const ilrMat = ilr(comp); // k-1 orthonormal coordinates, full rank
 
@@ -166,11 +166,31 @@ export function fitTrend(polls, partyCodes, { noiseMultiplier = null, noiseShape
   const baseMin = Math.min(...baseNoise);
   const relNoise = baseNoise.map((v) => v / baseMin); // relative shape: best poll = 1
 
-  // alpha is a per-observation VARIANCE. Production keeps the historical
-  // shape (variance ~ 1/sqrt(n)); noiseShape "n" squares the relative shape
-  // for the sampling-theory 1/n. A per-poll SD multiplier enters squared.
-  let relVar = noiseShape === "n" ? relNoise.map((v) => v * v) : relNoise;
-  if (noiseMultiplier) relVar = relVar.map((v, i) => v * noiseMultiplier[i] * noiseMultiplier[i]);
+  // alpha is a per-observation VARIANCE. Production ("ilr", default) uses
+  // the PER-COORDINATE multinomial sampling variance (ilrSamplingVariance):
+  // a coordinate loaded on a rare part is noisy in log-ratio space no
+  // matter how large the poll. The earlier scalar shapes treated all
+  // coordinates alike, which let one n=5572 poll's "< 1 %" residual act as
+  // a precisely measured huge log-move and drag the PQ-CAQ nowcast by ~2.4
+  // points for a 0.5-vs-2.0 AUTRES entry. "sqrt" (variance ~ 1/sqrt(n)) and
+  // "n" (~ 1/n) are kept for comparison tools. Each shape is normalised to
+  // best-observation = 1 per coordinate; the fitted noiseScale absorbs
+  // units and overdispersion (house scatter) exactly as before. A per-poll
+  // SD multiplier enters squared.
+  let relVarC;
+  if (noiseShape === "ilr") {
+    const varC = ilrSamplingVariance(comp, polls.map((p) => p.sampleSize));
+    relVarC = varC.map((col) => {
+      const m = Math.min(...col);
+      return col.map((v) => v / m);
+    });
+  } else {
+    const relVar = noiseShape === "n" ? relNoise.map((v) => v * v) : relNoise;
+    relVarC = Array.from({ length: ilrMat[0].length }, () => relVar);
+  }
+  if (noiseMultiplier) {
+    relVarC = relVarC.map((col) => col.map((v, i) => v * noiseMultiplier[i] * noiseMultiplier[i]));
+  }
 
   // The library's own optimizer (optimize: true) tunes kernel parameters by
   // gradient ascent, but the noise SCALE multiplying the per-poll vector is
@@ -181,9 +201,9 @@ export function fitTrend(polls, partyCodes, { noiseMultiplier = null, noiseShape
   // likelihood kept choosing the boundary values, and a maximum on the edge
   // of the grid means the grid is clipping the optimum, not finding it.
   const LENGTH_SCALE_CANDIDATES = [10, 20, 30, 50, 75, 110, 160, 230, 330, 470, 680, 1000, 1500, 2200];
-  const NOISE_SCALE_CANDIDATES = [0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8];
+  const NOISE_SCALE_CANDIDATES = [0.005, 0.01, 0.02, 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8];
 
-  const fitOne = (y, lengthScale, rho, dilation, noiseScale) => {
+  const fitOne = (y, relVar, lengthScale, rho, dilation, noiseScale) => {
     const gp = new ml.GaussianProcessRegressor({
       kernel: new ChangepointKernel({ lengthScale, rho, dilation }),
       normalizeY: true,
@@ -197,49 +217,97 @@ export function fitTrend(polls, partyCodes, { noiseMultiplier = null, noiseShape
     const y = ilrMat.map((row) => row[coord]);
 
     // Stage 1: stationary grid (rho = 1, dilation = 1) over
-    // (lengthScale, noiseScale).
-    let stat = null;
+    // (lengthScale, noiseScale). Per noise scale, keep the best stationary
+    // marginal likelihood; noise scales within DELTA_NS of the winner stay
+    // in play for stage 2 (marginalising the noise scale too).
+    const nsBest = new Map();
     for (const lengthScale of LENGTH_SCALE_CANDIDATES) {
       for (const noiseScale of NOISE_SCALE_CANDIDATES) {
-        const gp = fitOne(y, lengthScale, 1, 1, noiseScale);
-        if (!stat || gp.logMarginalLikelihood_ > stat.lml) {
-          stat = { lml: gp.logMarginalLikelihood_, lengthScale, noiseScale };
+        const gp = fitOne(y, relVarC[coord], lengthScale, 1, 1, noiseScale);
+        const cur = nsBest.get(noiseScale);
+        if (cur === undefined || gp.logMarginalLikelihood_ > cur) {
+          nsBest.set(noiseScale, gp.logMarginalLikelihood_);
         }
       }
     }
+    const statMax = Math.max(...nsBest.values());
+    const DELTA_NS = 4;
+    const nsKept = [...nsBest.entries()].filter(([, l]) => l >= statMax - DELTA_NS).map(([ns]) => ns);
 
-    // Stage 2: JOINT grid over (lengthScale x rho) with the noise scale
-    // carried from stage 1. Length scale and changepoints interact -- with a
-    // changepoint absorbing the regime shift, a long smooth scale becomes
-    // admissible again, and freezing the scale at its STATIONARY optimum
-    // biases the search toward rho = 1. Every candidate is the same
-    // implementation so marginal likelihoods are comparable; rho = 1 IS the
-    // stationary model, so keeping it is always on the table. Affordable
-    // because this runs at build time (compute.mjs), not per visitor.
-    // Dilation joins the same joint grid: it interacts with the length scale
-    // the same way the changepoints do (a dilated campaign makes a long
-    // smooth base scale admissible again).
-    let best = null;
-    for (const lengthScale of LENGTH_SCALE_CANDIDATES) {
-      for (const rho of RHO_GRID) {
-        for (const dilation of DILATION_GRID) {
-          let gp;
-          try {
-            gp = fitOne(y, lengthScale, rho, dilation, stat.noiseScale);
-          } catch {
-            continue;
-          }
-          if (!best || gp.logMarginalLikelihood_ > best.logMarginalLikelihood_) {
-            best = gp;
-            best.chosenHyperparams = { lengthScale, noiseScale: stat.noiseScale, rho, dilation };
+    // Stage 2: JOINT grid over (lengthScale x rho x dilation), for every
+    // retained noise scale. Length scale and the non-stationarities
+    // interact, so the grid is joint; rho = 1 and dilation = 1 keep the
+    // stationary model on the table.
+    //
+    // The result is NOT the maximum: it is the LIKELIHOOD-WEIGHTED ENSEMBLE
+    // over the grid (approximate marginalisation of the hyperparameters,
+    // weights exp(lml - max)). The point maximum was fragile: several grid
+    // cells sit within a nat or two of each other, and a trivial data edit
+    // (0.5 pp on one poll's AUTRES) flipped the argmax and jumped the
+    // PQ-CAQ nowcast by ~2 points. Averaging makes the prediction a
+    // continuous function of the data and carries hyperparameter
+    // uncertainty into the intervals. Affordable at build time.
+    const candidates = [];
+    for (const noiseScale of nsKept) {
+      for (const lengthScale of LENGTH_SCALE_CANDIDATES) {
+        for (const rho of RHO_GRID) {
+          for (const dilation of DILATION_GRID) {
+            let gp;
+            try {
+              gp = fitOne(y, relVarC[coord], lengthScale, rho, dilation, noiseScale);
+            } catch {
+              continue;
+            }
+            candidates.push({ gp, lml: gp.logMarginalLikelihood_, params: { lengthScale, noiseScale, rho, dilation } });
           }
         }
       }
     }
-    gps.push(best);
+    gps.push(new GpEnsemble(candidates));
   }
 
   return { gps, t0, partyCodes };
+}
+
+/**
+ * Likelihood-weighted ensemble of GPs over the hyperparameter grid,
+ * exposing the single-GP predict() surface. Members below MIN_REL_WEIGHT of
+ * the total are dropped (they contribute nothing but compute time).
+ * Mixture moments: mean = sum w m_j; var = sum w (s_j^2 + m_j^2) - mean^2 --
+ * hyperparameter uncertainty therefore WIDENS the predictive interval where
+ * the grid disagrees, which is exactly the honesty the point-maximum lacked.
+ */
+const MIN_REL_WEIGHT = 1e-3;
+class GpEnsemble {
+  constructor(candidates) {
+    const lmax = Math.max(...candidates.map((c) => c.lml));
+    const raw = candidates.map((c) => ({ ...c, w: Math.exp(c.lml - lmax) }));
+    const wSum = raw.reduce((s, c) => s + c.w, 0);
+    this.members = raw
+      .filter((c) => c.w / wSum >= MIN_REL_WEIGHT)
+      .map((c) => ({ gp: c.gp, w: c.w, params: c.params }));
+    const w2 = this.members.reduce((s, c) => s + c.w, 0);
+    for (const m of this.members) m.w /= w2;
+    const top = this.members.reduce((a, b) => (b.w > a.w ? b : a));
+    this.chosenHyperparams = { ...top.params, ensembleSize: this.members.length, topWeight: +top.w.toFixed(3) };
+    this.logMarginalLikelihood_ = lmax;
+  }
+
+  predict(X, { returnStd = false } = {}) {
+    const n = X.length;
+    const mean = new Array(n).fill(0);
+    const m2 = new Array(n).fill(0);
+    for (const { gp, w } of this.members) {
+      const r = gp.predict(X, { returnStd });
+      const ms = returnStd ? r.mean : r;
+      for (let i = 0; i < n; i++) {
+        mean[i] += w * ms[i];
+        if (returnStd) m2[i] += w * (r.std[i] * r.std[i] + ms[i] * ms[i]);
+      }
+    }
+    if (!returnStd) return mean;
+    return { mean, std: mean.map((m, i) => Math.sqrt(Math.max(m2[i] - m * m, 1e-12))) };
+  }
 }
 
 function randnBoxMuller(rng) {

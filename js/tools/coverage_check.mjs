@@ -15,7 +15,7 @@
 
 import { readFileSync } from "node:fs";
 import { ml, mva } from "@tangent.to/ds";
-import { pivotPolls, toClosedComposition, sampleSizeWeight } from "../src/compositional.js";
+import { pivotPolls, toClosedComposition, ilrSamplingVariance } from "../src/compositional.js";
 import { ChangepointKernel, fitTrend, toX } from "../src/gpTrend.js";
 
 const { ilr } = mva.composition;
@@ -29,11 +29,14 @@ const ilrMat = ilr(comp);
 const t0 = polls.reduce((min, p) => (p.pollDate < min ? p.pollDate : min), polls[0].pollDate);
 const x = toX(t0, polls.map((p) => p.pollDate));
 
-const w = sampleSizeWeight(polls);
-const wMax = Math.max(...w);
-const relNoise = w.map((v) => Math.max(v / wMax, 0.05)).map((v) => 1 / v);
-const relMin = Math.min(...relNoise);
-const noiseShape = relNoise.map((v) => v / relMin);
+// Per-coordinate multinomial ILR noise shape, matching production
+// (fitTrend noiseShape "ilr"): coordinates loaded on rare parts are noisy
+// regardless of sample size.
+const varC = ilrSamplingVariance(comp, polls.map((p) => p.sampleSize));
+const noiseShapeC = varC.map((col) => {
+  const m = Math.min(...col);
+  return col.map((v) => v / m);
+});
 
 console.log(`${polls.length} sondages, ${ilrMat[0].length} coordonnees ILR\n`);
 console.log("hyperparametres retenus par le fit de production :");
@@ -69,14 +72,14 @@ for (let c = 0; c < ilrMat[0].length; c++) {
       kernel: new ChangepointKernel({ lengthScale, rho, dilation }),
       normalizeY: true,
     });
-    gp.fit(tr.map((i) => x[i]), tr.map((i) => y[i]), { alpha: tr.map((i) => noiseShape[i] * noiseScale) });
+    gp.fit(tr.map((i) => x[i]), tr.map((i) => y[i]), { alpha: tr.map((i) => noiseShapeC[c][i] * noiseScale) });
     const { mean, std } = gp.predict(test.map((i) => x[i]), { returnStd: true });
 
     // The predictive interval for an OBSERVED poll includes that poll's own
     // observation noise, in the GP's normalized-y units.
     const yStd = gp._yStd ?? 1; // normalizeY scale, if exposed; else raw
     test.forEach((i, k) => {
-      const obsSd = Math.sqrt(noiseShape[i] * noiseScale) * (typeof yStd === "number" ? yStd : 1);
+      const obsSd = Math.sqrt(noiseShapeC[c][i] * noiseScale) * (typeof yStd === "number" ? yStd : 1);
       const sd = Math.sqrt(std[k] ** 2 + obsSd ** 2);
       if (Math.abs(y[i] - mean[k]) <= Z90 * sd) inside++;
       total++;

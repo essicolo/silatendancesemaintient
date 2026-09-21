@@ -159,11 +159,19 @@
     <h4>3. Tendance nationale</h4>
     <p>La trajectoire des intentions de vote est estimée par régression par processus gaussien,
     un processus indépendant par coordonnée ILR, noyau de Matérn (ν = 3/2). La variance
-    d'observation de chaque sondage décroît en 1/√n avec la taille d'échantillon; la forme 1/n
-    prescrite par la théorie de l'échantillonnage a été comparée par validation croisée, sans
-    gain mesurable, ce qui est attendu lorsque la variance effective est dominée par les écarts
-    méthodologiques entre maisons plutôt que par l'erreur d'échantillonnage. L'échelle du bruit
-    et la portée temporelle sont sélectionnées par maximisation de la vraisemblance marginale.</p>
+    d'observation est propre à chaque sondage et à chaque coordonnée : par la méthode delta
+    appliquée à l'échantillonnage multinomial, Var(ilr_c) = Σ_p M²_cp / (n x_p), où M est le
+    jacobien constant de la transformation ILR — une coordonnée chargée sur une part rare est
+    bruyante en log-ratio quelle que soit la taille du sondage, ce qu'une variance scalaire
+    par sondage ignorait (au point de laisser le résidu « autres » d'un sondage à grand
+    échantillon déplacer la tête de course). Une échelle multiplicative par coordonnée,
+    absorbant la surdispersion entre maisons, est estimée sur grille. Les hyperparamètres ne
+    sont pas fixés à leur maximum de vraisemblance : la prédiction est la moyenne de
+    l'ensemble des cellules de la grille pondérées par leur vraisemblance marginale
+    (marginalisation approchée). Le maximum ponctuel était fragile — plusieurs cellules à
+    moins d'un nat l'une de l'autre, et une retouche infime des données faisait basculer
+    l'argmax et sauter la prédiction; la moyenne rend la prédiction continue en les données
+    et propage l'incertitude des hyperparamètres dans les intervalles.</p>
     <p>Deux formes de non-stationnarité sont admises, chacune contenant le modèle stationnaire
     comme cas particulier afin que la sélection relève de la vraisemblance et non d'un choix
     discrétionnaire. Premièrement, des points de rupture aux changements de chefs (14 janvier
@@ -176,7 +184,7 @@
     passées) et k = 1 restituant l'horloge uniforme. La dilatation retenue est forte : portée
     effective d'environ 40 à 190 jours en campagne selon la coordonnée, contre 300 à 1500 hors
     campagne. La calibration des intervalles prédictifs est vérifiée par validation croisée à
-    cinq plis : 91 % des sondages retenus tombent dans l'intervalle nominal à 90 %.</p>
+    cinq plis : 90,5 % des sondages retenus tombent dans l'intervalle nominal à 90 %.</p>
 
     <h4>4. Désagrégation régionale</h4>
     <p>Les sondages régionaux sont intégrés par un processus gaussien conjoint à observations

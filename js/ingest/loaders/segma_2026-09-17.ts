@@ -25,6 +25,6 @@ await loadOneOff(
   "2026-09-17",
   "https://ici.radio-canada.ca/info/long-format/2285606/sondage-radio-canada-parti-quebec-conservateur-liberaux (Segma/Radio-Canada/Coops de l'information, terrain 8-17 septembre 2026)",
   {
-    National: { n: 5572, shares: { PQ: 29, CAQ: 22, LIB: 19, PCQ: 18, QS: 12, AUTRES: 0 } },
+    National: { n: 5572, shares: { PQ: 29, CAQ: 22, LIB: 19, PCQ: 18, QS: 12, AUTRES: 1.0 } }, // le graphique publie « < 1 % » : on entre la borne, pas un point arbitraire; 0 declencherait le remplacement de zero (~2,8 %)
   },
 );

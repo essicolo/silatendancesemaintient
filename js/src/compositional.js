@@ -68,3 +68,52 @@ export function sampleSizeWeight(polls) {
   const median = sizes.sort((a, b) => a - b)[Math.floor(sizes.length / 2)] ?? 1000;
   return polls.map((p) => Math.sqrt(p.sampleSize > 0 ? p.sampleSize : median));
 }
+
+/**
+ * Multinomial sampling variance of each ILR coordinate, per poll (delta
+ * method). In log-ratio geometry the variance of a coordinate is NOT the
+ * scalar 1/n the previous noise model assumed: a coordinate loaded on a
+ * RARE part has variance ~ 1/(n x_p), which explodes as the part shrinks.
+ * Treating all coordinates alike let one large-sample poll's "< 1 %"
+ * residual act as a precisely measured huge log-move and drag the whole
+ * nowcast (Segma n=5572: AUTRES entered at 0.5 vs 2.0 moved the PQ-CAQ
+ * nowcast by ~2.4 points each, with identical hyperparameters).
+ *
+ * ILR is linear in log-parts: ilr = M log x with a constant Jacobian M
+ * (recovered numerically once, from multiplicative unit perturbations).
+ * With Cov(log x) ~ diag(1/(n x_p)) (multinomial, delta method; the -1/n
+ * rank-one term is annihilated by the CLR centring inside M):
+ *
+ *   Var(ilr_c) = sum_p M[c][p]^2 / (n x_p).
+ *
+ * @param {number[][]} comps closed compositions (rows sum to 1)
+ * @param {number[]} ns per-poll sample sizes (fallback: median)
+ * @returns {number[][]} [k-1][nPolls] variances, absolute ILR units
+ */
+export function ilrSamplingVariance(comps, ns) {
+  const k = comps[0].length;
+  const eps = 1e-6;
+  const base = new Array(k).fill(1 / k);
+  const base0 = mva.composition.ilr([base])[0];
+  const M = [];
+  for (let c = 0; c < k - 1; c++) M.push(new Array(k));
+  for (let p = 0; p < k; p++) {
+    const pert = base.map((v, j) => (j === p ? v * Math.exp(eps) : v));
+    const s = pert.reduce((a, b) => a + b, 0);
+    const row = mva.composition.ilr([pert.map((v) => v / s)])[0];
+    for (let c = 0; c < k - 1; c++) M[c][p] = (row[c] - base0[c]) / eps;
+  }
+
+  const sizes = ns.filter((n) => n > 0);
+  const med = sizes.slice().sort((a, b) => a - b)[Math.floor(sizes.length / 2)] ?? 1000;
+  const out = [];
+  for (let c = 0; c < k - 1; c++) {
+    out.push(comps.map((x, i) => {
+      const n = ns[i] > 0 ? ns[i] : med;
+      let v = 0;
+      for (let p = 0; p < k; p++) v += (M[c][p] * M[c][p]) / Math.max(x[p], 1e-6);
+      return v / n;
+    }));
+  }
+  return out;
+}
