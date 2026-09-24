@@ -133,9 +133,13 @@ export async function run(force = false, dryRun = false): Promise<number> {
   const { polls, revisions } = await fetchAll(cycles);
   const parsed = new Set(polls.map((p) => p.poll_id));
 
-  const fresh = aq
-    .from(polls.filter((p) => !before.has(p.poll_id)))
-    .orderby(aq.desc("poll_date"));
+  // arquero cannot orderby a column on an EMPTY table (no schema to check
+  // the reference against), and zero-fresh runs are routine: a one-off
+  // loader often inserts a poll under the same key Wikipedia later uses.
+  const freshRows = polls.filter((p) => !before.has(p.poll_id));
+  const fresh = freshRows.length
+    ? aq.from(freshRows).orderby(aq.desc("poll_date"))
+    : aq.from([{ poll_date: "", firm: "", sample_size: null }]).slice(0, 0);
 
   // Additions are not the only kind of change: a poll can be corrected or
   // removed upstream, and a parser fix changes what the same page yields.
