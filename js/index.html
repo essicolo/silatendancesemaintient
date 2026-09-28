@@ -159,19 +159,14 @@
     <h4>3. Tendance nationale</h4>
     <p>La trajectoire des intentions de vote est estimée par régression par processus gaussien,
     un processus indépendant par coordonnée ILR, noyau de Matérn (ν = 3/2). La variance
-    d'observation est propre à chaque sondage et à chaque coordonnée : par la méthode delta
-    appliquée à l'échantillonnage multinomial, Var(ilr_c) = Σ_p M²_cp / (n x_p), où M est le
-    jacobien constant de la transformation ILR — une coordonnée chargée sur une part rare est
-    bruyante en log-ratio quelle que soit la taille du sondage, ce qu'une variance scalaire
-    par sondage ignorait (au point de laisser le résidu « autres » d'un sondage à grand
-    échantillon déplacer la tête de course). Une échelle multiplicative par coordonnée,
-    absorbant la surdispersion entre maisons, est estimée sur grille. Les hyperparamètres ne
-    sont pas fixés à leur maximum de vraisemblance : la prédiction est la moyenne de
-    l'ensemble des cellules de la grille pondérées par leur vraisemblance marginale
-    (marginalisation approchée). Le maximum ponctuel était fragile — plusieurs cellules à
-    moins d'un nat l'une de l'autre, et une retouche infime des données faisait basculer
-    l'argmax et sauter la prédiction; la moyenne rend la prédiction continue en les données
-    et propage l'incertitude des hyperparamètres dans les intervalles.</p>
+    d'observation de chaque sondage est calculée par coordonnée : méthode delta appliquée à
+    l'échantillonnage multinomial, Var(ilr_c) = Σ_p M²_cp / (n x_p), où M est le jacobien de
+    la transformation ILR. Une échelle multiplicative par coordonnée, estimée sur grille,
+    absorbe la surdispersion entre maisons de sondage. Les hyperparamètres (portée, échelle
+    de bruit et paramètres de non-stationnarité) sont marginalisés : la prédiction est la
+    moyenne des modèles de la grille pondérée par leur vraisemblance marginale, et
+    l'incertitude sur les hyperparamètres est ainsi incluse dans les intervalles
+    prédictifs.</p>
     <p>Deux formes de non-stationnarité sont admises, chacune contenant le modèle stationnaire
     comme cas particulier afin que la sélection relève de la vraisemblance et non d'un choix
     discrétionnaire. Premièrement, des points de rupture aux changements de chefs (14 janvier
