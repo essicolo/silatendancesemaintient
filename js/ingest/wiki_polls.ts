@@ -47,6 +47,7 @@ const PARTY_COLUMNS: Record<string, string> = {
 // Wikipedia abbreviates; the database already holds these spellings from the
 // previous source. Normalising keeps poll_id stable across the switch.
 const FIRM_NORMALIZE: Record<string, string> = {
+  Leger: "Léger", // graphie sans accent apparue le 2026-09-28
   Mainstreet: "Mainstreet Research",
   Pallas: "Pallas Data",
   Liaison: "Liaison Strategies",
