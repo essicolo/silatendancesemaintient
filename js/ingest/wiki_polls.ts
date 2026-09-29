@@ -48,6 +48,7 @@ const PARTY_COLUMNS: Record<string, string> = {
 // previous source. Normalising keeps poll_id stable across the switch.
 const FIRM_NORMALIZE: Record<string, string> = {
   Leger: "Léger", // graphie sans accent apparue le 2026-09-28
+  "Léger.": "Léger", // point final résiduel dans une entrée de la page wiki
   Mainstreet: "Mainstreet Research",
   Pallas: "Pallas Data",
   Liaison: "Liaison Strategies",
