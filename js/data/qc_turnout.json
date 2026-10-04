@@ -16,29 +16,29 @@
  ],
  "gradient": {
   "PQ": [
-   -0.3233,
-   0.1848,
-   -0.0184
+   -0.2813,
+   0.1596,
+   -0.0153
   ],
   "CAQ": [
-   -0.6731,
-   -0.667,
-   0.4638
+   -0.8177,
+   -0.6713,
+   0.4692
   ],
   "LIB": [
-   0.1746,
-   -0.1555,
-   0.0017
+   0.1387,
+   -0.1435,
+   0.0143
   ],
   "PCQ": [
-   0.1456,
-   0.2864,
-   -0.4189
+   0.1294,
+   0.2824,
+   -0.397
   ],
   "QS": [
-   0.723,
-   0.092,
-   -1.0807
+   0.7458,
+   0.0767,
+   -1.0692
   ],
   "AUTRES": [
    0,
@@ -54,7 +54,8 @@
    "Léger 2026-09-07 (Rapport-intentions-de-vote-7-septembre-2026-VF.pdf, p.7)",
    "Léger 2026-09-14 (VMEDIA1_Rapport-intentions-de-vote-14-septembre-2026-Finale.pdf, p.7)",
    "Léger 2026-09-21 (Rapport intentions de vote - 21 septembre 2026.pdf, p.7)",
-   "Léger 2026-09-27 (2026-09-26-leger.pdf, p.7)"
+   "Léger 2026-09-27 (2026-09-26-leger.pdf, p.7)",
+   "Léger 2026-10-01 (Rapport intentions de vote - 3 octobre 2026.pdf, p.7)"
   ],
   "validation": "js/tools/turnout_test.ts (backtest 2022 : MAE finaux 2,015 -> 1,877 pp)"
  }
