@@ -1,0 +1,22 @@
+{
+  "source": "Méthodologies publiées des maisons (sections méthode des rapports en data/raw/lus et notices Wikipédia des sondages). Trois modes : web (panel en ligne), ivr (réponse vocale interactive), tel (téléphone avec intervieweur, incl. hybrides tel+web).",
+  "modes": {
+    "Léger": "web",
+    "CROP": "web",
+    "Research Co.": "web",
+    "Angus Reid": "web",
+    "Ipsos": "web",
+    "Synopsis Recherche": "web",
+    "Innovative Research": "web",
+    "Abacus Data": "web",
+    "Mainstreet Research": "ivr",
+    "Pallas Data": "ivr",
+    "Forum Research": "ivr",
+    "Ekos": "ivr",
+    "Liaison Strategies": "ivr",
+    "Segma Recherche": "tel",
+    "Segma / Radio-Canada": "tel",
+    "Nanos": "tel",
+    "SRM": "tel"
+  }
+}

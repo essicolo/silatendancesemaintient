@@ -1,0 +1,93 @@
+{
+ "asOf": "2026-10-05",
+ "nPolls": 287,
+ "trendHyper": [
+  {
+   "lengthScale": 470,
+   "noiseScale": 0.02,
+   "rho": 0.7,
+   "dilation": 8,
+   "ensembleSize": 20,
+   "topWeight": 0.283
+  },
+  {
+   "lengthScale": 1500,
+   "noiseScale": 0.005,
+   "rho": 0.7,
+   "dilation": 8,
+   "ensembleSize": 33,
+   "topWeight": 0.21
+  },
+  {
+   "lengthScale": 680,
+   "noiseScale": 0.01,
+   "rho": 1,
+   "dilation": 16,
+   "ensembleSize": 25,
+   "topWeight": 0.243
+  },
+  {
+   "lengthScale": 330,
+   "noiseScale": 0.05,
+   "rho": 1,
+   "dilation": 4,
+   "ensembleSize": 42,
+   "topWeight": 0.212
+  },
+  {
+   "lengthScale": 470,
+   "noiseScale": 0.05,
+   "rho": 1,
+   "dilation": 16,
+   "ensembleSize": 31,
+   "topWeight": 0.179
+  }
+ ],
+ "turnoutFactor": null,
+ "nowcastMean": {
+  "CAQ": 0.157908,
+  "LIB": 0.240697,
+  "PCQ": 0.194768,
+  "PQ": 0.279573,
+  "QS": 0.109506,
+  "AUTRES": 0.017548
+ },
+ "pointCounts": {
+  "CAQ": 2,
+  "LIB": 41,
+  "PCQ": 23,
+  "PQ": 54,
+  "QS": 7,
+  "AUTRES": 0
+ },
+ "medoidCounts": {
+  "CAQ": 6,
+  "LIB": 41,
+  "PCQ": 23,
+  "PQ": 51,
+  "QS": 6,
+  "AUTRES": 0
+ },
+ "winProbProbes": {
+  "117": {
+   "CAQ": 0.139,
+   "LIB": 0.0312,
+   "PCQ": 0.645,
+   "PQ": 0.1846,
+   "QS": 0.0002,
+   "AUTRES": 0
+  },
+  "234": null,
+  "371": null,
+  "648": null,
+  "811": {
+   "CAQ": 0.0102,
+   "LIB": 0.0012,
+   "PCQ": 0,
+   "PQ": 0.9886,
+   "QS": 0,
+   "AUTRES": 0
+  }
+ },
+ "gallagherP50": 14.012
+}

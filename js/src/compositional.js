@@ -15,7 +15,16 @@ const { closure, multiplicativeReplacement } = mva.composition;
  * @returns {{polls: Array<object>, partyCodes: string[]}}
  */
 export function pivotPolls(rows) {
-  const partyCodes = [...new Set(rows.map((r) => r.party_code))].sort();
+  // AUTRES last. Under the library's cumulative pivot basis the FIRST
+  // part is mixed into every ILR coordinate; alphabetical order put
+  // AUTRES there, spreading its measurement noise across all five
+  // coordinates (the Segma episode) and aligning no coordinate with the
+  // axes that move. Tested as a basis A/B with full per-basis
+  // hyperparameter selection (tools/ilr_basis_test.mjs): AUTRES-last
+  // improves all three eve-of-election nowcasts (mean MAE 2.58 -> 2.08).
+  const partyCodes = [...new Set(rows.map((r) => r.party_code))].sort(
+    (a, b) => (a === "AUTRES") - (b === "AUTRES") || a.localeCompare(b),
+  );
   const byPoll = new Map();
   for (const r of rows) {
     if (!byPoll.has(r.poll_id)) {

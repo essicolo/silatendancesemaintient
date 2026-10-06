@@ -28,7 +28,12 @@ export function writeProjection(dataDir = new URL("../data/", import.meta.url)) 
     leaderEffect: load("qc_leader_effect.json"),
     regionalPollRows: load("qc_regional_polls.json"),
     byelectionRows: loadOptional("qc_byelections.json"),
-    turnout: (() => { try { return load("qc_turnout.json"); } catch { return null; } })(),
+    // Turnout correction retired (post-mortem 2026-10-06): the shrinkage
+    // weight w=0 is optimal over the 2022+2026 backtests combined
+    // (tools/turnout_test_2026.mjs). qc_turnout.json and its generator
+    // stay for the record; computeProjection's null path applies no
+    // correction.
+    turnout: null,
   });
 
   writeFileSync(new URL("qc_projection.json", dataDir), JSON.stringify(projection), "utf-8");

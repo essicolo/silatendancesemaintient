@@ -6,7 +6,8 @@
   "scripts": {
     "compute": "node tools/compute.mjs",
     "build:dashboard": "esbuild src/dashboard.js --bundle --platform=browser --format=esm --outfile=dist/dashboard.js --sourcemap",
-    "dev": "esbuild src/dashboard.js --bundle --platform=browser --format=esm --outfile=dist/dashboard.js --sourcemap --watch=forever --servedir=."
+    "dev": "esbuild src/dashboard.js --bundle --platform=browser --format=esm --outfile=dist/dashboard.js --sourcemap --watch=forever --servedir=.",
+    "test": "node --test test/"
   },
   "license": "ISC",
   "dependencies": {

@@ -112,7 +112,40 @@ async function ingestQcPolls(con: DuckDBConnection): Promise<number> {
   return polls.length;
 }
 
-export async function run(force = false, dryRun = false): Promise<number> {
+// Plausibility guards on what a PUBLICLY EDITABLE source may inject into
+// an AUTOMATIC recompute-and-publish pipeline (review 2026-10-06): a
+// renamed column makes the parser yield zero polls and the wholesale
+// National reload would then erase the series; plausible-looking
+// vandalism flows to the dashboard in one watch cycle. Thresholds are
+// calibrated on the observed history (legitimate reconciliations removed
+// at most a couple of rows; published shares sum to ~100). A violation
+// aborts the run WITHOUT writing; --override-guards (manual) bypasses
+// after human inspection.
+const MAX_STALE_REMOVALS = 5;
+const SHARE_SUM_RANGE: [number, number] = [85, 110];
+
+function guardViolations(
+  freshPolls: { poll_id: string; firm: string; poll_date: string }[],
+  shares: { poll_id: string; pct_reported: number }[],
+  staleCount: number,
+): string[] {
+  const out: string[] = [];
+  if (staleCount > MAX_STALE_REMOVALS) {
+    out.push(`${staleCount} retraits d'un coup (max ${MAX_STALE_REMOVALS}) — page tronquee ou parseur casse?`);
+  }
+  const sums = new Map<string, number>();
+  for (const s of shares) sums.set(s.poll_id, (sums.get(s.poll_id) ?? 0) + Number(s.pct_reported));
+  for (const p of freshPolls) {
+    const sum = sums.get(p.poll_id);
+    if (sum === undefined) continue;
+    if (sum < SHARE_SUM_RANGE[0] || sum > SHARE_SUM_RANGE[1]) {
+      out.push(`${p.firm} ${p.poll_date}: somme des parts ${sum.toFixed(1)} hors [${SHARE_SUM_RANGE}] — vandalisme ou erreur de table?`);
+    }
+  }
+  return out;
+}
+
+export async function run(force = false, dryRun = false, overrideGuards = false): Promise<number> {
   let con = await connect();
   const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
   console.log(`[${stamp}] veille des sondages`);
@@ -127,10 +160,13 @@ export async function run(force = false, dryRun = false): Promise<number> {
 
   const existing = await all(
     con,
-    "SELECT poll_id, poll_date::VARCHAR AS poll_date FROM polls WHERE jurisdiction_code = 'qc-provincial'",
+    // National only: the reload replaces nothing else, and the one-off
+    // REGIONAL rows (absent from Wikipedia by design) polluted both this
+    // diff's message and the removal guard.
+    "SELECT poll_id, poll_date::VARCHAR AS poll_date FROM polls WHERE jurisdiction_code = 'qc-provincial' AND region_code = 'National'",
   );
   const before = new Set(existing.map((r) => String(r.poll_id)));
-  const { polls, revisions } = await fetchAll(cycles);
+  const { polls, shares, revisions } = await fetchAll(cycles);
   const parsed = new Set(polls.map((p) => p.poll_id));
 
   // arquero cannot orderby a column on an EMPTY table (no schema to check
@@ -150,6 +186,14 @@ export async function run(force = false, dryRun = false): Promise<number> {
     (r) => !parsed.has(String(r.poll_id)) && reparsed.has(cycleOf(String(r.poll_date))),
   );
   if (stale.length) console.log(`  ${stale.length} sondage(s) en base ne figurent plus a la source`);
+
+  const violations = guardViolations(freshRows, shares, stale.length);
+  if (violations.length && !overrideGuards) {
+    console.log("  GARDES : run refuse, rien n'a ete ecrit (relancer avec --override-guards apres inspection) :");
+    for (const v of violations) console.log(`    ! ${v}`);
+    con.closeSync();
+    return 0;
+  }
 
   if (!fresh.numRows() && !stale.length) {
     console.log("  page modifiee mais aucun changement de sondage");
@@ -194,5 +238,5 @@ export async function run(force = false, dryRun = false): Promise<number> {
 
 if (import.meta.main) {
   const args = new Set(Deno.args);
-  await run(args.has("--force"), args.has("--dry-run"));
+  await run(args.has("--force"), args.has("--dry-run"), args.has("--override-guards"));
 }

@@ -178,8 +178,12 @@
     k partagé entre toutes les campagnes (donc identifié principalement par les campagnes
     passées) et k = 1 restituant l'horloge uniforme. La dilatation retenue est forte : portée
     effective d'environ 40 à 190 jours en campagne selon la coordonnée, contre 300 à 1500 hors
-    campagne. La calibration des intervalles prédictifs est vérifiée par validation croisée à
-    cinq plis : 90,5 % des sondages retenus tombent dans l'intervalle nominal à 90 %.</p>
+    campagne. La calibration des intervalles prédictifs est mesurée par validation
+    séquentielle : à chaque coupure mensuelle de 2016 à 2026, le modèle ajusté sur les
+    seuls sondages antérieurs prédit le sondage suivant. L'intervalle nominal à 90 %
+    couvre 79 % de ces 675 prédictions (95 % en période de campagne, 78 % hors
+    campagne). La validation croisée par plis aléatoires donne 90,5 %, chiffre qui
+    mesure l'interpolation de la série et non la prédiction.</p>
 
     <h4>4. Désagrégation régionale</h4>
     <p>Les sondages régionaux sont intégrés par un processus gaussien conjoint à observations
@@ -196,16 +200,10 @@
 
     <h4>5. Modèle de circonscription</h4>
     <p>Le point de départ de chaque circonscription est son résultat de 2022 exprimé sur la
-    carte de 2026. Le mouvement provincial estimé (section 3) est d'abord converti de la
-    population adulte, que décrivent les sondages, vers l'électorat probable : la part de
-    chaque parti est multipliée par le rapport de son mélange d'âge sous les poids de
-    participation et sous les poids de population, où le profil d'âge des partis provient des
-    ventilations par âge du cycle 2026 mutualisées en log-ratios, les taux de participation
-    par âge de l'élection de 2022 (Élections Québec) et la structure d'âge du recensement.
-    Cette correction de participation différentielle, validée sur les sept sondages finaux de
-    2022 (erreur absolue moyenne réduite de 2,02 à 1,88 point, robuste aux variantes de poids
-    et de taux), s'applique à la projection et à la simulation, non à la tendance affichée,
-    qui décrit l'opinion de la population adulte. Le mouvement ainsi converti, net de l'écart
+    carte de 2026. Aucune correction de participation différentielle n'est appliquée : le
+    poids de rétrécissement de cette correction, estimé sur grille contre les sondages
+    finaux de 2022 et de 2026 combinés, est nul (erreur absolue moyenne de 1,89 point sans
+    correction, 2,06 avec). Le mouvement provincial estimé (section 3), net de l'écart
     régional courant moins celui de 2022 (section 4), est appliqué en log-ratios. Trois
     ajustements estimés s'y superposent, tous en perturbation compositionnelle :</p>
     <ul>
@@ -266,11 +264,12 @@
     (swing seul) : 89 % des circonscriptions correctement classées, 78 % des courses serrées.
     Sur 2018 (pipeline complet, en validation temporelle inversée faute d'une troisième
     élection) : 89 % des circonscriptions et 97 % des serrées, contre 52 % pour la projection
-    sans changement. Le choc systémique n'est calibré que sur deux élections. La correction de
-    participation différentielle repose sur une seule élection de validation, sur les taux de
-    2022 comme a priori de la participation de 2026, et sur un gradient d'âge estimé de deux
-    ventilations publiées; la participation différentielle selon d'autres dimensions (langue,
-    région) n'est pas modélisée. Ne sont pas modélisées non plus : la notoriété individuelle
+    sans changement. Le choc systémique est calibré sur les élections de 2018 et de 2022; son
+    isotropie en coordonnées ILR a été testée contre une alternative anisotrope (axe
+    principal des dérives observées, part directionnelle sur grille) et retenue par
+    validation leave-one-out sur les trois dérives disponibles. La participation
+    différentielle par âge n'est pas modélisée (poids optimal nul sur les sondages finaux
+    de 2022 et 2026 combinés). Ne sont pas modélisées non plus : la notoriété individuelle
     des candidats (testée via la notoriété Wikipédia, redondante avec le profil démographique,
     sans gain hors échantillon) et la covariance entre partis dans la tendance. Cette dernière a été
     évaluée deux fois : par injection de la corrélation empirique des résidus de sondages

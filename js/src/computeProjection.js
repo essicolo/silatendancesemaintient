@@ -352,6 +352,11 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
       turnoutFactor: turnoutFactor,
       nByelections: byelectionInfo ? byelectionInfo.length : 0,
       byelections: byelectionInfo ?? [],
+      // Per-coordinate top ensemble member, exported so analysis tools
+      // read the production reference instead of hand-copying it (the
+      // production prediction marginalizes the grid; this is its top
+      // cell, refreshed at every compute).
+      trendHyper: model.gps.map((g) => g.chosenHyperparams ?? null),
     },
     partyCodes,
     trendSeries,

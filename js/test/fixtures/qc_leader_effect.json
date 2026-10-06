@@ -1,0 +1,24 @@
+{
+  "target_year": 2026,
+  "effects": {
+    "arrivee": {
+      "n": 7,
+      "delta_2026": 0.6012729955105611,
+      "sd_2026": 0.288388813423464,
+      "flat_mean": 0.19934062618648954
+    },
+    "continuation": {
+      "n": 17,
+      "delta_2026": 0.2695916106157119,
+      "sd_2026": 0.3672867026694859,
+      "flat_mean": 0.24086121090298118
+    },
+    "depart": {
+      "n": 11,
+      "delta_2026": -0.10316446295776595,
+      "sd_2026": 0.5355512966913191,
+      "flat_mean": -0.10316446295776595
+    }
+  },
+  "note": "exces log vs contrefactuel de swing uniforme ILR; GP Matern sur annee centree-reduite"
+}
