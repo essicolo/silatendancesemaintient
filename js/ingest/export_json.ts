@@ -37,8 +37,10 @@ async function exportPolls(
   return await all(
     con,
     `SELECT p.poll_id, p.region_code, p.firm, p.poll_date::VARCHAR AS poll_date,
-            p.sample_size, p.firm_rating, s.party_code, s.pct_reported
+            p.sample_size, p.firm_rating, s.party_code, s.pct_reported,
+            d.n_decided, d.field_start::VARCHAR AS field_start, d.field_end::VARCHAR AS field_end
      FROM polls p JOIN poll_shares s USING(poll_id)
+     LEFT JOIN poll_details d USING(poll_id)
      WHERE p.jurisdiction_code = ? AND p.region_code = ? AND p.general_election IS NULL
      ORDER BY p.poll_date`,
     [jurisdiction, region],

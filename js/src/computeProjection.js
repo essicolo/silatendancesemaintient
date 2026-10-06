@@ -301,12 +301,15 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   for (const entry of ridingForecast.values()) pointCounts[entry.winner]++;
 
   // Vote-vs-seat disproportion. Each draw i carries BOTH a national vote
-  // composition (provinceDraws[i], probable-electorate basis) and a seat
-  // allocation (simulation.draws[i], same index by construction), so the
+  // composition and a seat allocation (same index by construction), so the
   // distortion of the electoral system is a joint distribution obtained for
   // free: per-party gaps (seat share minus vote share) and the Gallagher
-  // least-squares index sqrt(1/2 sum (v-s)^2), summarised over draws.
-  const nDraws = Math.min(provinceDraws.length, simulation.draws.length);
+  // least-squares index sqrt(1/2 sum (v-s)^2), summarised over draws. The
+  // vote side is simulation.voteDraws -- the draw's composition INCLUDING
+  // the common systemic shock its seats were computed under; pairing seats
+  // with the raw provinceDraws mixed two different laws.
+  const voteDraws = simulation.voteDraws ?? provinceDraws;
+  const nDraws = Math.min(voteDraws.length, simulation.draws.length);
   const gallagherDraws = new Array(nDraws);
   const gapDraws = Object.fromEntries(partyCodes.map((p) => [p, new Array(nDraws)]));
   const voteMean = Object.fromEntries(partyCodes.map((p) => [p, 0]));
@@ -314,7 +317,7 @@ export function computeProjection(data, { asOf = new Date().toISOString().slice(
   for (let i = 0; i < nDraws; i++) {
     let sq = 0;
     for (const p of partyCodes) {
-      const v = (provinceDraws[i][p] ?? 0) * 100;
+      const v = (voteDraws[i][p] ?? 0) * 100;
       const s = ((simulation.draws[i][p] ?? 0) / simulation.totalSeats) * 100;
       sq += (v - s) ** 2;
       gapDraws[p][i] = s - v;

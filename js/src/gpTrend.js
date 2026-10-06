@@ -363,25 +363,45 @@ export function sampleTrendDraws(model, asOf, nSamples = 2000, seed = null, { co
   const x = toX(model.t0, [asOf]);
   const rng = seed !== null ? mulberry32(seed) : Math.random;
 
-  const means = [], stds = [];
-  for (const gp of model.gps) {
+  // Per-coordinate predictive: the FULL mixture over ensemble members, not
+  // its moment-matched Gaussian. Sampling a member first (probability w)
+  // and then from that member's Gaussian reproduces the exact mixture;
+  // collapsing to two moments kept the variance but erased the tail mass
+  // carried by low-weight reactive members (2026-10-06 review). A plain GP
+  // (no members) degrades to the single-Gaussian path.
+  const perCoord = model.gps.map((gp) => {
+    if (gp.members) {
+      const comps = gp.members.map(({ gp: m, w }) => {
+        const { mean, std } = m.predict(x, { returnStd: true });
+        return { w, m: mean[0], s: std[0] };
+      });
+      const { mean, std } = gp.predict(x, { returnStd: true });
+      return { comps, m: mean[0], s: std[0] };
+    }
     const { mean, std } = gp.predict(x, { returnStd: true });
-    means.push(mean[0]);
-    stds.push(std[0]);
-  }
+    return { comps: null, m: mean[0], s: std[0] };
+  });
+
+  const pickComp = (pc) => {
+    if (!pc.comps) return pc;
+    let u = rng();
+    for (const c of pc.comps) { u -= c.w; if (u <= 0) return c; }
+    return pc.comps[pc.comps.length - 1];
+  };
 
   const Lc = corr ? cholLower(corr) : null;
   const samplesIlr = [];
   for (let s = 0; s < nSamples; s++) {
-    const z = means.map(() => randnBoxMuller(rng));
+    const z = perCoord.map(() => randnBoxMuller(rng));
+    const chosen = perCoord.map(pickComp);
     samplesIlr.push(
       Lc
-        ? means.map((m, i) => {
+        ? chosen.map((c, i) => {
             let v = 0;
             for (let j = 0; j <= i; j++) v += Lc[i][j] * z[j];
-            return m + stds[i] * v;
+            return c.m + c.s * v;
           })
-        : means.map((m, i) => m + stds[i] * z[i])
+        : chosen.map((c, i) => c.m + c.s * z[i])
     );
   }
   const samplesSimplex = ilrInv(samplesIlr);

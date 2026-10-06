@@ -137,6 +137,22 @@ CREATE TABLE IF NOT EXISTS party_leaders (
     PRIMARY KEY (jurisdiction_code, party_code)
 );
 
+-- Per-poll survey facts the source tables don't carry: the DECIDED base
+-- the shares are computed on (the published n is the total sample; using
+-- it overstates precision by the undecided rate, ~10-15%), and the field
+-- window (a multi-day poll measures the AVERAGE opinion of its window,
+-- and poll_date conventions differ between Wikipedia and the reports).
+-- Kept in a side table keyed by poll_id so the facts SURVIVE the watch's
+-- wholesale reload of the National series; populated by
+-- ingest/poll_details.ts from the report PDFs.
+CREATE TABLE IF NOT EXISTS poll_details (
+    poll_id             VARCHAR PRIMARY KEY,
+    n_decided           INTEGER,
+    field_start         DATE,
+    field_end           DATE,
+    detail_source       VARCHAR
+);
+
 -- Reputation / attention proxy signals (Wikipedia pageviews, GDELT tone),
 -- sourced and reproducible rather than a manual editorial judgement.
 CREATE TABLE IF NOT EXISTS sentiment_signals (

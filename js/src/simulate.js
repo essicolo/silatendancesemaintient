@@ -150,11 +150,22 @@ export function simulateSeatCounts(
   // the one per-riding decomposition that adds up across the province.
   const winTally = ridings.map(() => new Array(partyCodes.length).fill(0));
 
-  const draws = provinceDraws.map((draw) => {
+  // National vote composition of each draw INCLUDING the common systemic
+  // shock: the shock shifts every riding, so the vote total implied by a
+  // draw's seats is provDraw + shock, not provDraw. The published joint
+  // votes-seats distribution must pair seats with THIS composition --
+  // pairing them with the raw provinceDraws mixed two different laws
+  // (found by the 2026-10-06 review).
+  const voteDraws = new Array(provinceDraws.length);
+
+  const draws = provinceDraws.map((draw, di) => {
     const provDrawIlr = ilrRows([partyCodes.map((p) => draw[p])])[0];
     const delta = provDrawIlr.map((v, j) => v - provBaseIlr[j]);
 
     const shock = sysSd ? Array.from({ length: k }, () => randn(rng) * sysSd) : null;
+    const effIlr = provDrawIlr.map((v, j) => v + (shock ? shock[j] : 0));
+    const effShare = ilrInv([effIlr])[0];
+    voteDraws[di] = Object.fromEntries(partyCodes.map((p, j) => [p, effShare[j]]));
     const regionShock = new Map(
       regionLabels.map((label) => [label, Array.from({ length: k }, () => randn(rng) * sigmaRegion)])
     );
@@ -191,7 +202,7 @@ export function simulateSeatCounts(
     ]),
   );
 
-  return { draws, totalSeats: ridings.length, winProbs };
+  return { draws, voteDraws, totalSeats: ridings.length, winProbs };
 }
 
 /**

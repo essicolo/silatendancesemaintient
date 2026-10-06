@@ -23,7 +23,12 @@ export function pivotPolls(rows) {
         pollId: r.poll_id,
         firm: r.firm,
         pollDate: r.poll_date,
-        sampleSize: r.sample_size,
+        // Observation precision uses the DECIDED base when the report
+        // gives one: the shares are computed on it, and the published
+        // total overstates n by the undecided rate (~10-15%). The
+        // published total remains in the poll's identity key upstream.
+        sampleSize: r.n_decided ?? r.sample_size,
+        sampleSizePublished: r.sample_size,
         firmRating: r.firm_rating,
         // null, not 0: a party a poll never asked about is UNMEASURED, and
         // that is not the same claim as "measured at zero". Pre-2021 polls

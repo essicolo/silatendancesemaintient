@@ -5,12 +5,20 @@ node_modules/
 # Dashboard bundle (rebuild: npm run build:dashboard)
 js/dist/
 
-# Raw/scraped data and the DuckDB base: rebuildable via ingest scripts
-# (deno task watch for polls; the historical Python chain lives at tag python-archive).
-# The materialised riding-name maps are kept: they need geopandas to rebuild.
+# Raw/scraped data and the DuckDB base. Much of data/raw is NOT rebuildable
+# (pollster PDFs whose press links die, the DGEQ results feed whose format is
+# not guaranteed): what git can't carry is inventoried with SHA256 + origin in
+# data/raw/MANIFEST.md and must be backed up off-machine. The small
+# irreplaceable JSON inputs ARE tracked below.
 /data/*
 !/data/riding_names_2017.json
 !/data/riding_names_2026.json
+!/data/raw
+/data/raw/*
+!/data/raw/MANIFEST.md
+!/data/raw/lus
+/data/raw/lus/*
+!/data/raw/lus/2026-10-05-resultats-dgeq.json
 
 # NOTE: js/data/ is tracked on purpose. It mixes regenerable exports with
 # ESTIMATED parameters (qc_systemic, qc_leader_effect, qc_regional_calibration,
