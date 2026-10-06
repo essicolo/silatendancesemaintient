@@ -134,8 +134,8 @@ const close = (v: number[]) => { const s = v.reduce((x, y) => x + y, 0); return 
 const ACTUAL = close(PARTIES.map((p) => ACTUAL_RAW[p]));
 const mae = (a: number[], b: number[]) => a.reduce((s, v, i) => s + Math.abs(v - b[i]), 0) / a.length * 100;
 
-function correct(nat: Record<string, number>, wPop: number[], tau: number[]): number[] {
-  const wV = close(wPop.map((w, a) => w * tau[a]));
+function correct(nat: Record<string, number>, wPop: number[], tau: number[], w = 1): number[] {
+  const wV = close(wPop.map((wp, a) => wp * tau[a]));
   const wP = close(wPop);
   return close(PARTIES.map((p, pi) => {
     const s = nat[p] ?? 0;
@@ -145,7 +145,7 @@ function correct(nat: Record<string, number>, wPop: number[], tau: number[]): nu
       mixP += wP[a] * band;
       mixV += wV[a] * band;
     }
-    return s * (mixP > 0 ? mixV / mixP : 1);
+    return s * Math.pow(mixP > 0 ? mixV / mixP : 1, w);
   }));
 }
 
@@ -181,6 +181,16 @@ for (const [label, wPop, tau] of CASES) {
   console.log(`\n${label}: MAE brut ${(e0 / finals.size).toFixed(3)} pp, corrige ${(e1 / finals.size).toFixed(3)} pp` +
     ` (delta ${(e1 - e0) / finals.size >= 0 ? "+" : ""}${((e1 - e0) / finals.size).toFixed(3)})`);
   for (const l of detail) console.log(l);
+}
+
+// Shrinkage grid on the central case (w = 0: no correction; w = 1: full),
+// comparable to tools/turnout_test_2026.mjs for the joint two-election choice.
+const W_GRID = [0, 0.25, 0.5, 0.75, 1, 1.25];
+console.log("\nMAE moyenne selon le poids w (cas central) :");
+for (const w of W_GRID) {
+  let e = 0;
+  for (const [, f] of finals) e += mae(correct(f.nat, CASES[0][1], CASES[0][2], w), ACTUAL);
+  console.log(`  w=${String(w).padEnd(4)} : ${(e / finals.size).toFixed(3)} pp`);
 }
 
 // Magnitude of the correction itself (central case), for scale.
