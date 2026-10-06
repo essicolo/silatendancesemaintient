@@ -110,6 +110,37 @@ export function residualIlr(resultRows, dateA, boundaryA, dateB, boundaryB, part
   return { ridings: common, Y: swing.map((r) => r.map((v, j) => v - mean[j])) };
 }
 
+/**
+ * Pooled mean-reversion of riding departure LEVELS -- the 2030 successor
+ * of the feature-based effects model, validated 2026-10-06.
+ *
+ * Post-2026 finding: every mapping from static features (demographics,
+ * federal vote, previous departure) to the NEXT transition's departure
+ * change anti-transfers between transitions (R2 -0.10 to -0.52,
+ * tools/pooled_effects_test.mjs), while the departure levels themselves
+ * persist with a stable coefficient rho < 1. Estimated per ILR
+ * coordinate by OLS through the origin, POOLED over all available
+ * transitions (single-transition estimates do not transfer), it is the
+ * only spatial structure that beats the pure carry-forward null out of
+ * transition: leave-one-transition-out R2 +0.21 / -0.04 / +0.09
+ * (tools/persistence_test.mjs). Predicted change = (rho - 1) * level;
+ * rho = 1 recovers no-effects.
+ *
+ * @param {Array<Array<[number[], number[]]>>} transitions each a list of
+ *   [levelPrev, levelNext] ILR pairs (centred departures)
+ * @returns {number[]} rho per ILR coordinate
+ */
+export function pooledPersistence(transitions) {
+  const nC = transitions[0][0][0].length;
+  return Array.from({ length: nC }, (_, j) => {
+    let num = 0, den = 0;
+    for (const pairs of transitions) {
+      for (const [a, b] of pairs) { num += a[j] * b[j]; den += a[j] * a[j]; }
+    }
+    return num / den;
+  });
+}
+
 /** Apply a predicted ILR departure to each riding's baseline composition. */
 export function applyIlrShift(baselineShares, shifts, maxShift = 0.35) {
   const base = ilrMatrix(baselineShares);
