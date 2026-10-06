@@ -150,7 +150,7 @@ async function exportByelections(con: DuckDBConnection): Promise<Record<string, 
     `SELECT election_date::VARCHAR AS election_date, boundary_year, riding_code, party_code, votes
      FROM election_results
      WHERE jurisdiction_code = 'qc-provincial' AND riding_code IS NOT NULL
-       AND election_date > '2022-10-03'::DATE`,
+       AND election_date > '2022-10-03'::DATE AND election_date < '2026-10-05'::DATE`,
   );
 }
 
