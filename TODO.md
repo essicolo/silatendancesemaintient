@@ -20,6 +20,15 @@
 
 ## À faire
 
+### Horizon : gouvernement PQ minoritaire (59/127), prochaines générales plausibles dès 2028
+Les refontes « entre deux cycles » sont à faire tôt, pas à la veille du prochain déclenchement. Ordre suggéré :
+- [ ] Ré-entraîner les effets locaux sur la transition 2022→2026 (double les données; les résidus QS-bastions et PCQ-Mauricie du post-mortem deviennent des données d'entraînement).
+- [ ] Granularité régionale : île / couronne / RMR-QC / Chaudière-Appalaches–reste, selon ce que les ventilations publiées permettent (le post-mortem chiffre le coût des 3 régions à ~10 sièges).
+- [ ] Élasticité de swing par circonscription (concentration des bastions), nul = 1 sur grille, estimée sur 2018→2022→2026.
+- [ ] Réordonner les parts ILR (AUTRES en dernier) — déjà au journal, à faire pendant l'accalmie.
+- [ ] Retirer la correction de participation de `computeProjection` (verdict w=0 du post-mortem).
+- [ ] Nouvelle carte des sortants/chefs : Fréchette démissionnera-t-elle? partielles à surveiller via la veille DGEQ.
+
 ### Pipeline
 - [x] **Boucle vivante portée en Deno/TypeScript** (2026-09-02) — `js/ingest/` : `wiki_polls.ts` (parseur avec exclusion des sous-groupes par chaîne de titres), `db.ts` (DuckDB via `@duckdb/node-api`, même schéma SQL), `export_json.ts` (noms de circonscriptions matérialisés dans `data/riding_names_{2017,2026}.json`, plus de geopandas), `watch.ts` (arquero pour le diff). **Parité prouvée avant bascule** : les deux parseurs sur le même HTML sauvegardé — 269 sondages, 1 487 parts, zéro divergence d'id, de champ ou de part ; export comparé sémantiquement fichier par fichier (8/8 identiques). Le harnais de parité et la boucle Python ont ensuite été **supprimés**, puis (2026-09-02) **tout le Python purgé du tronc** — prototypes, loaders, `pyproject`/`uv.lock` compris ; le dernier état complet est le tag git `python-archive`. Pas de double maintenance : un bug de parseur se corrige dans le TS. Gain : la veille importe `computeProjection` directement, un seul runtime, plus de subprocess. Les prototypes Python (`model/`, loaders ponctuels) restent archivés tels quels — leurs sorties (`qc_leader_effect.json`, `qc_systemic.json`…) sont statiques entre élections.
 - [ ] Un prochain PDF ponctuel (Léger/Synopsis) s'écrira en TS dans `js/ingest/` sur le modèle des loaders du tag `python-archive` (ex. `leger_aug31_2026.py`) ; leurs lignes sont déjà en base.
