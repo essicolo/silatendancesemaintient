@@ -1,0 +1,876 @@
+{
+ "source": "election_results (Atlas 1878-2012 + DGEQ 2014-2026), sièges = pluralité par circonscription, carte native",
+ "cases": [
+  {
+   "date": "1890-01-01",
+   "incumbent": "CONS",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -4.0913683749553655
+  },
+  {
+   "date": "1892-01-01",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -0.8917696133675221
+  },
+  {
+   "date": "1897-01-01",
+   "incumbent": "CONS",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -8.58336649129982
+  },
+  {
+   "date": "1908-01-01",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": true,
+   "swing": 0.251659906182212
+  },
+  {
+   "date": "1912-01-01",
+   "incumbent": "LIB",
+   "mandates": 2,
+   "reelected": true,
+   "swing": 0.006238571988312458
+  },
+  {
+   "date": "1923-01-01",
+   "incumbent": "LIB",
+   "mandates": 3,
+   "reelected": true,
+   "swing": -2.024344559592656
+  },
+  {
+   "date": "1927-01-01",
+   "incumbent": "LIB",
+   "mandates": 4,
+   "reelected": true,
+   "swing": 7.8270666868158045
+  },
+  {
+   "date": "1931-01-01",
+   "incumbent": "LIB",
+   "mandates": 5,
+   "reelected": true,
+   "swing": -4.465388780783265
+  },
+  {
+   "date": "1935-01-01",
+   "incumbent": "LIB",
+   "mandates": 6,
+   "reelected": true,
+   "swing": -8.344211929094904
+  },
+  {
+   "date": "1936-01-01",
+   "incumbent": "LIB",
+   "mandates": 7,
+   "reelected": false,
+   "swing": -7.122681759801196
+  },
+  {
+   "date": "1939-01-01",
+   "incumbent": "UN",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -18.27996349968462
+  },
+  {
+   "date": "1944-01-01",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -14.154933451342657
+  },
+  {
+   "date": "1948-01-01",
+   "incumbent": "UN",
+   "mandates": 1,
+   "reelected": true,
+   "swing": 13.218428399594337
+  },
+  {
+   "date": "1952-01-01",
+   "incumbent": "UN",
+   "mandates": 2,
+   "reelected": true,
+   "swing": -0.7418932596701993
+  },
+  {
+   "date": "1956-01-01",
+   "incumbent": "UN",
+   "mandates": 3,
+   "reelected": true,
+   "swing": 1.3023641351754094
+  },
+  {
+   "date": "1960-01-01",
+   "incumbent": "UN",
+   "mandates": 4,
+   "reelected": false,
+   "swing": -5.185205352691874
+  },
+  {
+   "date": "1962-01-01",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": true,
+   "swing": 5.024773562337806
+  },
+  {
+   "date": "1966-01-01",
+   "incumbent": "LIB",
+   "mandates": 2,
+   "reelected": false,
+   "swing": -9.109163965736869
+  },
+  {
+   "date": "1970-01-01",
+   "incumbent": "UN",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -21.166921774689484
+  },
+  {
+   "date": "1973-10-29",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": true,
+   "swing": 9.252742278250125
+  },
+  {
+   "date": "1976-11-15",
+   "incumbent": "LIB",
+   "mandates": 2,
+   "reelected": false,
+   "swing": -20.87683952977153
+  },
+  {
+   "date": "1981-04-13",
+   "incumbent": "PQ",
+   "mandates": 1,
+   "reelected": true,
+   "swing": 7.881992746657801
+  },
+  {
+   "date": "1985-12-02",
+   "incumbent": "PQ",
+   "mandates": 2,
+   "reelected": false,
+   "swing": -10.563578033179894
+  },
+  {
+   "date": "1989-09-25",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": true,
+   "swing": -6.042645097503559
+  },
+  {
+   "date": "1994-09-12",
+   "incumbent": "LIB",
+   "mandates": 2,
+   "reelected": false,
+   "swing": -5.552321379902672
+  },
+  {
+   "date": "1998-11-30",
+   "incumbent": "PQ",
+   "mandates": 1,
+   "reelected": true,
+   "swing": -1.8784322264539952
+  },
+  {
+   "date": "2003-04-14",
+   "incumbent": "PQ",
+   "mandates": 2,
+   "reelected": false,
+   "swing": -9.627970130997632
+  },
+  {
+   "date": "2007-03-26",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": true,
+   "swing": -12.907297826468714
+  },
+  {
+   "date": "2008-12-08",
+   "incumbent": "LIB",
+   "mandates": 2,
+   "reelected": true,
+   "swing": 8.995040324341353
+  },
+  {
+   "date": "2012-09-04",
+   "incumbent": "LIB",
+   "mandates": 3,
+   "reelected": false,
+   "swing": -10.884033573094083
+  },
+  {
+   "date": "2014-04-07",
+   "incumbent": "PQ",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -5.92544583592759
+  },
+  {
+   "date": "2018-10-01",
+   "incumbent": "LIB",
+   "mandates": 1,
+   "reelected": false,
+   "swing": -16.862614664833043
+  },
+  {
+   "date": "2022-10-03",
+   "incumbent": "CAQ",
+   "mandates": 1,
+   "reelected": true,
+   "swing": 2.935198627439277
+  },
+  {
+   "date": "2026-10-05",
+   "incumbent": "CAQ",
+   "mandates": 2,
+   "reelected": false,
+   "swing": -28.521499076598175
+  }
+ ],
+ "elections": [
+  {
+   "date": "1878-01-01",
+   "winner": "CONS",
+   "shares": {
+    "LIB": 47.488288864965526,
+    "CONS": 49.48863801681748,
+    "AUTRES": 3.0230731182169976
+   }
+  },
+  {
+   "date": "1890-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 44.542449723924825,
+    "CONS": 45.39726964186212,
+    "AUTRES": 10.06028063421306
+   }
+  },
+  {
+   "date": "1892-01-01",
+   "winner": "CONS",
+   "shares": {
+    "LIB": 43.6506801105573,
+    "CONS": 52.40542257268914,
+    "AUTRES": 3.943897316753552
+   }
+  },
+  {
+   "date": "1897-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 53.2821918778983,
+    "CONS": 43.82205608138932,
+    "AUTRES": 2.895752040712378
+   }
+  },
+  {
+   "date": "1908-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 53.53385178408051,
+    "CONS": 39.92043523722389,
+    "AUTRES": 6.545712978695595
+   }
+  },
+  {
+   "date": "1912-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 53.54009035606882,
+    "CONS": 43.007360311989345,
+    "AUTRES": 3.4525493319418317
+   }
+  },
+  {
+   "date": "1923-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 51.51574579647617,
+    "CONS": 39.32062384525665,
+    "AUTRES": 9.163630358267188
+   }
+  },
+  {
+   "date": "1927-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 59.34281248329197,
+    "CONS": 34.31395674312259,
+    "AUTRES": 6.343230773585439
+   }
+  },
+  {
+   "date": "1931-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 54.87742370250871,
+    "CONS": 43.5420006330471,
+    "AUTRES": 1.5805756644441948
+   }
+  },
+  {
+   "date": "1935-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 46.533211773413804,
+    "CONS": 18.932025259107206,
+    "Action_liberale_nationale": 29.482009318350887,
+    "AUTRES": 4.767125126547232,
+    "Autre_liberal_opposition": 0.28562852258087373
+   }
+  },
+  {
+   "date": "1936-01-01",
+   "winner": "UN",
+   "shares": {
+    "LIB": 39.41053001361261,
+    "UN": 56.87647652922321,
+    "AUTRES": 3.7129934571641856
+   }
+  },
+  {
+   "date": "1939-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 53.503214112626196,
+    "UN": 38.59651302953859,
+    "AUTRES": 7.900272857835209
+   }
+  },
+  {
+   "date": "1944-01-01",
+   "winner": "UN",
+   "shares": {
+    "LIB": 39.34828066128354,
+    "UN": 38.020796129805504,
+    "Bloc_populaire": 14.403752296123415,
+    "AUTRES": 8.227170912787537
+   }
+  },
+  {
+   "date": "1948-01-01",
+   "winner": "UN",
+   "shares": {
+    "LIB": 36.16172304489319,
+    "AUTRES": 12.599052425706967,
+    "UN": 51.23922452939984
+   }
+  },
+  {
+   "date": "1952-01-01",
+   "winner": "UN",
+   "shares": {
+    "LIB": 45.766446351762646,
+    "UN": 50.49733126972964,
+    "AUTRES": 3.736222378507714
+   }
+  },
+  {
+   "date": "1956-01-01",
+   "winner": "UN",
+   "shares": {
+    "LIB": 44.87462677348625,
+    "UN": 51.79969540490505,
+    "AUTRES": 3.3256778216086977
+   }
+  },
+  {
+   "date": "1960-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 51.37539546226576,
+    "UN": 46.61449005221318,
+    "AUTRES": 2.0101144855210613
+   }
+  },
+  {
+   "date": "1962-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 56.400169024603564,
+    "UN": 42.15399676270153,
+    "AUTRES": 1.4458342126949082
+   }
+  },
+  {
+   "date": "1966-01-01",
+   "winner": "UN",
+   "shares": {
+    "LIB": 47.291005058866695,
+    "UN": 40.81710955945577,
+    "Ralliement_national": 3.2118491295488827,
+    "Rassemblement_pour_l_independance_nationale": 5.550730827944765,
+    "AUTRES": 3.1293054241838862
+   }
+  },
+  {
+   "date": "1970-01-01",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 45.40043926668221,
+    "PQ": 23.056418967131577,
+    "UN": 19.65018778476629,
+    "Ralliement_creditiste": 11.18598523479187,
+    "AUTRES": 0.7069687466280539
+   }
+  },
+  {
+   "date": "1973-10-29",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 54.65318154493234,
+    "PQ": 30.219308254722854,
+    "UN": 4.9212414228580625,
+    "Parti_creditiste": 9.919494523352244,
+    "AUTRES": 0.28677425413449714
+   }
+  },
+  {
+   "date": "1976-11-15",
+   "winner": "PQ",
+   "shares": {
+    "LIB": 33.77634201516081,
+    "PQ": 41.37326343116185,
+    "UN": 18.20160416318257,
+    "Ralliement_creditiste": 4.625821230493265,
+    "AUTRES": 2.0229691600015
+   }
+  },
+  {
+   "date": "1981-04-13",
+   "winner": "PQ",
+   "shares": {
+    "LIB": 46.075230750726995,
+    "PQ": 49.25525617781965,
+    "Union_nationale ": 4.001836617180037,
+    "AUTRES": 0.6676764542733155
+   }
+  },
+  {
+   "date": "1985-12-02",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 55.994345186886996,
+    "PQ": 38.69167814463976,
+    "AUTRES": 4.970678041169455,
+    "Autre_parti_du_socialisme_chretien": 0.3432986273037897
+   }
+  },
+  {
+   "date": "1989-09-25",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 49.951700089383436,
+    "PQ": 40.16144168119477,
+    "Equality_party": 3.6881594668558177,
+    "AUTRES": 5.205360424698928,
+    "Unity_party": 0.9933383378670418
+   }
+  },
+  {
+   "date": "1994-09-12",
+   "winner": "PQ",
+   "shares": {
+    "LIB": 44.399378709480764,
+    "PQ": 44.75054735960472,
+    "ADQ": 6.457195316354561,
+    "AUTRES": 4.392878614559957
+   }
+  },
+  {
+   "date": "1998-11-30",
+   "winner": "PQ",
+   "shares": {
+    "LIB": 43.55094492477766,
+    "PQ": 42.87211513315072,
+    "ADQ": 11.813673536403838,
+    "AUTRES": 1.763266405667779
+   }
+  },
+  {
+   "date": "2003-04-14",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 45.99192092544222,
+    "PQ": 33.24414500215309,
+    "ADQ": 18.181375276208797,
+    "Union_des_forces_progressistes": 1.0587872901520368,
+    "Parti_vert": 0.4446319887766766,
+    "AUTRES": 1.0791395172671752
+   }
+  },
+  {
+   "date": "2007-03-26",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 33.08462309897351,
+    "PQ": 28.34687194789325,
+    "ADQ": 30.836811801084867,
+    "Quebec_solidaire": 3.6371668087939963,
+    "Parti_vert": 3.850408173236509,
+    "AUTRES": 0.24411817001786623
+   }
+  },
+  {
+   "date": "2008-12-08",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 42.07966342331486,
+    "PQ": 35.170483126653984,
+    "ADQ": 16.367945001329193,
+    "Quebec_solidaire": 3.777123295730906,
+    "Parti_vert": 2.168385067089544,
+    "AUTRES": 0.43640008588151613
+   }
+  },
+  {
+   "date": "2012-09-04",
+   "winner": "PQ",
+   "shares": {
+    "LIB": 31.19562985022078,
+    "PQ": 31.945970007481627,
+    "CAQ": 27.052931587131603,
+    "Quebec_solidaire": 6.030937807150087,
+    "Parti_vert": 0.9946620065427554,
+    "AUTRES": 2.779868741473147
+   }
+  },
+  {
+   "date": "2014-04-07",
+   "winner": "LIB",
+   "shares": {
+    "LIB": 42.60948166240975,
+    "PQ": 26.020524171554037,
+    "QS": 7.694071705470186,
+    "CAQ": 23.556616806825275,
+    "AUTRES:ON": 0.03679361070317137,
+    "AUTRES:VERT": 0.057828953240014226,
+    "PCQ": 0.024683089797567052
+   }
+  },
+  {
+   "date": "2018-10-01",
+   "winner": "CAQ",
+   "shares": {
+    "LIB": 25.746866997576706,
+    "CAQ": 38.93161729418888,
+    "QS": 16.74846383192175,
+    "PQ": 17.65859996986715,
+    "AUTRES:VERT": 0.41658795342381283,
+    "PCQ": 0.49786395302169695
+   }
+  },
+  {
+   "date": "2022-10-03",
+   "winner": "CAQ",
+   "shares": {
+    "QS": 15.657060251700411,
+    "PCQ": 13.0343089103164,
+    "CAQ": 41.86681592162816,
+    "LIB": 14.456926481691415,
+    "PQ": 14.76520191503906,
+    "AUTRES:PCANQ": 0.15037886933372496,
+    "AUTRES:BM": 0.04248371644854113,
+    "AUTRES:VERT": 0.026823933842288757
+   }
+  },
+  {
+   "date": "2026-10-05",
+   "winner": "PQ",
+   "shares": {
+    "PQ": 28.018930772803408,
+    "PCQ": 20.669082516472077,
+    "LIB": 24.215730297199027,
+    "CAQ": 13.345316845029984,
+    "QS": 12.426612082378004,
+    "AUTRES:Christian Savard CQ-EMO": 0.002872119911706831,
+    "AUTRES:Roula Al-Nseir PCQ/CPQ": 0.009130072239653422,
+    "AUTRES:Ahmad Elmawieh PVQ/GPQ": 0.005370630729207895,
+    "AUTRES:Elizabeth Dupuis PN": 0.004249803446590595,
+    "AUTRES:Claude Gélinas CQ-EMO": 0.003525935826566922,
+    "AUTRES:Francis Desjardins PN": 0.0033157807110761784,
+    "AUTRES:Brigitte Roy Ind.": 0.009690485880962071,
+    "AUTRES:Esber Khalil Esber PCQ/CPQ": 0.0028487693433189706,
+    "AUTRES:Margaret Ethel Brunton Ind.": 0.002381757975561762,
+    "AUTRES:Martin Charron OQ": 0.00226500513362246,
+    "AUTRES:Jonathan Croteau PVQ/GPQ": 0.006911768242806682,
+    "AUTRES:Carol Filion DD": 0.001868045471028833,
+    "AUTRES:Pierre Larochelle PN": 0.004062998899487712,
+    "AUTRES:Ginette Vien DD": 0.0018913960394166935,
+    "AUTRES:Charmaine Carvalho PVQ/GPQ": 0.009176773376429142,
+    "AUTRES:Karine Pelletier DD": 0.004039648331099851,
+    "AUTRES:Jean-Pierre Hamel DD": 0.001961447744580275,
+    "AUTRES:Isabelle Lamothe PRQ": 0.005300579024044313,
+    "AUTRES:Jean-Pierre Lacombe CQ-EMO": 0.005137125045329291,
+    "AUTRES:Louis Jr Simard DD": 0.0041330506046512935,
+    "AUTRES:Guillaume Tremblay PRQ": 0.007542233589278914,
+    "AUTRES:Jonathan Godin DD": 0.0042731540149784555,
+    "AUTRES:Marie-Claude Archambault CQ-EMO": 0.01688246094442308,
+    "AUTRES:Thomas Thibault-Vincent CQ-EMO": 0.008779813713835516,
+    "AUTRES:Joseph Wa Ngoie Ngoie Ind.": 0.003152326732361156,
+    "AUTRES:Frédérique Marseille PN": 0.008289451777690447,
+    "AUTRES:Michelle Julien PCQ/CPQ": 0.006328004033110172,
+    "AUTRES:Ganaëlle Roy PRQ": 0.005884343233740825,
+    "AUTRES:Chantal Poulin PN": 0.006444756875049474,
+    "AUTRES:Benoît Dupont CQ-EMO": 0.003992947194324131,
+    "AUTRES:Louis Chandonnet EA": 0.0010974767142294395,
+    "AUTRES:François Pellerin PCUQ": 0.008779813713835516,
+    "AUTRES:Caroline Boisvert Ind.": 0.004016297762711991,
+    "AUTRES:Frédéric Ouellet CQ-EMO": 0.003852843783996968,
+    "AUTRES:Marc-André Legault DD": 0.0017045914923138103,
+    "AUTRES:Martine Ouellet CQ-EMO": 0.02307036156720609,
+    "AUTRES:Lionel Bonhomet PN": 0.0051838261821050115,
+    "AUTRES:Christine Dion DD": 0.0035959875317305035,
+    "AUTRES:Olguine Michelle Louissaint PVQ/GPQ": 0.0067249636957038,
+    "AUTRES:Marcela Martínez PCQ/CPQ": 0.006678262558928077,
+    "AUTRES:Pierre Soublière PMLQ": 0.0012142295561687415,
+    "AUTRES:Amelia Alexandrescu PN": 0.007472181884115332,
+    "AUTRES:Leopold Toko Simo PAPE-EQD": 0.001984798312968135,
+    "AUTRES:James Collins DD": 0.002988872753646133,
+    "AUTRES:Mario Desjardins Pelchat PAPE-EQD": 0.0018913960394166935,
+    "AUTRES:José Bro PVQ/GPQ": 0.007682336999606076,
+    "AUTRES:Hannah Wolker PCQ/CPQ": 0.005604136413086499,
+    "AUTRES:William Beaudry PN": 0.007588934726054634,
+    "AUTRES:Olivier Dion CQ-EMO": 0.004810217087899245,
+    "AUTRES:Charles Olivier PLIQ": 0.004459958562081339,
+    "AUTRES:Sona Lakhoyan Olivier Ind.": 0.022229741105243114,
+    "AUTRES:Jonathan Gray PCQ/CPQ": 0.006561509716988777,
+    "AUTRES:Dominic Dumas PN": 0.01193214044619667,
+    "AUTRES:David Baillargeon PRQ": 0.0031289761639732958,
+    "AUTRES:Joyce Stoliar Shanks PCQ/CPQ": 0.01025089952227072,
+    "AUTRES:Gavin Zheng PVQ/GPQ": 0.005744239823413662,
+    "AUTRES:Diane Johnston PMLQ": 0.0019380971761924143,
+    "AUTRES:Guillaume Massie-Hamel PN": 0.00168124092392595,
+    "AUTRES:Nicolas Riqueur-Lainé CQ-EMO": 0.005697538686637941,
+    "AUTRES:Marco Beauchesne PVQ/GPQ": 0.0067016131273159385,
+    "AUTRES:Sylvain Audet PRQ": 0.005370630729207895,
+    "AUTRES:Joelle Lavallée PRQ": 0.004716814814347803,
+    "AUTRES:Alexandre Deschênes PMLQ": 0.001307631829720183,
+    "AUTRES:Lynn Buchanan PVQ/GPQ": 0.007308727905400309,
+    "AUTRES:Qaiser Choudhry PCQ/CPQ": 0.005534084707922918,
+    "AUTRES:Pierre Brabant CQ-EMO": 0.00618790062278301,
+    "AUTRES:Camille Jannard PVQ/GPQ": 0.006911768242806682,
+    "AUTRES:Elizabeth Laferrière PN": 0.004693464245959943,
+    "AUTRES:Jean-Claude Saint-André CQ-EMO": 0.001984798312968135,
+    "AUTRES:Charles McNicoll EA": 0.0004203102309814875,
+    "AUTRES:Andrzej Wisniowski PVQ/GPQ": 0.007729038136381797,
+    "AUTRES:Jimmy Paquin EA": 0.001074126145841579,
+    "AUTRES:Samuel Beauchamp CQ-EMO": 0.007775739273157518,
+    "AUTRES:Fajr Al-sayed PVQ/GPQ": 0.0057909409601893825,
+    "AUTRES:Raphaëlle Dompierre PN": 0.0032690795743004577,
+    "AUTRES:Christine Dandenault PMLQ": 0.001354332966495904,
+    "AUTRES:Charles Rouillard DD": 0.0013309823981080436,
+    "AUTRES:Igor Sadikov PCQ": 0.0013309823981080436,
+    "AUTRES:Danilo Velasquez PCQ/CPQ": 0.004319855151754176,
+    "AUTRES:Dale Langille PCQ/CPQ": 0.004763515951123524,
+    "AUTRES:Caroline Blake PLIQ": 0.010134146680331418,
+    "AUTRES:Marie-Hélène Roy Rioux PN": 0.0071452739266852855,
+    "AUTRES:Mélodie Caron PN": 0.0026853153646039475,
+    "AUTRES:Bianca Jitaru PVQ/GPQ": 0.013216421707528994,
+    "AUTRES:Yesica Ochoa PCQ/CPQ": 0.010227548953882861,
+    "AUTRES:Geneviève Dorval PN": 0.00396959662593627,
+    "AUTRES:Mario Ledoux CQ-EMO": 0.002148252291683158,
+    "AUTRES:Claude Moreau PMLQ": 0.0014477352400473456,
+    "AUTRES:Nicolas Thériault EA": 0.0008172698935751144,
+    "AUTRES:Younes Gouriny PVQ/GPQ": 0.0043432057201420364,
+    "AUTRES:Djaouida Sellah PCQ/CPQ": 0.0038294932156091076,
+    "AUTRES:Mehdi Lahlou PVQ/GPQ": 0.004086349467875572,
+    "AUTRES:Anne Rufiange PN": 0.0032690795743004577,
+    "AUTRES:Robert Dubé DD": 0.0008172698935751144,
+    "AUTRES:Claudiu Bell EA": 0.0006071147780843708,
+    "AUTRES:David Chouinard PN": 0.007005170516358124,
+    "AUTRES:Boris Geynet PVQ/GPQ": 0.0057208892550258015,
+    "AUTRES:Sophie Sarrazin CQ-EMO": 0.002872119911706831,
+    "AUTRES:Xavie Jean-Bourgeault PRQ": 0.002732016501379668,
+    "AUTRES:Marc Lavoie CQ-EMO": 0.0037127403736698056,
+    "AUTRES:Natacha Alarie DD": 0.005440682434371476,
+    "AUTRES:Jean-Simon Boileau CQ-EMO": 0.004926969929838547,
+    "AUTRES:Pierre Boutin PRQ": 0.0045066596988570596,
+    "AUTRES:Sylvain Tremblay CQ-EMO": 0.0043432057201420364,
+    "AUTRES:Stefany Tremblay PRQ": 0.0030122233220339933,
+    "AUTRES:Giovanni Manfredi PCQ/CPQ": 0.005137125045329291,
+    "AUTRES:David Cox PVQ/GPQ": 0.0036426886685062246,
+    "AUTRES:Emilie Roberge-Boily PN": 0.007051871653133844,
+    "AUTRES:Martin Grand'Maison CQ-EMO": 0.0037127403736698056,
+    "AUTRES:Tina Jiuru Zhu PVQ/GPQ": 0.012562605792668902,
+    "AUTRES:Emilia Farcutiu PCQ/CPQ": 0.0057208892550258015,
+    "AUTRES:Barbara Joannette CQ-EMO": 0.004623412540796362,
+    "AUTRES:Hélène Héroux PMLQ": 0.0013309823981080436,
+    "AUTRES:William Mayeu PN": 0.007472181884115332,
+    "AUTRES:Jenifer Gomes PCQ/CPQ": 0.005043722771777849,
+    "AUTRES:Stéphane Doucet PCQ": 0.0028954704800946912,
+    "AUTRES:Louis Poirier CQ-EMO": 0.0023350568387860413,
+    "AUTRES:Jean-Louis Thémis PCUQ": 0.002311706270398181,
+    "AUTRES:Mathieu Marcil PN": 0.00226500513362246,
+    "AUTRES:Olivier Lamanque Galarneau DD": 0.0012142295561687415,
+    "AUTRES:Patrick Truong PVQ/GPQ": 0.008219400072526866,
+    "AUTRES:Shawn Lalande McLean PAPE-EQD": 0.0018913960394166935,
+    "AUTRES:Hugo Laperrière Piché CQ-EMO": 0.007308727905400309,
+    "AUTRES:Jean-Patrick Berthiaume BP": 0.004950320498226407,
+    "AUTRES:Stéphane Gélinas DD": 0.003152326732361156,
+    "AUTRES:Maxime Émilie Savoie Ind.": 0.012165646130075276,
+    "AUTRES:Félix-Alexandre Bernier DD": 0.005230527318880732,
+    "AUTRES:Pierre Germain CQ-EMO": 0.0038061426472212473,
+    "AUTRES:Yvan Tremblay PRQ": 0.0030355738904218536,
+    "AUTRES:Charles-Eugène Bergeron CQ-EMO": 0.004786866519511384,
+    "AUTRES:Violette L'Ecuyer DD": 0.0035959875317305035,
+    "AUTRES:Vincent Bégin Ind.": 0.0035492863949547824,
+    "AUTRES:Jean-François Grenier PRQ": 0.0016345397871502289,
+    "AUTRES:Sam Kühn PVQ/GPQ": 0.005954394938904406,
+    "AUTRES:Ingénieur Hu PAPE-EQD": 0.0024751602491132037,
+    "AUTRES:Mathieu Fillion CQ-EMO": 0.0035726369633426428,
+    "AUTRES:Sylvain Marcoux Ind.": 0.002732016501379668,
+    "AUTRES:Mario Roy DD": 0.0026853153646039475,
+    "AUTRES:Michel Fortin PVQ/GPQ": 0.008826514850611237,
+    "AUTRES:Gabriel Landry PAPE-EQD": 0.002031499449743856,
+    "AUTRES:Rachid Jemmah PVQ/GPQ": 0.007635635862830355,
+    "AUTRES:Alexandre Pendenza PCQ/CPQ": 0.007191975063461007,
+    "AUTRES:Jérôme Dumont PN": 0.003432533553015481,
+    "AUTRES:Louise Gosselin CQ-EMO": 0.0029188210484825516,
+    "AUTRES:Gilles Brodeur Ind.": 0.002078200586519577,
+    "AUTRES:Claude Ladouceur DD": 0.0018446949026409726,
+    "AUTRES:Alexandre Mari0 Br0s Cossette PN": 0.004062998899487712,
+    "AUTRES:Michel Lefrancois DD": 0.0024051085439496223,
+    "AUTRES:Isaac Varin PN": 0.004646763109184222,
+    "AUTRES:Marie-Michèle Boutet CQ-EMO": 0.007051871653133844,
+    "AUTRES:Claude Jr Tremblay DD": 0.0054873835711471974,
+    "AUTRES:Laurel Thompson PVQ/GPQ": 0.006865067106030962,
+    "AUTRES:Jenny Cartwright PN": 0.003666039236894085,
+    "AUTRES:Michelle Paquette PCQ": 0.0028020682065432495,
+    "AUTRES:Jogues Sauriol CQ-EMO": 0.0016578903555380892,
+    "AUTRES:Jocelyn Simon Daigle Ind.": 0.0005837642096965103,
+    "AUTRES:Ludovic Mbany OQ": 0.003058924458809714,
+    "AUTRES:Danick Soucy CQ-EMO": 0.005370630729207895,
+    "AUTRES:Zenzi Wolker PCQ/CPQ": 0.0028487693433189706,
+    "AUTRES:Jean-Simon Bellavance CQ-EMO": 0.007075222221521705,
+    "AUTRES:Sylvain Bouchard Ind.": 0.004389906856917758,
+    "AUTRES:Annie St-Jacques PRQ": 0.0024518096807253434,
+    "AUTRES:Renaud Blais PN": 0.0051838261821050115,
+    "AUTRES:Pierre Gosselin PAPE-EQD": 0.0021015511549074373,
+    "AUTRES:Jean Bédard PMLQ": 0.0007939193251872541,
+    "AUTRES:Mathias Mackowiak PVQ/GPQ": 0.010461054637761464,
+    "AUTRES:Sonia Moscote PCQ/CPQ": 0.003736090942057666,
+    "AUTRES:Gia Rose PCQ": 0.002311706270398181,
+    "AUTRES:Michael Wilkinson PCQ/CPQ": 0.011511830215215185,
+    "AUTRES:Alex Di Pardo PVQ/GPQ": 0.010974767142294395,
+    "AUTRES:Marc-Olivier Billette CQ-EMO": 0.005043722771777849,
+    "AUTRES:Christian Collard Ind.": 0.001984798312968135,
+    "AUTRES:Steve Lauzier PRQ": 0.0014010341032716248,
+    "AUTRES:Alex Tyrrell PVQ/GPQ": 0.015855035935357222,
+    "AUTRES:Christian Turgeon PCQ/CPQ": 0.008312802346078308,
+    "AUTRES:Rachel Hoffman PMLQ": 0.0021716028600710182,
+    "AUTRES:Ivan Byard PCQ": 0.0014710858084352062,
+    "AUTRES:David Cherniak PN": 0.00392289548916055,
+    "AUTRES:Lucie Pinard PRQ": 0.0036893898052819452,
+    "AUTRES:Ngaire DeNora PCQ/CPQ": 0.003432533553015481,
+    "AUTRES:Madeleine Smith CQ-EMO": 0.003222378437524737,
+    "AUTRES:Julie Gomez Ind.": 0.0073787796105638905,
+    "AUTRES:Yahia Ghzala PVQ/GPQ": 0.007262026768624588,
+    "AUTRES:Michael Douris PCQ/CPQ": 0.004600061972408502,
+    "AUTRES:Stéphane Bilodeau CQ-EMO": 0.00392289548916055,
+    "AUTRES:Florent Portron EA": 0.0010040744406779978,
+    "AUTRES:Maude Chapdelaine PN": 0.005557435276310778,
+    "AUTRES:Geneviève Royer PMLQ": 0.0010507755774537186,
+    "AUTRES:Daniel Lasalle EA": 0.0009106721671265561,
+    "AUTRES:William Twolan PCQ/CPQ": 0.009386928491919886,
+    "AUTRES:Marc-André Demers PN": 0.003852843783996968,
+    "AUTRES:Jean Cloutier CQ-EMO": 0.0032690795743004577,
+    "AUTRES:Michaël Bernatchez DD": 0.0025218613858889244,
+    "AUTRES:Sabine Groulx DD": 0.003852843783996968,
+    "AUTRES:Kevin Grenier DD": 0.02638614227828227,
+    "AUTRES:Shawn-Brandon Rimpel PVQ/GPQ": 0.007752388704769657,
+    "AUTRES:Martin Larivière CQ-EMO": 0.008219400072526866,
+    "AUTRES:Jean-Louis Raymond DD": 0.0036193381001183643,
+    "AUTRES:Pierre-Olivier Lassonde CQ-EMO": 0.005744239823413662,
+    "AUTRES:Christophe Duret Ind.": 0.004600061972408502,
+    "AUTRES:Alexane Roy PRQ": 0.0028954704800946912,
+    "AUTRES:Thomas Guay-Vachon PN": 0.004950320498226407,
+    "AUTRES:Gilles Gagné CQ-EMO": 0.0045066596988570596,
+    "AUTRES:Carole Sierpien CQ-EMO": 0.007705687567993936,
+    "AUTRES:Paul Henry Danylewich PCQ/CPQ": 0.012422502382341738,
+    "AUTRES:Hélène Savard PVQ/GPQ": 0.007215325631848867,
+    "AUTRES:Thierry Paquin CQ-EMO": 0.005230527318880732,
+    "AUTRES:Jean Duval Ind.": 0.0031289761639732958,
+    "AUTRES:Samuel Touchette PN": 0.005977745507292266,
+    "AUTRES:Rémi Tétreault CQ-EMO": 0.006328004033110172,
+    "AUTRES:Sylvie Peloquin PRQ": 0.004109700036263433,
+    "AUTRES:Jean-Pierre Duford PVQ/GPQ": 0.009013319397714119,
+    "AUTRES:Laura Champagne QI": 0.0031990278691368767,
+    "AUTRES:Julie Desmarais PCUQ": 0.008919917124162678,
+    "AUTRES:Martin Boudreau PN": 0.006608210853764497,
+    "AUTRES:Denis Thériault CQ-EMO": 0.005207176750492872,
+    "AUTRES:Julie Larouche PRQ": 0.004459958562081339,
+    "AUTRES:Jean-Charles Cléroux DD": 0.0025452119542767847,
+    "AUTRES:Sandra Hould CQ-EMO": 0.007005170516358124,
+    "AUTRES:Audrey Baillairgé PCQ/CPQ": 0.012702709202996066,
+    "AUTRES:Pierre-Christophe Dagher Falardeau PVQ/GPQ": 0.008779813713835516,
+    "AUTRES:Fernand Deschamps PMLQ": 0.002661964796216087,
+    "AUTRES:Joe Young Ind.": 0.0017979937658652518,
+    "AUTRES:Lina Zdruli PVQ/GPQ": 0.006981819947970264,
+    "AUTRES:Rachël Frenette PN": 0.0026853153646039475,
+    "AUTRES:Justin Bouchard PCUQ": 0.0021249017232952976,
+    "AUTRES:Dominique Blanchard CQ-EMO": 0.0015177869452109268,
+    "AUTRES:Linda Sullivan PMLQ": 0.0011208272826172998,
+    "AUTRES:Adrien Welsh PCQ": 0.001074126145841579,
+    "AUTRES:Chinook Blais-Leduc BP": 0.0010274250090658583,
+    "AUTRES:Mustapha Jaalouk PVQ/GPQ": 0.005277228455656453,
+    "AUTRES:Anne-Marie Tougas CQ-EMO": 0.0034091829846276205,
+    "AUTRES:Maxime Fournier BP": 0.0031990278691368767,
+    "AUTRES:Jean-Michel Bérard PLIQ": 0.005393981297595755,
+    "AUTRES:Pierre-Luc Garon PRQ": 0.0031990278691368767,
+    "AUTRES:Patrick Thouin CQ-EMO": 0.0030822750271975743,
+    "AUTRES:Léo Boivin PCQ": 0.0021716028600710182,
+    "AUTRES:Luc Lainé DD": 0.0014477352400473456,
+    "AUTRES:Joseph Cianflone PCQ/CPQ": 0.0113250256681123,
+    "AUTRES:Jules Briand DD": 0.0031756773007490164,
+    "AUTRES:Samuel Pignedoli PN": 0.007472181884115332,
+    "AUTRES:Jean-François Joubert CQ-EMO": 0.0033391312794640387,
+    "AUTRES:Patrick Kerr Ind.": 0.0028254187749311103,
+    "AUTRES:Guy Boivin EA": 0.000840620461962975,
+    "AUTRES:Benoit Beauchamp CQ-EMO": 0.007005170516358124,
+    "AUTRES:Béatrice Lafontaine PN": 0.00455336083563278,
+    "AUTRES:Nancy Nadon CQ-EMO": 0.0038294932156091076,
+    "AUTRES:Jean Gagnon Savard BP": 0.0018446949026409726,
+    "AUTRES:Martine Lajoie CQ-EMO": 0.006117848917619428,
+    "AUTRES:Marjorie Villeneuve PN": 0.006444756875049474,
+    "AUTRES:Marjolaine Pépin CQ-EMO": 0.004016297762711991,
+    "AUTRES:Kathia Poliquin DD": 0.001307631829720183,
+    "AUTRES:Carole Thériault PVQ/GPQ": 0.01188543930942095,
+    "AUTRES:Germain Dallaire CQ-EMO": 0.00791584268348468,
+    "AUTRES:Victoria Shahsavar-Arshad PVQ/GPQ": 0.004670113677572083,
+    "AUTRES:Abdur Rashid PCQ/CPQ": 0.0021716028600710182,
+    "AUTRES:Max Richard BP": 0.0013309823981080436,
+    "AUTRES:Manuel Johnson PCQ": 0.0012375801245566019,
+    "AUTRES:Marc-André Ouellette QI": 0.001190878987780881,
+    "AUTRES:Matthieu Deutté Brien CQ-EMO": 0.0009807238722901374,
+    "AUTRES:Marina Cabrera Ind.": 0.0009340227355144165,
+    "AUTRES:Normand Chouinard PMLQ": 0.0006304653464722311,
+    "AUTRES:Manel Chaouche PVQ/GPQ": 0.004740165382735664,
+    "AUTRES:Afruza Hossain PCQ/CPQ": 0.0038294932156091076,
+    "AUTRES:Renaud Boisvert PN": 0.00226500513362246,
+    "AUTRES:Mario Bellavance Ind.": 0.0021249017232952976,
+    "AUTRES:Normand Raymond PCQ": 0.001354332966495904,
+    "AUTRES:Pierrette Kamning Nguendjong PVQ/GPQ": 0.005090423908553569,
+    "AUTRES:Chantale Bordeleau PN": 0.004623412540796362,
+    "AUTRES:Hailey Roop PVQ/GPQ": 0.010087445543555697,
+    "AUTRES:Maryam Kamali Nezhad PCQ/CPQ": 0.00677166483247952,
+    "AUTRES:Kaity Zozula PCQ": 0.002498510817501064,
+    "AUTRES:Marc A. Lefebvre PN": 0.0017279420607016706
+   }
+  }
+ ]
+}

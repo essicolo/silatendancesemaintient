@@ -109,3 +109,17 @@ const tally = (list: Cas[], label: string) => {
 };
 tally(cases, "série complète");
 tally(cases.filter((c) => c.date >= "1960"), "ère moderne (1960+)");
+
+// Dump for downstream tests (fundamentals forecast backtest): the case
+// table plus each election's main-party shares.
+const dump = {
+  source: "election_results (Atlas 1878-2012 + DGEQ 2014-2026), sièges = pluralité par circonscription, carte native",
+  cases,
+  elections: elections.map((e) => ({
+    date: e.date,
+    winner: e.winner,
+    shares: Object.fromEntries([...e.share].filter(([p]) => !p.startsWith("Autres"))),
+  })),
+};
+await Deno.writeTextFile(new URL("../data/qc_mandate_cases.json", import.meta.url), JSON.stringify(dump, null, 1));
+console.log("\nqc_mandate_cases.json ecrit");
