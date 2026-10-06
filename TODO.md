@@ -27,6 +27,7 @@ Les refontes « entre deux cycles » sont à faire tôt, pas à la veille du pro
 - [ ] Élasticité de swing par circonscription (concentration des bastions), nul = 1 sur grille, estimée sur 2018→2022→2026.
 - [ ] Réordonner les parts ILR (AUTRES en dernier) — déjà au journal, à faire pendant l'accalmie.
 - [ ] Retirer la correction de participation de `computeProjection` (verdict w=0 du post-mortem).
+- [ ] Vraisemblance d'observation robuste (Student-t, df sur grille, normal en cas limite) pour le GP de tendance : à la veille du scrutin la moyenne de la dernière semaine a battu le nowcast GP en 2022 (1,34 vs 2,44) et 2026 (1,32 vs 1,96), et le seul Mainstreet final valait 1,9 pp d'erreur CAQ — un bruit à queues lourdes escompte ce point sans l'écarter à la main. Backtester sur les fins de campagne 2018/2022/2026.
 - [ ] Nouvelle carte des sortants/chefs : Fréchette démissionnera-t-elle? partielles à surveiller via la veille DGEQ.
 
 ### Pipeline
