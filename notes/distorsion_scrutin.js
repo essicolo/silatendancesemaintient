@@ -1,6 +1,9 @@
+// ---
+// title: Distorsion scrutin
+// id: distorsion-scrutin
+// ---
+
 // %% [markdown]
-// # La distorsion du mode de scrutin — Québec 2026
-//
 // Élection générale du 5 octobre 2026 (dépouillement final, Élections Québec).
 // Sources : flux ouvert donnees.electionsquebec.qc.ca; Atlas des élections et
 // DGEQ pour l'historique; ISQ pour la population; Wikipédia (« Gallagher
@@ -33,8 +36,8 @@ partis;
 // exprimés, les sièges de l'Assemblée. Les pentes racontent tout : le PQ grossit
 // à chaque étage du filtre (13 % de la population, 46 % de l'Assemblée); la
 // CAQ disparaît au dernier étage; tous les partis confondus se tassent sous
-// 14 % de la population — un gouvernement procède du vote d'une petite
-// fraction des Québécois.
+// 14 % de la population (un gouvernement procède du vote d'une petite
+// fraction des Québécois).
 
 // %% [javascript]
 const etapes = ["% Assemblée", "% vote exprimé", "% des inscrits", "% population"];
@@ -74,56 +77,12 @@ Plot.plot({
 });
 
 // %% [markdown]
-// ## 2. Votes et sièges : la flèche de la distorsion
+// ## 2. L'entonnoir et la distorsion
 //
-// Chaque flèche part de la part des votes exprimés (point) et pointe vers la
-// part des sièges. La CAQ : 13,3 % des votes, aucun des 127 sièges.
-
-// %% [javascript]
-const fleches = partis.map((p) => ({
-  ...p,
-  votesPct: p.votesN / VOTES_VALIDES * 100,
-  siegesPct: p.sieges / TOTAL_SIEGES * 100,
-}));
-
-Plot.plot({
-  height: 300,
-  width: 760,
-  marginLeft: 60,
-  marginRight: 40,
-  marginBottom: 55,
-  style: { fontSize: "13px", fontFamily: "system-ui" },
-  x: { label: "part (%)", domain: [0, 50], grid: true, labelAnchor: "center", labelOffset: 45 },
-  y: { domain: partis.map((d) => d.parti), label: null, axis: null },
-  marks: [
-    Plot.text(fleches, {
-      y: "parti", x: 0, text: "parti", fill: "couleur",
-      textAnchor: "end", dx: -10, fontSize: 13,
-    }),
-    Plot.arrow(fleches, {
-      y: "parti", x1: "votesPct", x2: "siegesPct",
-      stroke: "couleur", strokeWidth: 2.5, headLength: 5,
-    }),
-    Plot.dot(fleches, { y: "parti", x: "votesPct", r: 4.5, fill: "couleur" }),
-    Plot.text(fleches, {
-      y: "parti", x: "votesPct", dy: -13, textAnchor: "middle",
-      text: (d) => d.votesPct.toFixed(1).replace(".", ",") + " %",
-      fill: "#555", fontSize: 11,
-    }),
-    Plot.text(fleches, {
-      y: "parti", x: "siegesPct", dy: -13, textAnchor: "middle",
-      text: (d) => `${d.sieges} siège${d.sieges > 1 ? "s" : ""}`,
-      fill: "#333", fontSize: 11,
-    }),
-  ],
-});
-
-// %% [markdown]
-// ## 3. L'entonnoir, en flux
-//
-// La cascade population → inscrits → votants → votes valides, puis le vote
-// valide éclaté par parti (couleurs des partis, sièges en étiquette); les
-// sorties de l'entonnoir en gris.
+// La cascade population → inscrits → votants → votes valides, le vote valide
+// éclaté par parti, et, alignée sur chaque parti, la flèche de la distorsion :
+// de sa part des votes exprimés (point) vers sa part des sièges. La CAQ :
+// 13,3 % des votes, aucun des 127 sièges.
 
 // %% [javascript]
 const sankeyMod = await import("https://cdn.jsdelivr.net/npm/d3-sankey@0.12/+esm");
@@ -133,14 +92,14 @@ const autresN = VOTES_VALIDES - partis.reduce((s, p) => s + p.votesN, 0);
 const partisSankey = [...partis, { parti: "Autres", votesN: autresN, sieges: 0, couleur: "#9a9a9a" }];
 
 const noeudsSankey = [
-  "Population du Québec", "Électeurs inscrits", "Votes exercés", "Votes valides",
+  "Pop. du Québec", "Électeurs inscrits", "Votes exercés", "Votes valides",
   "Mineurs, non-citoyens", "Abstention", "Bulletins rejetés",
   ...partisSankey.map((p) => p.parti),
 ].map((name) => ({ name }));
 const idxSankey = Object.fromEntries(noeudsSankey.map((n, i) => [n.name, i]));
 const liensSankey = [
-  ["Population du Québec", "Électeurs inscrits", INSCRITS],
-  ["Population du Québec", "Mineurs, non-citoyens", POPULATION - INSCRITS],
+  ["Pop. du Québec", "Électeurs inscrits", INSCRITS],
+  ["Pop. du Québec", "Mineurs, non-citoyens", POPULATION - INSCRITS],
   ["Électeurs inscrits", "Votes exercés", VOTES_EXERCES],
   ["Électeurs inscrits", "Abstention", INSCRITS - VOTES_EXERCES],
   ["Votes exercés", "Votes valides", VOTES_VALIDES],
@@ -154,22 +113,22 @@ const sankeyGen = sankeyMod.sankey().nodeWidth(14).nodePadding(16)
 const sankeyLayout = sankeyGen({ nodes: noeudsSankey.map((d) => ({ ...d })), links: liensSankey });
 const gris = new Set(["Mineurs, non-citoyens", "Abstention", "Bulletins rejetés"]);
 const couleurNoeud = (name) =>
-  gris.has(name) ? "#9a9a9a" : couleurParti[name] ?? (name === "Autres" ? "#9a9a9a" : "#2B50C8");
+  gris.has(name) ? "#9a9a9a" : couleurParti[name] ?? (name === "Autres" ? "#9a9a9a" : "#b6cb9e");
 const siegesDe = Object.fromEntries(partisSankey.map((p) => [p.parti, p.sieges]));
 const libelle = (d) => {
-  const base = `${d.name} — ${(d.value / 1e6).toFixed(2).replace(".", ",")} M`;
+  const base = `${d.name} : ${(d.value / 1e6).toFixed(2).replace(".", ",")} M`;
   if (siegesDe[d.name] === undefined) return base;
   const s = siegesDe[d.name];
   return `${base} (${s} siège${s > 1 ? "s" : ""})`;
 };
 
-const svgSankey = d3.create("svg").attr("viewBox", [0, 0, 920, 480])
+const svgSankey = d3.create("svg").attr("viewBox", [0, 0, 1400, 540])
   .attr("font-family", "system-ui").attr("font-size", 12);
 svgSankey.append("g").selectAll("path").data(sankeyLayout.links).join("path")
   .attr("d", sankeyMod.sankeyLinkHorizontal())
   .attr("fill", "none")
-  .attr("stroke", (d) => gris.has(d.target.name) ? "#c4c4c4"
-    : couleurParti[d.target.name] ?? "#2B50C8")
+  .attr("stroke", (d) => gris.has(d.target.name) ? "#c8b7b7"
+    : couleurParti[d.target.name] ?? "#d1f0b1")
   .attr("stroke-opacity", (d) => couleurParti[d.target.name] ? 0.55 : 0.35)
   .attr("stroke-width", (d) => Math.max(1, d.width));
 svgSankey.append("g").selectAll("rect").data(sankeyLayout.nodes).join("rect")
@@ -179,17 +138,75 @@ svgSankey.append("g").selectAll("rect").data(sankeyLayout.nodes).join("rect")
 svgSankey.append("g").selectAll("text").data(sankeyLayout.nodes).join("text")
   .attr("x", (d) => d.x1 + 6).attr("y", (d) => (d.y0 + d.y1) / 2).attr("dy", "0.35em")
   .attr("font-weight", (d) => couleurParti[d.name] ? "bold" : "normal")
-  .text(libelle);
+  .text((d) => d.name === "Votes valides" ? "" : libelle(d));
+// --- flèches de distorsion, alignées sur les nœuds de partis ---
+const xFleche = d3.scaleLinear([0, 50], [990, 1360]);
+const partisFleche = partis.map((p) => {
+  const n = sankeyLayout.nodes.find((nd) => nd.name === p.parti);
+  return {
+    ...p,
+    y: (n.y0 + n.y1) / 2,
+    votesPct: p.votesN / VOTES_VALIDES * 100,
+    siegesPct: p.sieges / TOTAL_SIEGES * 100,
+  };
+});
+const yHautF = Math.min(...partisFleche.map((d) => d.y)) - 34;
+const yAxeF = 500;
+
+// axe et grille
+const grilleF = svgSankey.append("g");
+for (let t = 0; t <= 50; t += 10) {
+  grilleF.append("line")
+    .attr("x1", xFleche(t)).attr("x2", xFleche(t))
+    .attr("y1", yHautF).attr("y2", yAxeF)
+    .attr("stroke", "#e4e4e4");
+  grilleF.append("text")
+    .attr("x", xFleche(t)).attr("y", yAxeF + 16)
+    .attr("text-anchor", "middle").attr("fill", "#666").attr("font-size", 11)
+    .text(t);
+}
+grilleF.append("text")
+  .attr("x", xFleche(25)).attr("y", yAxeF + 34)
+  .attr("text-anchor", "middle").attr("fill", "#444").attr("font-size", 12)
+  .text("part (%)");
+
+// pointes de flèche aux couleurs des partis
+const defsF = svgSankey.append("defs");
+for (const p of partisFleche) {
+  defsF.append("marker")
+    .attr("id", "fleche-" + p.parti)
+    .attr("viewBox", "0 0 8 8").attr("refX", 6).attr("refY", 4)
+    .attr("markerWidth", 7).attr("markerHeight", 7).attr("orient", "auto")
+    .append("path").attr("d", "M0,0L8,4L0,8z").attr("fill", p.couleur);
+}
+const grpF = svgSankey.append("g");
+for (const p of partisFleche) {
+  grpF.append("line")
+    .attr("x1", xFleche(p.votesPct)).attr("x2", xFleche(p.siegesPct))
+    .attr("y1", p.y).attr("y2", p.y)
+    .attr("stroke", p.couleur).attr("stroke-width", 2.5)
+    .attr("marker-end", `url(#fleche-${p.parti})`);
+  grpF.append("circle")
+    .attr("cx", xFleche(p.votesPct)).attr("cy", p.y).attr("r", 4.5).attr("fill", p.couleur);
+  grpF.append("text")
+    .attr("x", xFleche(p.votesPct)).attr("y", p.y - 10)
+    .attr("text-anchor", "middle").attr("fill", "#555").attr("font-size", 10)
+    .text(p.votesPct.toFixed(1).replace(".", ",") + " %");
+  grpF.append("text")
+    .attr("x", xFleche(p.siegesPct)).attr("y", p.y - 10)
+    .attr("text-anchor", "middle").attr("fill", "#333").attr("font-size", 10)
+    .text(`${p.sieges} siège${p.sieges > 1 ? "s" : ""}`);
+}
 svgSankey.node();
 
 // %% [markdown]
-// ## 4. Le Québec dans le monde : l'indice de Gallagher
+// ## 3. Le Québec dans le monde : l'indice de Gallagher
 //
 // L'indice de Gallagher, √(½ Σ (vᵢ − sᵢ)²), mesure l'écart entre parts de
 // votes et parts de sièges. Élections récentes (Wikipédia, « Gallagher
 // index ») et les trois dernières générales québécoises, calculées des
 // résultats par circonscription (partis principaux distincts, petites
-// candidatures regroupées — le regroupement choisi influence la valeur).
+// candidatures regroupées - le regroupement choisi influence la valeur).
 
 // %% [javascript]
 const gallagherMonde = [
