@@ -87,9 +87,20 @@ Plot.plot({
 // %% [javascript]
 const sankeyMod = await import("https://cdn.jsdelivr.net/npm/d3-sankey@0.12/+esm");
 
+// --- palette et typographie du graphique (hors couleurs de partis) ---
+const ENCRE = "#2A2E24";        // encre teintée feuille, pas de noir pur
+const GRIS = "#8B887A";         // texte secondaire, chaud
+const HAIRLINE = "#DAD7CE";
+const VERT_NOEUD = "#9FBA85";   // entonnoir
+const VERT_FLUX = "#E3EDD3";
+const SORTIE_FLUX = "#ECE8E1";  // gris-papier des sorties
+const SORTIE_NOEUD = "#C8C2B8";
+const F_DISPLAY = "'Fraunces', Georgia, serif";
+const F_TEXTE = "'Inter Tight', 'Segoe UI', sans-serif";
+
 const couleurParti = Object.fromEntries(partis.map((p) => [p.parti, p.couleur]));
 const autresN = VOTES_VALIDES - partis.reduce((s, p) => s + p.votesN, 0);
-const partisSankey = [...partis, { parti: "Autres", votesN: autresN, sieges: 0, couleur: "#9a9a9a" }];
+const partisSankey = [...partis, { parti: "Autres", votesN: autresN, sieges: 0, couleur: GRIS }];
 
 const noeudsSankey = [
   "Pop. du Québec", "Électeurs inscrits", "Votes exercés", "Votes valides",
@@ -107,44 +118,58 @@ const liensSankey = [
   ...partisSankey.map((p) => ["Votes valides", p.parti, p.votesN]),
 ].map(([s, t, v]) => ({ source: idxSankey[s], target: idxSankey[t], value: v }));
 
-const sankeyGen = sankeyMod.sankey().nodeWidth(14).nodePadding(16)
+const sankeyGen = sankeyMod.sankey().nodeWidth(8).nodePadding(16)
   .nodeSort(null) // garde l'ordre déclaré : partis du plus fort au plus faible
   .extent([[0, 10], [640, 470]]);
 const sankeyLayout = sankeyGen({ nodes: noeudsSankey.map((d) => ({ ...d })), links: liensSankey });
 const gris = new Set(["Mineurs, non-citoyens", "Abstention", "Bulletins rejetés"]);
 const couleurNoeud = (name) =>
-  gris.has(name) ? "#9a9a9a" : couleurParti[name] ?? (name === "Autres" ? "#9a9a9a" : "#b6cb9e");
-const siegesDe = Object.fromEntries(partisSankey.map((p) => [p.parti, p.sieges]));
-const libelle = (d) => {
-  const base = `${d.name} : ${(d.value / 1e6).toFixed(2).replace(".", ",")} M`;
-  if (siegesDe[d.name] === undefined) return base;
-  const s = siegesDe[d.name];
-  return `${base} (${s} siège${s > 1 ? "s" : ""})`;
-};
+  gris.has(name) ? SORTIE_NOEUD : couleurParti[name] ?? (name === "Autres" ? SORTIE_NOEUD : VERT_NOEUD);
+const valeurM = (v) => (v / 1e6).toFixed(2).replace(".", ",") + " M";
 
 // Réglages du panneau des flèches : SEULS ces deux nombres sont à ajuster.
-// FLECHE_GAUCHE rapproche/éloigne le panneau du Sankey (les libellés du
-// Sankey finissent vers x = 900); FLECHE_LARGEUR le resserre ou l'étire.
-const FLECHE_GAUCHE = 940;
+// FLECHE_GAUCHE rapproche/éloigne le panneau du Sankey; FLECHE_LARGEUR le
+// resserre ou l'étire.
+const FLECHE_GAUCHE = 780;
 const FLECHE_LARGEUR = 300;
 
-const svgSankey = d3.create("svg").attr("viewBox", [0, 0, FLECHE_GAUCHE + FLECHE_LARGEUR + 40, 540])
-  .attr("font-family", "system-ui").attr("font-size", 12);
+const svgSankey = d3.create("svg").attr("viewBox", [0, 0, FLECHE_GAUCHE + FLECHE_LARGEUR + 90, 540])
+  .attr("font-family", F_TEXTE).attr("font-size", 12);
+svgSankey.append("style").text(
+  "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Inter+Tight:wght@400;600&display=swap');"
+);
+
+// flux
 svgSankey.append("g").selectAll("path").data(sankeyLayout.links).join("path")
   .attr("d", sankeyMod.sankeyLinkHorizontal())
   .attr("fill", "none")
-  .attr("stroke", (d) => gris.has(d.target.name) ? "#c8b7b7"
-    : couleurParti[d.target.name] ?? "#d1f0b1")
-  .attr("stroke-opacity", (d) => couleurParti[d.target.name] ? 0.55 : 0.35)
+  .attr("stroke", (d) => gris.has(d.target.name) ? SORTIE_FLUX
+    : couleurParti[d.target.name] ?? VERT_FLUX)
+  .attr("stroke-opacity", (d) => couleurParti[d.target.name] ? 0.5 : 1)
   .attr("stroke-width", (d) => Math.max(1, d.width));
+// nœuds
 svgSankey.append("g").selectAll("rect").data(sankeyLayout.nodes).join("rect")
   .attr("x", (d) => d.x0).attr("y", (d) => d.y0)
   .attr("width", (d) => d.x1 - d.x0).attr("height", (d) => Math.max(1, d.y1 - d.y0))
   .attr("fill", (d) => couleurNoeud(d.name));
-svgSankey.append("g").selectAll("text").data(sankeyLayout.nodes).join("text")
-  .attr("x", (d) => d.x1 + 6).attr("y", (d) => (d.y0 + d.y1) / 2).attr("dy", "0.35em")
-  .attr("font-weight", (d) => couleurParti[d.name] ? "bold" : "normal")
-  .text((d) => d.name === "Votes valides" ? "" : libelle(d));
+// libellés des étapes et des sorties
+svgSankey.append("g").selectAll("text")
+  .data(sankeyLayout.nodes.filter((d) => !couleurParti[d.name] && d.name !== "Autres" && d.name !== "Votes valides"))
+  .join("text")
+  .attr("x", (d) => d.x1 + 8).attr("y", (d) => (d.y0 + d.y1) / 2).attr("dy", "0.35em")
+  .attr("fill", (d) => gris.has(d.name) ? GRIS : ENCRE)
+  .text((d) => `${d.name} : ${valeurM(d.value)}`);
+// libellés des partis : nom en couleur, valeur en gris léger
+const lblParti = svgSankey.append("g").selectAll("text")
+  .data(sankeyLayout.nodes.filter((d) => couleurParti[d.name] || d.name === "Autres"))
+  .join("text")
+  .attr("x", (d) => d.x1 + 8).attr("y", (d) => (d.y0 + d.y1) / 2).attr("dy", "0.35em");
+lblParti.append("tspan")
+  .attr("font-weight", 600)
+  .attr("fill", (d) => d.name === "Autres" ? GRIS : couleurParti[d.name])
+  .text((d) => d.name);
+lblParti.append("tspan").attr("fill", GRIS).text((d) => `  ${valeurM(d.value)}`);
+
 // --- flèches de distorsion, alignées sur les nœuds de partis ---
 const xFleche = d3.scaleLinear([0, 50], [FLECHE_GAUCHE, FLECHE_GAUCHE + FLECHE_LARGEUR]);
 const partisFleche = partis.map((p) => {
@@ -156,25 +181,23 @@ const partisFleche = partis.map((p) => {
     siegesPct: p.sieges / TOTAL_SIEGES * 100,
   };
 });
-const yHautF = Math.min(...partisFleche.map((d) => d.y)) - 34;
-const yAxeF = 500;
+const yHautF = Math.min(...partisFleche.map((d) => d.y)) - 26;
+const yBasF = Math.max(...partisFleche.map((d) => d.y)) + 26;
 
-// axe et grille
-const grilleF = svgSankey.append("g");
-for (let t = 0; t <= 50; t += 10) {
-  grilleF.append("line")
-    .attr("x1", xFleche(t)).attr("x2", xFleche(t))
-    .attr("y1", yHautF).attr("y2", yAxeF)
-    .attr("stroke", "#e4e4e4");
-  grilleF.append("text")
-    .attr("x", xFleche(t)).attr("y", yAxeF + 16)
-    .attr("text-anchor", "middle").attr("fill", "#666").attr("font-size", 11)
-    .text(t);
-}
-grilleF.append("text")
-  .attr("x", xFleche(25)).attr("y", yAxeF + 34)
-  .attr("text-anchor", "middle").attr("fill", "#444").attr("font-size", 12)
-  .text("part (%)");
+// un seul repère : le zéro, là où s'écrase la flèche de la CAQ
+svgSankey.append("line")
+  .attr("x1", xFleche(0)).attr("x2", xFleche(0))
+  .attr("y1", yHautF).attr("y2", yBasF)
+  .attr("stroke", HAIRLINE);
+svgSankey.append("text")
+  .attr("x", xFleche(0)).attr("y", yBasF + 16)
+  .attr("text-anchor", "middle").attr("fill", GRIS).attr("font-size", 11)
+  .text("0");
+// la légende remplace l'axe
+svgSankey.append("text")
+  .attr("x", xFleche(0) + 12).attr("y", yBasF + 16)
+  .attr("fill", GRIS).attr("font-size", 11)
+  .text("chaque flèche va de la part des votes à la part des sièges, à l'échelle");
 
 // pointes de flèche aux couleurs des partis
 const defsF = svgSankey.append("defs");
@@ -182,30 +205,46 @@ for (const p of partisFleche) {
   defsF.append("marker")
     .attr("id", "fleche-" + p.parti)
     .attr("viewBox", "0 0 8 8").attr("refX", 6).attr("refY", 4)
-    .attr("markerWidth", 7).attr("markerHeight", 7).attr("orient", "auto")
+    .attr("markerWidth", 6.5).attr("markerHeight", 6.5).attr("orient", "auto")
     .append("path").attr("d", "M0,0L8,4L0,8z").attr("fill", p.couleur);
 }
-const grpF = svgSankey.append("g");
+const grpF = svgSankey.append("g").attr("font-size", 11);
 for (const p of partisFleche) {
+  const x1 = xFleche(p.votesPct), x2 = xFleche(p.siegesPct);
+  const versDroite = x2 >= x1;
   grpF.append("line")
-    .attr("x1", xFleche(p.votesPct)).attr("x2", xFleche(p.siegesPct))
-    .attr("y1", p.y).attr("y2", p.y)
-    .attr("stroke", p.couleur).attr("stroke-width", 2.5)
+    .attr("x1", x1).attr("x2", x2).attr("y1", p.y).attr("y2", p.y)
+    .attr("stroke", p.couleur).attr("stroke-width", 2)
     .attr("marker-end", `url(#fleche-${p.parti})`);
-  grpF.append("circle")
-    .attr("cx", xFleche(p.votesPct)).attr("cy", p.y).attr("r", 4.5).attr("fill", p.couleur);
+  grpF.append("circle").attr("cx", x1).attr("cy", p.y).attr("r", 4).attr("fill", p.couleur);
+  // part des votes du côté du point, hors de la flèche
   grpF.append("text")
-    .attr("x", xFleche(p.votesPct)).attr("y", p.y - 10)
-    .attr("text-anchor", "middle").attr("fill", "#555").attr("font-size", 10)
-    .text(p.votesPct.toFixed(1).replace(".", ",") + " %");
-  // fleche courte : l'etiquette sieges passe sous la ligne pour ne pas
-  // chevaucher l'etiquette votes, quels que soient les reglages
-  const dessous = Math.abs(xFleche(p.votesPct) - xFleche(p.siegesPct)) < 55;
+    .attr("x", x1 + (versDroite ? -9 : 9)).attr("y", p.y)
+    .attr("dy", "0.35em").attr("text-anchor", versDroite ? "end" : "start")
+    .attr("fill", GRIS)
+    .text(Math.round(p.votesPct) + " %");
+  // sièges au-delà de la pointe
   grpF.append("text")
-    .attr("x", xFleche(p.siegesPct)).attr("y", p.y + (dessous ? 18 : -10))
-    .attr("text-anchor", "middle").attr("fill", "#333").attr("font-size", 10)
+    .attr("x", x2 + (versDroite ? 10 : -10)).attr("y", p.y)
+    .attr("dy", "0.35em").attr("text-anchor", versDroite ? "start" : "end")
+    .attr("fill", ENCRE).attr("font-weight", 600)
     .text(`${p.sieges} siège${p.sieges > 1 ? "s" : ""}`);
 }
+
+// --- l'annotation qui habite le vide : la thèse du graphique ---
+const pctPop = Math.round(1199925 / POPULATION * 100);
+const xAnnot = FLECHE_GAUCHE + 110;
+svgSankey.append("text")
+  .attr("x", xAnnot).attr("y", 96)
+  .attr("font-family", F_DISPLAY).attr("font-size", 78).attr("font-weight", 560)
+  .attr("fill", ENCRE)
+  .text(pctPop + " %");
+const annot = svgSankey.append("text")
+  .attr("x", xAnnot + 3).attr("y", 122)
+  .attr("fill", GRIS).attr("font-size", 13);
+annot.append("tspan").text("de la population a donné son vote");
+annot.append("tspan").attr("x", xAnnot + 3).attr("dy", 18).text("au parti qui forme le gouvernement.");
+
 svgSankey.node();
 
 // %% [markdown]
