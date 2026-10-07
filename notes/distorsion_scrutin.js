@@ -122,7 +122,13 @@ const libelle = (d) => {
   return `${base} (${s} siège${s > 1 ? "s" : ""})`;
 };
 
-const svgSankey = d3.create("svg").attr("viewBox", [0, 0, 1400, 540])
+// Réglages du panneau des flèches : SEULS ces deux nombres sont à ajuster.
+// FLECHE_GAUCHE rapproche/éloigne le panneau du Sankey (les libellés du
+// Sankey finissent vers x = 900); FLECHE_LARGEUR le resserre ou l'étire.
+const FLECHE_GAUCHE = 940;
+const FLECHE_LARGEUR = 300;
+
+const svgSankey = d3.create("svg").attr("viewBox", [0, 0, FLECHE_GAUCHE + FLECHE_LARGEUR + 40, 540])
   .attr("font-family", "system-ui").attr("font-size", 12);
 svgSankey.append("g").selectAll("path").data(sankeyLayout.links).join("path")
   .attr("d", sankeyMod.sankeyLinkHorizontal())
@@ -140,7 +146,7 @@ svgSankey.append("g").selectAll("text").data(sankeyLayout.nodes).join("text")
   .attr("font-weight", (d) => couleurParti[d.name] ? "bold" : "normal")
   .text((d) => d.name === "Votes valides" ? "" : libelle(d));
 // --- flèches de distorsion, alignées sur les nœuds de partis ---
-const xFleche = d3.scaleLinear([0, 50], [990, 1360]);
+const xFleche = d3.scaleLinear([0, 50], [FLECHE_GAUCHE, FLECHE_GAUCHE + FLECHE_LARGEUR]);
 const partisFleche = partis.map((p) => {
   const n = sankeyLayout.nodes.find((nd) => nd.name === p.parti);
   return {
@@ -192,8 +198,11 @@ for (const p of partisFleche) {
     .attr("x", xFleche(p.votesPct)).attr("y", p.y - 10)
     .attr("text-anchor", "middle").attr("fill", "#555").attr("font-size", 10)
     .text(p.votesPct.toFixed(1).replace(".", ",") + " %");
+  // fleche courte : l'etiquette sieges passe sous la ligne pour ne pas
+  // chevaucher l'etiquette votes, quels que soient les reglages
+  const dessous = Math.abs(xFleche(p.votesPct) - xFleche(p.siegesPct)) < 55;
   grpF.append("text")
-    .attr("x", xFleche(p.siegesPct)).attr("y", p.y - 10)
+    .attr("x", xFleche(p.siegesPct)).attr("y", p.y + (dessous ? 18 : -10))
     .attr("text-anchor", "middle").attr("fill", "#333").attr("font-size", 10)
     .text(`${p.sieges} siège${p.sieges > 1 ? "s" : ""}`);
 }
