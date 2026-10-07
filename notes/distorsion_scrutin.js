@@ -119,16 +119,21 @@ Plot.plot({
 // %% [markdown]
 // ## 3. L'entonnoir, en flux
 //
-// La cascade population → inscrits → votants → votes valides → vote
-// gouvernemental, avec ce qui sort à chaque étape (en gris).
+// La cascade population → inscrits → votants → votes valides, puis le vote
+// valide éclaté par parti (couleurs des partis, sièges en étiquette); les
+// sorties de l'entonnoir en gris.
 
 // %% [javascript]
 const sankeyMod = await import("https://cdn.jsdelivr.net/npm/d3-sankey@0.12/+esm");
 
+const couleurParti = Object.fromEntries(partis.map((p) => [p.parti, p.couleur]));
+const autresN = VOTES_VALIDES - partis.reduce((s, p) => s + p.votesN, 0);
+const partisSankey = [...partis, { parti: "Autres", votesN: autresN, sieges: 0, couleur: "#9a9a9a" }];
+
 const noeudsSankey = [
   "Population du Québec", "Électeurs inscrits", "Votes exercés", "Votes valides",
-  "Vote gouvernemental (PQ)",
-  "Mineurs, non-citoyens", "Abstention", "Bulletins rejetés", "Votes des autres partis",
+  "Mineurs, non-citoyens", "Abstention", "Bulletins rejetés",
+  ...partisSankey.map((p) => p.parti),
 ].map((name) => ({ name }));
 const idxSankey = Object.fromEntries(noeudsSankey.map((n, i) => [n.name, i]));
 const liensSankey = [
@@ -138,29 +143,41 @@ const liensSankey = [
   ["Électeurs inscrits", "Abstention", INSCRITS - VOTES_EXERCES],
   ["Votes exercés", "Votes valides", VOTES_VALIDES],
   ["Votes exercés", "Bulletins rejetés", VOTES_EXERCES - VOTES_VALIDES],
-  ["Votes valides", "Vote gouvernemental (PQ)", 1199925],
-  ["Votes valides", "Votes des autres partis", VOTES_VALIDES - 1199925],
+  ...partisSankey.map((p) => ["Votes valides", p.parti, p.votesN]),
 ].map(([s, t, v]) => ({ source: idxSankey[s], target: idxSankey[t], value: v }));
 
-const sankeyGen = sankeyMod.sankey().nodeWidth(14).nodePadding(20).extent([[0, 10], [640, 410]]);
+const sankeyGen = sankeyMod.sankey().nodeWidth(14).nodePadding(16)
+  .nodeSort(null) // garde l'ordre déclaré : partis du plus fort au plus faible
+  .extent([[0, 10], [640, 470]]);
 const sankeyLayout = sankeyGen({ nodes: noeudsSankey.map((d) => ({ ...d })), links: liensSankey });
-const sorties = new Set(["Mineurs, non-citoyens", "Abstention", "Bulletins rejetés", "Votes des autres partis"]);
+const gris = new Set(["Mineurs, non-citoyens", "Abstention", "Bulletins rejetés"]);
+const couleurNoeud = (name) =>
+  gris.has(name) ? "#9a9a9a" : couleurParti[name] ?? (name === "Autres" ? "#9a9a9a" : "#2B50C8");
+const siegesDe = Object.fromEntries(partisSankey.map((p) => [p.parti, p.sieges]));
+const libelle = (d) => {
+  const base = `${d.name} — ${(d.value / 1e6).toFixed(2).replace(".", ",")} M`;
+  if (siegesDe[d.name] === undefined) return base;
+  const s = siegesDe[d.name];
+  return `${base} (${s} siège${s > 1 ? "s" : ""})`;
+};
 
-const svgSankey = d3.create("svg").attr("viewBox", [0, 0, 920, 420])
+const svgSankey = d3.create("svg").attr("viewBox", [0, 0, 920, 480])
   .attr("font-family", "system-ui").attr("font-size", 12);
 svgSankey.append("g").selectAll("path").data(sankeyLayout.links).join("path")
   .attr("d", sankeyMod.sankeyLinkHorizontal())
   .attr("fill", "none")
-  .attr("stroke", (d) => sorties.has(d.target.name) ? "#c4c4c4" : "#2B50C8")
-  .attr("stroke-opacity", 0.4)
+  .attr("stroke", (d) => gris.has(d.target.name) ? "#c4c4c4"
+    : couleurParti[d.target.name] ?? "#2B50C8")
+  .attr("stroke-opacity", (d) => couleurParti[d.target.name] ? 0.55 : 0.35)
   .attr("stroke-width", (d) => Math.max(1, d.width));
 svgSankey.append("g").selectAll("rect").data(sankeyLayout.nodes).join("rect")
   .attr("x", (d) => d.x0).attr("y", (d) => d.y0)
   .attr("width", (d) => d.x1 - d.x0).attr("height", (d) => Math.max(1, d.y1 - d.y0))
-  .attr("fill", (d) => sorties.has(d.name) ? "#9a9a9a" : "#2B50C8");
+  .attr("fill", (d) => couleurNoeud(d.name));
 svgSankey.append("g").selectAll("text").data(sankeyLayout.nodes).join("text")
   .attr("x", (d) => d.x1 + 6).attr("y", (d) => (d.y0 + d.y1) / 2).attr("dy", "0.35em")
-  .text((d) => `${d.name} — ${(d.value / 1e6).toFixed(2).replace(".", ",")} M`);
+  .attr("font-weight", (d) => couleurParti[d.name] ? "bold" : "normal")
+  .text(libelle);
 svgSankey.node();
 
 // %% [markdown]
