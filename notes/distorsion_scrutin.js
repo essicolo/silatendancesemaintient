@@ -29,8 +29,8 @@ partis;
 // ## 1. Quatre lectures de la force d'un parti
 //
 // De gauche à droite, la même force politique rapportée à quatre dénominateurs
-// de plus en plus larges : les sièges de l'Assemblée, les votes exprimés, les
-// électeurs inscrits, la population. Les pentes racontent tout : le PQ grossit
+// de plus en plus étroits : la population, les électeurs inscrits, les votes
+// exprimés, les sièges de l'Assemblée. Les pentes racontent tout : le PQ grossit
 // à chaque étage du filtre (13 % de la population, 46 % de l'Assemblée); la
 // CAQ disparaît au dernier étage; tous les partis confondus se tassent sous
 // 14 % de la population — un gouvernement procède du vote d'une petite
@@ -48,30 +48,27 @@ const pente = partis.flatMap((p) => [
 Plot.plot({
   height: 420,
   width: 760,
-  marginLeft: 70,
-  marginRight: 30,
+  marginLeft: 40,
+  marginRight: 110,
   marginBottom: 45,
   style: { fontSize: "13px", fontFamily: "system-ui" },
-  x: { domain: etapes, label: null, tickSize: 0, padding: 0.35 },
+  x: { domain: [...etapes].reverse(), label: null, tickSize: 0, padding: 0.35 },
   y: { label: null, axis: null, domain: [0, 50] },
   marks: [
-    // les quatre axes verticaux noirs de la maquette
     Plot.ruleX(etapes, { x: (d) => d, y1: 0, y2: 50, stroke: "black", strokeWidth: 2.5 }),
     Plot.line(pente, {
       x: "etape", y: "pct", z: "parti",
       stroke: "couleur", strokeWidth: 2.5, curve: "linear",
     }),
     Plot.dot(pente, { x: "etape", y: "pct", fill: "couleur", r: 7 }),
-    // noms des partis à gauche de la première colonne
+    // noms des partis a droite de la colonne Assemblee, valeur au-dessus du point
     Plot.text(pente.filter((d) => d.etape === etapes[0]), {
       x: "etape", y: "pct", text: "parti", fill: "couleur",
-      textAnchor: "end", dx: -14, fontWeight: "bold", fontSize: 13,
+      textAnchor: "start", dx: 14, fontWeight: "bold", fontSize: 13,
     }),
-    // valeur a la premiere colonne seulement (les colonnes suivantes se
-    // lisent par la pente, comme dans la maquette)
     Plot.text(pente.filter((d) => d.etape === etapes[0]), {
       x: "etape", y: "pct", text: (d) => d.pct.toFixed(0) + " %",
-      dx: 16, dy: -10, fill: "#444", fontSize: 11,
+      dx: -10, dy: -10, textAnchor: "end", fill: "#444", fontSize: 11,
     }),
   ],
 });
@@ -94,10 +91,15 @@ Plot.plot({
   width: 760,
   marginLeft: 60,
   marginRight: 40,
+  marginBottom: 55,
   style: { fontSize: "13px", fontFamily: "system-ui" },
-  x: { label: "part (%)", domain: [0, 50], grid: true },
-  y: { domain: partis.map((d) => d.parti), label: null },
+  x: { label: "part (%)", domain: [0, 50], grid: true, labelAnchor: "center", labelOffset: 45 },
+  y: { domain: partis.map((d) => d.parti), label: null, axis: null },
   marks: [
+    Plot.text(fleches, {
+      y: "parti", x: 0, text: "parti", fill: "couleur",
+      textAnchor: "end", dx: -10, fontSize: 13,
+    }),
     Plot.arrow(fleches, {
       y: "parti", x1: "votesPct", x2: "siegesPct",
       stroke: "couleur", strokeWidth: 2.5, headLength: 5,
@@ -111,7 +113,7 @@ Plot.plot({
     Plot.text(fleches, {
       y: "parti", x: "siegesPct", dy: -13, textAnchor: "middle",
       text: (d) => `${d.sieges} siège${d.sieges > 1 ? "s" : ""}`,
-      fontWeight: "bold", fontSize: 11,
+      fill: "#333", fontSize: 11,
     }),
   ],
 });
@@ -210,8 +212,9 @@ Plot.plot({
   height: 420,
   width: 760,
   marginLeft: 150,
+  marginBottom: 55,
   style: { fontSize: "13px", fontFamily: "system-ui" },
-  x: { label: "indice de Gallagher", grid: true, domain: [0, 32] },
+  x: { label: "indice de Gallagher", grid: true, domain: [0, 32], labelAnchor: "center", labelOffset: 45 },
   y: {
     label: null,
     domain: gallagherMonde.slice().sort((a, b) => b.g - a.g).map((d) => d.label),
