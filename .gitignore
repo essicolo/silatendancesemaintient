@@ -29,3 +29,6 @@ js/dist/
 .claude/
 .agents/
 skills-lock.json
+
+# Briefing de reprise local (non versionné)
+AGENT.md
